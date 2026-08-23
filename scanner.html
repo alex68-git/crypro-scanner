@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>🐋 Китовый сканер — Bybit</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0b0e11; color: #eaecef; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 12px; padding-bottom: 100px; }
+        .header { background: #1e2329; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+        h1 { font-size: 20px; font-weight: 700; }
+        .sub { color: #848e9c; font-size: 13px; margin-top: 4px; }
+        .settings { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+        .settings input, .settings select { background: #2b3139; border: 1px solid #3b4149; color: #eaecef; padding: 8px 12px; border-radius: 8px; font-size: 14px; flex: 1; min-width: 80px; }
+        .settings button { background: #f7931a; border: none; color: #fff; padding: 8px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .settings button.stop { background: #f6465d; }
+        .stats { display: flex; gap: 12px; margin: 10px 0; flex-wrap: wrap; }
+        .stat { background: #1e2329; padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #848e9c; }
+        .stat span { color: #eaecef; font-weight: 600; }
+        .order { background: #1e2329; padding: 12px 14px; border-radius: 10px; margin: 6px 0; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #0ecb81; animation: slideIn 0.3s ease; }
+        .order.sell { border-left-color: #f6465d; }
+        .order .left { flex: 1; }
+        .order .symbol { font-weight: 700; font-size: 15px; }
+        .order .side { font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 12px; display: inline-block; margin-left: 8px; }
+        .order .side.buy { background: #0ecb8122; color: #0ecb81; }
+        .order .side.sell { background: #f6465d22; color: #f6465d; }
+        .order .price { font-size: 16px; font-weight: 600; }
+        .order .amount { color: #848e9c; font-size: 13px; }
+        .order .usd { color: #f0b90b; font-size: 13px; font-weight: 500; }
+        .empty { color: #848e9c; text-align: center; padding: 40px 20px; }
+        .empty .big { font-size: 48px; display: block; margin-bottom: 12px; }
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e2329; padding: 12px 24px; border-radius: 12px; border: 1px solid #3b4149; color: #eaecef; font-size: 14px; opacity: 0; transition: opacity 0.3s; z-index: 100; white-space: nowrap; pointer-events: none; }
+        .toast.show { opacity: 1; }
+        .badge { background: #f6465d; color: #fff; border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 600; margin-left: 6px; }
+        .auto-mode { color: #848e9c; font-size: 12px; margin-top: 6px; }
+        .auto-mode span { color: #0ecb81; }
+        .sound-toggle { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+        .sound-toggle label { color: #848e9c; font-size: 13px; }
+        .sound-toggle input[type="checkbox"] { width: 20px; height: 20px; accent-color: #f7931a; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .notif-permission { background: #2b3139; padding: 8px 12px; border-radius: 8px; margin-top: 8px; font-size: 12px; color: #848e9c; }
+        .notif-permission .granted { color: #0ecb81; }
+        .notif-permission .denied { color: #f6465d; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🐋 Bybit Китовый сканер</h1>
+    <div class="sub">Топ-300 монет · Крупные заявки в стакане</div>
+    <div class="settings">
+        <input type="number" id="threshold" value="30000" placeholder="Порог USDT">
+        <select id="coinSelect"></select>
+        <button id="mainBtn" onclick="toggleScanner()">▶ Старт</button>
+    </div>
+    <div class="sound-toggle">
+        <input type="checkbox" id="soundEnabled" checked>
+        <label for="soundEnabled">🔊 Звук при находке</label>
+        <input type="checkbox" id="notifEnabled" checked style="margin-left:16px;">
+        <label for="notifEnabled">🔔 Push-уведомления</label>
+    </div>
+    <div class="notif-permission" id="notifStatus">🔔 Разрешение на уведомления: <span class="denied">не запрошено</span></div>
+    <div class="stats">
+        <div class="stat">📊 Монет: <span id="totalCoins">300</span></div>
+        <div class="stat">🐋 Найдено: <span id="foundCount">0</span></div>
+        <div class="stat">⏱ <span id="status">Остановлен</span></div>
+    </div>
+    <div class="auto-mode">🔄 Авто-сканирование: <span id="scanStatus">выключено</span> (выберите монету или включите авто)</div>
+</div>
+
+<div id="orders"><div class="empty"><span class="big">📡</span>Нажмите «Старт» для сканирования стакана Bybit</div></div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+// ============================================================
+// ТОП-300 МОНЕТ BYBIT (по объёму торгов за 24ч, отсортированы)
+// ============================================================
+const TOP_300_BYBIT = [
+    "BTCUSDT", "ETHUSDT", "USDCUSDT", "XRPUSDT", "SOLUSDT", "DOGEUSDT", "ADAUSDT", "TRXUSDT",
+    "AVAXUSDT", "DOTUSDT", "LINKUSDT", "MATICUSDT", "BNBUSDT", "UNIUSDT", "ATOMUSDT", "LTCUSDT",
+    "ETCUSDT", "XLMUSDT", "BCHUSDT", "VETUSDT", "FILUSDT", "ICPUSDT", "HBARUSDT", "APTUSDT",
+    "NEARUSDT", "ARBUSDT", "MKRUSDT", "OPUSDT", "AAVEUSDT", "EGLDUSDT", "ALGOUSDT", "FTMUSDT",
+    "EOSUSDT", "QNTUSDT", "GRTUSDT", "RNDRUSDT", "STXUSDT", "IMXUSDT", "TAOUSDT", "INJUSDT",
+    "THETAUSDT", "MNTUSDT", "RUNEUSDT", "PENDLEUSDT", "TIAUSDT", "SEIUSDT", "SUIUSDT", "ARUSDT",
+    "AXSUSDT", "WIFUSDT", "BONKUSDT", "FLOKIUSDT", "PEPEUSDT", "JUPUSDT", "JASMYUSDT", "KASUSDT",
+    "NOTUSDT", "ONDOUSDT", "ENAUSDT", "ETHFIUSDT", "AEVOUSDT", "ALTUSDT", "WUSDT", "ZROUSDT",
+    "IOUSDT", "ZKUSDT", "LISTAUSDT", "BBUSDT", "TNSRUSDT", "REZUSDT", "EIGENUSDT", "HMSTRUSDT",
+    "CATIUSDT", "NEIROUSDT", "DOGSUSDT", "XUSDT", "1MBABYDOGEUSDT", "LOKAUSDT", "CLVUSDT",
+    "ATAUSDT", "LITUSDT", "DGBUSDT", "SCUSDT", "ZILUSDT", "QTUMUSDT", "BTGUSDT", "DASHUSDT",
+    "XMRUSDT", "ZECUSDT", "RVNUSDT", "XEMUSDT", "WAVESUSDT", "NEOUSDT", "ONTUSDT", "IOTAUSDT",
+    "BTTUSDT", "WINUSDT", "SUNUSDT", "KAVAUSDT", "BANDUSDT", "NMRUSDT", "OCEANUSDT", "BATUSDT",
+    "ZRXUSDT", "RENUSDT", "KNCUSDT", "SNXUSDT", "UMAUSDT", "YFIUSDT", "COMPUSDT", "SUSHIUSDT",
+    "CRVUSDT", "1INCHUSDT", "BALUSDT", "LRCUSDT", "DYDXUSDT", "ENSUSDT", "GALUSDT", "LDOUSDT",
+    "RPLUSDT", "FXSUSDT", "CVXUSDT", "OHMUSDT", "FRAXUSDT", "USDPUSDT", "TUSDUSDT",
+    "BUSDUSDT", "DAIUSDT", "FDUSDUSDT", "PYUSDUSDT", "EURCUSDT", "XAUTUSDT", "PAXGUSDT",
+    "AKTUSDT", "ALPHUSDT", "ARPAUSDT", "ASTRUSDT", "AUDIOUSDT", "BICOUSDT", "BLURUSDT",
+    "CHRUSDT", "CHZUSDT", "CKBUSDT", "COQUSDT", "COREUSDT", "COTIUSDT", "CTSIUSDT",
+    "CVCUSDT", "DIAUSDT", "DYDXUSDT", "ENJUSDT", "FIDAUSDT", "FISUSDT", "FLOWUSDT",
+    "GALAUSDT", "GASUSDT", "GNOUSDT", "HIFIUSDT", "HNTUSDT", "HOTUSDT", "ICXUSDT",
+    "ILVUSDT", "IOSTUSDT", "IOTXUSDT", "JTOUSDT", "KSMUSDT", "LPTUSDT", "LSKUSDT",
+    "MANAUSDT", "MASKUSDT", "MINAUSDT", "MOVRUSDT", "MTLUSDT", "MYRIAUSDT", "NTRNUSDT",
+    "NYANUSDT", "OASUSDT", "OOKIUSDT", "ORBSUSDT", "ORDIUSDT", "OXTUSDT", "PHAUSDT",
+    "PIXELUSDT", "POLYUSDT", "PONDUSDT", "POWRUSDT", "PROUSDT", "PYRUSDT", "RADUSDT",
+    "RAILUSDT", "RAREUSDT", "RLCUSDT", "ROSEUSDT", "SANDUSDT", "SANTOSUSDT", "SFPUSDT",
+    "SKALEUSDT", "SKLUSDT", "SLPUSDT", "SNTUSDT", "SSVUSDT", "STORJUSDT", "STRAXUSDT",
+    "SUPERUSDT", "SXPUSDT", "SYNUSDT", "TUSDT", "TELUSDT", "TFUELUSDT", "TOKENUSDT",
+    "TRBUSDT", "TRIBEUSDT", "TWTUSDT", "UFTUSDT", "UNFIUSDT", "VIBUSDT", "WAXPUSDT",
+    "WBTCUSDT", "WOOUSDT", "XCNUSDT", "XDCUSDT", "XPRTUSDT", "XTZUSDT", "YGGUSDT",
+    "ZENUSDT", "ZETAUSDT", "ZKFUSDT", "ZMNUSDT", "ZRXUSDT"
+];
+
+const SYMBOLS = [...new Set(TOP_300_BYBIT)].slice(0, 300);
+
+// ============================================================
+// ЗВУКОВОЙ ДВИЖОК (реалистичный "бум" как на бирже)
+// ============================================================
+class SoundEngine {
+    constructor() {
+        this.ctx = null;
+        this.enabled = true;
+    }
+
+    init() {
+        if (!this.ctx) {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (this.ctx.state === 'suspended') {
+            this.ctx.resume();
+        }
+    }
+
+    playBoom() {
+        if (!this.enabled) return;
+        try {
+            this.init();
+            
+            // Низкий удар (бас)
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            const filter = this.ctx.createBiquadFilter();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(120, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(60, this.ctx.currentTime + 0.15);
+            
+            filter.type = 'lowpass';
+            filter.frequency.value = 200;
+            
+            gain.gain.setValueAtTime(0.5, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.25);
+            
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.ctx.destination);
+            
+            osc.start(this.ctx.currentTime);
+            osc.stop(this.ctx.currentTime + 0.25);
+            
+            // Второй слой (металлический "бум")
+            const osc2 = this.ctx.createOscillator();
+            const gain2 = this.ctx.createGain();
+            osc2.type = 'square';
+            osc2.frequency.setValueAtTime(80, this.ctx.currentTime);
+            osc2.frequency.exponentialRampToValueAtTime(40, this.ctx.currentTime + 0.2);
+            
+            gain2.gain.setValueAtTime(0.2, this.ctx.currentTime);
+            gain2.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.2);
+            
+            osc2.connect(gain2);
+            gain2.connect(this.ctx.destination);
+            
+            osc2.start(this.ctx.currentTime + 0.02);
+            osc2.stop(this.ctx.currentTime + 0.22);
+            
+        } catch(e) {
+            // Если звук не работает — просто игнорируем
+        }
+    }
+
+    playAlert() {
+        if (!this.enabled) return;
+        try {
+            this.init();
+            // Короткий "динь" для дополнительного внимания
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, this.ctx.currentTime);
+            osc.frequency.setValueAtTime(1100, this.ctx.currentTime + 0.05);
+            
+            gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+            
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            
+            osc.start(this.ctx.currentTime);
+            osc.stop(this.ctx.currentTime + 0.1);
+        } catch(e) {}
+    }
+}
+
+const sound = new SoundEngine();
+
+// ============================================================
+// УВЕДОМЛЕНИЯ (Push-уведомления для iPhone)
+// ============================================================
+class Notifier {
+    constructor() {
+        this.enabled = true;
+        this.permission = 'default';
+        this.requestPermission();
+    }
+
+    async requestPermission() {
+        if ('Notification' in window) {
+            const status = document.getElementById('notifStatus');
+            if (Notification.permission === 'granted') {
+                this.permission = 'granted';
+                status.innerHTML = '🔔 Уведомления: <span class="granted">✅ разрешены</span>';
+            } else if (Notification.permission === 'denied') {
+                this.permission = 'denied';
+                status.innerHTML = '🔔 Уведомления: <span class="denied">❌ запрещены (включите в настройках iPhone)</span>';
+            } else {
+                status.innerHTML = '🔔 Уведомления: <span class="denied">⏳ запрос разрешения...</span>';
+                try {
+                    const result = await Notification.requestPermission();
+                    this.permission = result;
+                    if (result === 'granted') {
+                        status.innerHTML = '🔔 Уведомления: <span class="granted">✅ разрешены</span>';
+                    } else {
+                        status.innerHTML = '🔔 Уведомления: <span class="denied">❌ запрещены</span>';
+                    }
+                } catch(e) {
+                    status.innerHTML = '🔔 Уведомления: <span class="denied">⚠️ не поддерживаются в этом браузере</span>';
+                }
+            }
+        }
+    }
+
+    send(title, body, icon = 'https://cryptologos.cc/logos/bitcoin-btc-logo.png') {
+        if (!this.enabled) return;
+        if (this.permission === 'granted') {
+            try {
+                const notif = new Notification(title, {
+                    body: body,
+                    icon: icon,
+                    sound: 'default', // На iPhone может не работать
+                    vibrate: [200, 100, 200],
+                    badge: icon,
+                    requireInteraction: true
+                });
+                
+                // Автоматически закрываем через 8 секунд
+                setTimeout(() => notif.close(), 8000);
+            } catch(e) {
+                // Если не работает — просто игнорируем
+            }
+        }
+    }
+}
+
+const notifier = new Notifier();
+
+// ============================================================
+// ОСНОВНАЯ ЛОГИКА СКАНЕРА
+// ============================================================
+let ws = null;
+let currentSymbol = 'BTCUSDT';
+let isAutoMode = false;
+let autoInterval = null;
+let foundOrders = [];
+let isRunning = false;
+let lastNotificationTime = 0;
+const NOTIFICATION_COOLDOWN = 3000; // Не чаще 1 раза в 3 секунды
+
+// Заполняем select
+const select = document.getElementById('coinSelect');
+SYMBOLS.forEach(sym => {
+    const opt = document.createElement('option');
+    opt.value = sym;
+    opt.textContent = sym.replace('USDT', '');
+    if (sym === 'BTCUSDT') opt.selected = true;
+    select.appendChild(opt);
+});
+document.getElementById('totalCoins').textContent = SYMBOLS.length;
+
+// ============================================================
+// ПОДКЛЮЧЕНИЕ К WEBSOCKET BYBIT
+// ============================================================
+function connect(symbol) {
+    if (ws) { 
+        try { ws.close(); } catch(e) {}
+    }
+    
+    const threshold = parseFloat(document.getElementById('threshold').value) || 30000;
+    const topic = `orderbook.200.${symbol}`;
+    const wsUrl = `wss://stream.bybit.com/v5/public/spot`;
+    
+    document.getElementById('status').textContent = `🔄 ${symbol.replace('USDT','')}`;
+    document.getElementById('orders').innerHTML = `<div class="empty"><span class="big">⏳</span>Подключение к ${symbol}...</div>`;
+    
+    ws = new WebSocket(wsUrl);
+    let pingInterval = null;
+    let reconnectAttempts = 0;
+    
+    ws.onopen = () => {
+        ws.send(JSON.stringify({
+            op: "subscribe",
+            args: [topic]
+        }));
+        showToast(`✅ Подключён: ${symbol.replace('USDT','')}`);
+        document.getElementById('status').textContent = `🟢 ${symbol.replace('USDT','')}`;
+        reconnectAttempts = 0;
+        
+        pingInterval = setInterval(() => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ op: "ping" }));
+            }
+        }, 15000);
+    };
+    
+    ws.onmessage = (event) => {
+        try {
+            const msg = JSON.parse(event.data);
+            if (msg.type === 'snapshot' || msg.type === 'delta') {
+                const data = msg.data || msg;
+                const bids = data.b || [];
+                const asks = data.a || [];
+                processOrders(symbol, bids, asks, threshold);
+            }
+        } catch(e) {}
+    };
+    
+    ws.onclose = () => {
+        clearInterval(pingInterval);
+        document.getElementById('status').textContent = '❌ Отключён';
+        if (isRunning) {
+            reconnectAttempts++;
+            const delay = Math.min(3000 + reconnectAttempts * 1000, 10000);
+            showToast(`⚠️ Переподключение через ${delay/1000}с...`);
+            setTimeout(() => {
+                if (isRunning) {
+                    connect(currentSymbol);
+                }
+            }, delay);
+        }
+    };
+    
+    ws.onerror = () => {
+        document.getElementById('status').textContent = '⚠️ Ошибка';
+    };
+}
+
+// ============================================================
+// ОБРАБОТКА ЗАЯВОК
+// ============================================================
+function processOrders(symbol, bids, asks, threshold) {
+    const allOrders = [];
+    
+    bids.forEach(([price, qty]) => {
+        const p = parseFloat(price);
+        const q = parseFloat(qty);
+        const usd = p * q;
+        if (usd > threshold) {
+            allOrders.push({ symbol, side: 'buy', price: p, qty: q, usd });
+        }
+    });
+    
+    asks.forEach(([price, qty]) => {
+        const p = parseFloat(price);
+        const q = parseFloat(qty);
+        const usd = p * q;
+        if (usd > threshold) {
+            allOrders.push({ symbol, side: 'sell', price: p, qty: q, usd });
+        }
+    });
+    
+    allOrders.sort((a,b) => b.usd - a.usd);
+    foundOrders = allOrders;
+    document.getElementById('foundCount').textContent = allOrders.length;
+    
+    if (allOrders.length === 0) {
+        document.getElementById('orders').innerHTML = `<div class="empty"><span class="big">🔍</span>Крупных заявок в ${symbol.replace('USDT','')} нет</div>`;
+        return;
+    }
+    
+    // --- ВОСПРОИЗВЕДЕНИЕ ЗВУКА ---
+    const soundEnabled = document.getElementById('soundEnabled').checked;
+    sound.enabled = soundEnabled;
+    if (soundEnabled) {
+        sound.playBoom();
+        // Небольшая задержка для второго звука (эффект эха)
+        setTimeout(() => sound.playAlert(), 150);
+    }
+    
+    // --- ОТПРАВКА PUSH-УВЕДОМЛЕНИЯ ---
+    const notifEnabled = document.getElementById('notifEnabled').checked;
+    notifier.enabled = notifEnabled;
+    if (notifEnabled) {
+        const now = Date.now();
+        if (now - lastNotificationTime > NOTIFICATION_COOLDOWN) {
+            const top = allOrders[0];
+            const sideEmoji = top.side === 'buy' ? '🟢' : '🔴';
+            const sideText = top.side === 'buy' ? 'ПОКУПКА' : 'ПРОДАЖА';
+            notifier.send(
+                `🐋 КИТОВАЯ ЗАЯВКА! ${top.symbol.replace('USDT','')}`,
+                `${sideEmoji} ${sideText} $${top.usd.toLocaleString()} · Цена: $${top.price.toFixed(2)}`,
+                'https://cryptologos.cc/logos/bitcoin-btc-logo.png'
+            );
+            lastNotificationTime = now;
+        }
+    }
+    
+    // --- ОБНОВЛЕНИЕ UI ---
+    let html = `<div class="badge" style="display:inline-block;margin-bottom:8px;">🔔 ${allOrders.length} крупных заявок</div>`;
+    
+    allOrders.slice(0, 20).forEach(order => {
+        const sideClass = order.side === 'buy' ? 'buy' : 'sell';
+        const sideLabel = order.side === 'buy' ? '🟢 BUY' : '🔴 SELL';
+        html += `
+            <div class="order ${order.side === 'sell' ? 'sell' : ''}">
+                <div class="left">
+                    <div class="symbol">${order.symbol.replace('USDT','')} <span class="side ${sideClass}">${sideLabel}</span></div>
+                    <div class="amount">${order.qty.toFixed(4)} BTC · $${order.usd.toLocaleString()}</div>
+                </div>
+                <div class="price">$${order.price.toFixed(2)}</div>
+            </div>
+        `;
+    });
+    
+    document.getElementById('orders').innerHTML = html;
+    
+    // Вибрация
+    if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+}
+
+// ============================================================
+// УПРАВЛЕНИЕ СКАНЕРОМ
+// ============================================================
+function toggleScanner() {
+    const btn = document.getElementById('mainBtn');
+    
+    if (isRunning) {
+        // Остановка
+        if (ws) { try { ws.close(); } catch(e) {} }
+        ws = null;
+        isRunning = false;
+        clearInterval(autoInterval);
+        isAutoMode = false;
+        document.getElementById('status').textContent = '⏹ Остановлен';
+        document.getElementById('scanStatus').textContent = 'выключено';
+        document.getElementById('scanStatus').style.color = '#848e9c';
+        document.getElementById('orders').innerHTML = `<div class="empty"><span class="big">⏸</span>Сканирование приостановлено</div>`;
+        btn.textContent = '▶ Старт';
+        btn.className = '';
+        showToast('⏹ Остановлено');
+        return;
+    }
+    
+    // Запуск
+    isRunning = true;
+    btn.textContent = '⏹ Стоп';
+    btn.className = 'stop';
+    
+    const threshold = parseFloat(document.getElementById('threshold').value) || 30000;
+    const selected = document.getElementById('coinSelect').value;
+    currentSymbol = selected;
+    connect(currentSymbol);
+    showToast(`▶ Запущен сканер ${selected.replace('USDT','')}`);
+}
+
+// Переключение монеты вручную
+document.getElementById('coinSelect').addEventListener('change', function() {
+    if (isRunning && !isAutoMode) {
+        const selected = this.value;
+        currentSymbol = selected;
+        connect(selected);
+        showToast(`🔄 Переключено на ${selected.replace('USDT','')}`);
+    }
+});
+
+// ============================================================
+// АВТО-РЕЖИМ (вызывается из консоли)
+// ============================================================
+function startAutoMode() {
+    if (!isRunning) {
+        showToast('⚠️ Сначала нажмите «Старт»');
+        return;
+    }
+    isAutoMode = true;
+    document.getElementById('scanStatus').textContent = '🔁 включён (сканирование по кругу)';
+    document.getElementById('scanStatus').style.color = '#0ecb81';
+    showToast('🔄 Авто-режим включён');
+    switchToNext();
+}
+
+function switchToNext() {
+    if (!isAutoMode || !isRunning) return;
+    const currentIdx = SYMBOLS.indexOf(currentSymbol);
+    const nextIdx = (currentIdx + 1) % SYMBOLS.length;
+    currentSymbol = SYMBOLS[nextIdx];
+    document.getElementById('coinSelect').value = currentSymbol;
+    connect(currentSymbol);
+    
+    clearInterval(autoInterval);
+    autoInterval = setInterval(() => {
+        if (isAutoMode && isRunning && ws) {
+            ws.close();
+        }
+    }, 15000);
+}
+
+function stopAutoMode() {
+    isAutoMode = false;
+    clearInterval(autoInterval);
+    document.getElementById('scanStatus').textContent = 'выключено';
+    document.getElementById('scanStatus').style.color = '#848e9c';
+    showToast('⏹ Авто-режим остановлен');
+}
+
+// ============================================================
+// ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+// ============================================================
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+console.log('🐋 Команды:');
+console.log('  startAutoMode() — включить автоскан всех 300 монет');
+console.log('  stopAutoMode()  — выключить автоскан');
+console.log('  sound.playBoom() — тест звука');
+</script>
+</body>
+</html>
