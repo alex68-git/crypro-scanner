@@ -32,9 +32,9 @@
         const notificationsDiv = document.getElementById('notifications');
         const statusDiv = document.getElementById('status');
 
-        // Оптимизация: заявки от 500к и 10 уровней глубины
+        // Порог и глубины (стабильный вариант)
         const USDT_THRESHOLD = 500000;
-        const DEPTH_LEVELS = 10;
+        const DEPTH_LEVELS = 50;
 
         function sendNotification(title, body) {
             if (Notification.permission === "granted") {
@@ -55,7 +55,7 @@
             const json = await response.json();
             const allTickers = json.result.list;
 
-            // 2. Фильтрация USDT + сортировка по обороту (turnover24h) + срез топ-180
+            // 2. Фильтрация USDT + сортировка по обороту + срез топ-180
             const topCoins = allTickers
                 .filter(coin => coin.symbol.endsWith('USDT'))
                 .sort((a, b) => parseFloat(b.turnover24h) - parseFloat(a.turnover24h))
@@ -72,10 +72,10 @@
                 statusDiv.innerText = "Сканирование 180 монет (Активно)";
                 statusDiv.style.color = "#27ae60";
                 
-                // 4. Подписка на стаканы (10 уровней глубины)
+                // 4. Подписка на стаканы (стабильные 50 уровней)
                 const subscribeMsg = {
                     "op": "subscribe",
-                    "args": symbols.map(sym => `orderbook.10.${sym}`)
+                    "args": symbols.map(sym => `orderbook.50.${sym}`)
                 };
                 ws.send(JSON.stringify(subscribeMsg));
             };
