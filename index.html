@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Bybit Whale Scanner (Level 2)</title>
+    <title>Bybit Whale Scanner</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
                          Roboto, sans-serif;
-            background-color: #0b0e11;
+            background: #0b0e11;
             color: #eaecef;
             margin: 0;
             padding: 15px;
@@ -18,7 +22,7 @@
 
         h1 {
             font-size: 20px;
-            margin-bottom: 10px;
+            margin: 0 0 15px 0;
         }
 
         .header {
@@ -30,58 +34,71 @@
 
         .settings {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
-        button {
+        button,
+        select {
             background: #f7931a;
             border: none;
             color: #1e2329;
-            padding: 10px 20px;
+            padding: 10px 14px;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        button:active {
-            opacity: 0.7;
-        }
-
-        .list {
-            margin-top: 15px;
-        }
-
-        .notification {
+        select {
             background: #2b3139;
-            border-left: 4px solid #f7931a;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 6px;
-            font-size: 14px;
+            color: #eaecef;
         }
 
-        .buy {
-            border-left-color: #27ae60;
+        button:hover {
+            opacity: 0.9;
         }
 
-        .sell {
-            border-left-color: #e74c3c;
+        button.stop {
+            background: #e74c3c;
+            color: white;
         }
 
-        .time {
+        button.pause {
+            background: #3498db;
+            color: white;
+        }
+
+        button.clear {
+            background: #555;
+            color: white;
+        }
+
+        .status {
             color: #848e9c;
-            font-size: 12px;
+            font-size: 13px;
         }
 
         .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .stat {
             background: #161a1e;
-            padding: 12px;
             border-radius: 8px;
-            margin-top: 10px;
-            font-size: 13px;
-            line-height: 1.7;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 4px;
         }
 
         .green {
@@ -96,10 +113,96 @@
             color: #e74c3c;
         }
 
-        .empty {
+        .blue {
+            color: #3498db;
+        }
+
+        .section-title {
+            font-size: 14px;
             color: #848e9c;
+            margin: 15px 0 8px;
+        }
+
+        /*
+         * ВАЖНО:
+         * Список сигналов НЕ прокручивается автоматически.
+         * У него фиксированная высота.
+         */
+        .list {
+            height: 65vh;
+            min-height: 350px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .notification {
+            background: #1e2329;
+            padding: 14px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border-left: 5px solid #f7931a;
+            font-size: 14px;
+        }
+
+        .notification.buy {
+            border-left-color: #27ae60;
+        }
+
+        .notification.sell {
+            border-left-color: #e74c3c;
+        }
+
+        .coin {
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .side {
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .amount {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 7px 0;
+        }
+
+        .details {
+            color: #b7bdc6;
+            line-height: 1.7;
+            font-size: 13px;
+        }
+
+        .time {
+            color: #848e9c;
+            font-size: 11px;
+            margin-top: 7px;
+        }
+
+        .empty {
             text-align: center;
-            padding: 30px 10px;
+            color: #848e9c;
+            padding: 50px 15px;
+        }
+
+        .paused {
+            opacity: 0.7;
+        }
+
+        @media (max-width: 600px) {
+
+            .stats {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+
+            .list {
+                height: 60vh;
+            }
+
+            .amount {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
@@ -108,56 +211,120 @@
 
 <div class="header">
 
-    <h1>🐋 Bybit Whale Scanner (Level 2)</h1>
+    <h1>🐋 Bybit Whale Scanner</h1>
 
     <div class="settings">
 
         <button onclick="startScan()">
-            ▶ Запустить сканер
+            ▶ Запуск
         </button>
 
-        <button onclick="stopScan()">
+        <button class="stop" onclick="stopScan()">
             ⏹ Стоп
         </button>
 
-        <button onclick="clearNotifications()">
+        <button class="pause" onclick="toggleDisplayPause()">
+            ⏸ Пауза экрана
+        </button>
+
+        <button class="clear" onclick="clearNotifications()">
             🗑 Очистить
         </button>
 
     </div>
 
-    <div class="time">
+
+    <div class="settings">
+
+        <label>
+            Подтверждение заявки:
+        </label>
+
+        <select id="stabilitySelect">
+            <option value="3">3 секунды</option>
+            <option value="5">5 секунд</option>
+            <option value="10">10 секунд</option>
+        </select>
+
+    </div>
+
+
+    <div class="status">
+
         Статус:
-        <span id="status" style="color:#848e9c;">
+        <span id="status">
             Остановлен
         </span>
+
     </div>
+
 
     <div class="stats">
 
-        <div>
-            Монет:
-            <span id="coinCount">0</span>
+        <div class="stat">
+
+            Монет
+
+            <span
+                class="stat-value"
+                id="coinCount"
+            >
+                0
+            </span>
+
         </div>
 
-        <div>
-            WebSocket:
-            <span id="wsStatus">Отключен</span>
+
+        <div class="stat">
+
+            WebSocket
+
+            <span
+                class="stat-value"
+                id="wsStatus"
+            >
+                OFF
+            </span>
+
         </div>
 
-        <div>
-            Обработано заявок:
-            <span id="orderCount">0</span>
+
+        <div class="stat">
+
+            Сигналов
+
+            <span
+                class="stat-value"
+                id="signalCount"
+            >
+                0
+            </span>
+
         </div>
 
     </div>
 
 </div>
 
-<div id="notifications" class="list">
 
-    <div class="empty" id="emptyMessage">
-        Запусти сканер — здесь появятся крупные заявки.
+<div class="section-title">
+
+    🐋 Подтверждённые крупные заявки
+
+</div>
+
+
+<div
+    id="notifications"
+    class="list"
+>
+
+    <div
+        id="emptyMessage"
+        class="empty"
+    >
+        Запусти сканер.<br>
+        Здесь появятся подтверждённые заявки.
     </div>
 
 </div>
@@ -166,48 +333,59 @@
 <script>
 
 /* =========================================================
-   НАСТРОЙКИ
+   ОСНОВНЫЕ НАСТРОЙКИ
 ========================================================= */
 
-// Сколько монет сканируем
-const MAX_SYMBOLS = 180;
+// Теперь сканируем только TOP-100
+const MAX_SYMBOLS = 100;
 
 // Глубина стакана
 const ORDERBOOK_DEPTH = 50;
 
-// Сколько заявка должна находиться выше порога
-const STABILITY_TIME = 3;
-
-// Обновляем список монет раз в 5 минут
+// Обновляем рейтинг монет каждые 5 минут
 const SYMBOL_REFRESH_TIME = 5 * 60 * 1000;
 
-// Минимальные размеры заявок
+// Максимум сигналов на экране
+const MAX_SIGNALS = 50;
+
+// Минимальное время между повторными
+// сигналами одной и той же заявки
+const ALERT_COOLDOWN = 10000;
+
+
+/* =========================================================
+   ПОРОГИ
+=========================================================
+
+   1–5      = $500,000
+   6–20     = $300,000
+   21–50    = $180,000
+   51–100   = $100,000
+
+========================================================= */
+
 const THRESHOLDS = {
 
-    // 1–5
     top5: 500000,
 
-    // 6–20
     top20: 300000,
 
-    // 21–50
     top50: 180000,
 
-    // 51–100
-    top100: 100000,
+    top100: 100000
 
-    // 101–180
-    rest: 50000
 };
 
 
 /* =========================================================
-   ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+   СОСТОЯНИЕ
 ========================================================= */
 
 let ws = null;
 
 let isRunning = false;
+
+let displayPaused = false;
 
 let reconnectTimer = null;
 
@@ -215,35 +393,50 @@ let symbolRefreshTimer = null;
 
 let heartbeatTimer = null;
 
-// Список монет
+
+/*
+ * Список TOP-100
+ */
 const symbols = [];
 
-// Рейтинг монет
+
+/*
+ * Рейтинг:
+ *
+ * BTCUSDT -> 1
+ * ETHUSDT -> 2
+ * ...
+ */
 const symbolRanks = new Map();
 
-// Локальные стаканы
-//
-// symbol -> {
-//     bids: Map(price -> qty),
-//     asks: Map(price -> qty)
-// }
+
+/*
+ * Локальные стаканы.
+ */
 const orderBooks = new Map();
 
-// Заявки, которые уже наблюдаем
-//
-// key -> {
-//     firstSeen,
-//     lastValue,
-//     lastSeen,
-//     side,
-//     price,
-//     symbol
-// }
+
+/*
+ * Заявки, которые мы отслеживаем.
+ */
 const stableOrders = new Map();
 
-// Чтобы не спамить одинаковыми уведомлениями
+
+/*
+ * Последние сигналы по заявкам.
+ */
 const alertedOrders = new Map();
 
+
+/*
+ * Счётчик сигналов.
+ */
+let signalCount = 0;
+
+
+/* =========================================================
+   DOM
+========================================================= */
 
 const notificationsDiv =
     document.getElementById("notifications");
@@ -257,44 +450,77 @@ const wsStatusDiv =
 const coinCountDiv =
     document.getElementById("coinCount");
 
-const orderCountDiv =
-    document.getElementById("orderCount");
+const signalCountDiv =
+    document.getElementById("signalCount");
+
+const stabilitySelect =
+    document.getElementById("stabilitySelect");
 
 
 /* =========================================================
-   ПОЛУЧАЕМ ПОРОГ ДЛЯ КОНКРЕТНОЙ МОНЕТЫ
+   ПОЛУЧЕНИЕ ТЕКУЩЕГО ВРЕМЕНИ ПОДТВЕРЖДЕНИЯ
+========================================================= */
+
+function getStabilityTime() {
+
+    return parseInt(
+        stabilitySelect.value
+    ) || 3;
+
+}
+
+
+/* =========================================================
+   ПОЛУЧЕНИЕ ПОРОГА
 ========================================================= */
 
 function getThreshold(symbol) {
 
-    const rank = symbolRanks.get(symbol);
+    const rank =
+        symbolRanks.get(symbol);
 
     if (!rank) {
-        return THRESHOLDS.rest;
-    }
 
-    // 1–5
-    if (rank <= 5) {
-        return THRESHOLDS.top5;
-    }
-
-    // 6–20
-    if (rank <= 20) {
-        return THRESHOLDS.top20;
-    }
-
-    // 21–50
-    if (rank <= 50) {
-        return THRESHOLDS.top50;
-    }
-
-    // 51–100
-    if (rank <= 100) {
         return THRESHOLDS.top100;
+
     }
 
-    // 101–180
-    return THRESHOLDS.rest;
+
+    /*
+     * 1–5
+     */
+    if (rank <= 5) {
+
+        return THRESHOLDS.top5;
+
+    }
+
+
+    /*
+     * 6–20
+     */
+    if (rank <= 20) {
+
+        return THRESHOLDS.top20;
+
+    }
+
+
+    /*
+     * 21–50
+     */
+    if (rank <= 50) {
+
+        return THRESHOLDS.top50;
+
+    }
+
+
+    /*
+     * 51–100
+     */
+    return THRESHOLDS.top100;
+
 }
 
 
@@ -310,6 +536,7 @@ function formatMoney(value) {
             maximumFractionDigits: 0
         }
     );
+
 }
 
 
@@ -320,51 +547,57 @@ function formatMoney(value) {
 function formatThreshold(value) {
 
     if (value >= 1000000) {
-        return "$" + (value / 1000000).toFixed(1) + "M";
+
+        return "$" +
+            (value / 1000000).toFixed(1) +
+            "M";
+
     }
 
-    return "$" + (value / 1000).toFixed(0) + "K";
+    return "$" +
+        (value / 1000).toFixed(0) +
+        "K";
+
 }
 
 
 /* =========================================================
-   УВЕДОМЛЕНИЕ
+   УВЕДОМЛЕНИЕ БРАУЗЕРА
 ========================================================= */
 
-function sendNotification(title, body) {
+function sendNotification(
+    title,
+    body
+) {
 
-    // Браузер может не поддерживать Notification
-    if (!("Notification" in window)) {
+    if (
+        !("Notification" in window)
+    ) {
+
         return;
+
     }
 
-    if (Notification.permission === "granted") {
 
-        new Notification(title, {
-            body: body
-        });
+    if (
+        Notification.permission ===
+        "granted"
+    ) {
 
-    } else if (Notification.permission !== "denied") {
+        new Notification(
+            title,
+            {
+                body: body
+            }
+        );
 
-        Notification.requestPermission()
-            .then(permission => {
-
-                if (permission === "granted") {
-
-                    new Notification(title, {
-                        body: body
-                    });
-
-                }
-
-            })
-            .catch(() => {});
     }
+
 }
 
 
 /* =========================================================
-   ДОБАВЛЕНИЕ СИГНАЛА НА ЭКРАН
+   ДОБАВЛЕНИЕ СИГНАЛА
 ========================================================= */
 
 function addNotification(
@@ -376,67 +609,145 @@ function addNotification(
     threshold
 ) {
 
-    const emptyMessage =
-        document.getElementById("emptyMessage");
+    /*
+     * Если отображение поставлено
+     * на паузу — сигнал НЕ теряется
+     * в логике сканера, но не появляется
+     * на экране.
+     */
+    if (displayPaused) {
 
-    if (emptyMessage) {
-        emptyMessage.remove();
+        return;
+
     }
 
-    const div =
-        document.createElement("div");
 
-    div.className =
-        "notification " +
-        (side === "Buy" ? "buy" : "sell");
+    const empty =
+        document.getElementById(
+            "emptyMessage"
+        );
+
+
+    if (empty) {
+
+        empty.remove();
+
+    }
+
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
 
     const sideText =
         side === "Buy"
             ? "🟢 BUY"
             : "🔴 SELL";
 
+
+    const sideClass =
+        side === "Buy"
+            ? "buy"
+            : "sell";
+
+
+    div.className =
+        "notification " +
+        sideClass;
+
+
     div.innerHTML = `
 
-        <b>🐋 ${symbol}</b>
+        <div class="coin">
 
-        <br>
+            🐋 ${symbol}
 
-        ${sideText}
+            <span class="side">
+                ${sideText}
+            </span>
 
-        <br>
+        </div>
 
-        💰 Заявка:
-        <b>$${formatMoney(value)}</b>
 
-        <br>
+        <div class="amount">
 
-        💵 Цена:
-        ${price}
+            $${formatMoney(value)}
 
-        <br>
+        </div>
 
-        📊 Рейтинг:
-        #${rank}
 
-        <br>
+        <div class="details">
 
-        🎯 Порог:
-        ${formatThreshold(threshold)}
+            💵 Цена:
+            <b>${price}</b>
 
-        <br>
+            <br>
 
-        <span class="time">
+            📊 Рейтинг:
+            <b>#${rank}</b>
+
+            <br>
+
+            🎯 Порог:
+            <b>${formatThreshold(threshold)}</b>
+
+        </div>
+
+
+        <div class="time">
+
+            Сигнал:
             ${new Date().toLocaleTimeString()}
-        </span>
+
+        </div>
 
     `;
 
-    notificationsDiv.prepend(div);
+
+    /*
+     * ВАЖНО:
+     *
+     * Добавляем в конец,
+     * а не prepend().
+     *
+     * Поэтому экран не будет
+     * постоянно прыгать.
+     */
+    notificationsDiv.appendChild(
+        div
+    );
+
+
+    /*
+     * Если сигналов стало больше 50,
+     * удаляем самый старый.
+     */
+    while (
+        notificationsDiv
+            .children
+            .length > MAX_SIGNALS
+    ) {
+
+        notificationsDiv
+            .removeChild(
+                notificationsDiv.firstElementChild
+            );
+
+    }
+
+
+    signalCount++;
+
+    signalCountDiv.innerText =
+        signalCount;
+
 }
 
 
 /* =========================================================
-   ПОЛУЧАЕМ 180 МОНЕТ
+   ЗАГРУЗКА TOP-100
 ========================================================= */
 
 async function loadSymbols() {
@@ -444,7 +755,7 @@ async function loadSymbols() {
     try {
 
         statusDiv.innerText =
-            "Загрузка списка монет...";
+            "Загрузка TOP-100...";
 
         statusDiv.style.color =
             "#f7931a";
@@ -457,9 +768,12 @@ async function loadSymbols() {
 
 
         if (!response.ok) {
+
             throw new Error(
-                "HTTP " + response.status
+                "HTTP " +
+                response.status
             );
+
         }
 
 
@@ -469,49 +783,53 @@ async function loadSymbols() {
 
         if (
             !json.result ||
-            !Array.isArray(json.result.list)
+            !Array.isArray(
+                json.result.list
+            )
         ) {
 
             throw new Error(
                 "Некорректный ответ Bybit"
             );
+
         }
 
 
-        const allTickers =
-            json.result.list;
-
-
         /*
-         * Оставляем только USDT-перпа.
+         * Только USDT perpetual.
          */
         const topCoins =
-            allTickers
+            json.result.list
 
-                .filter(coin => {
-
-                    return (
+                .filter(
+                    coin =>
                         coin.symbol &&
-                        coin.symbol.endsWith("USDT") &&
-                        parseFloat(coin.turnover24h) > 0
-                    );
+                        coin.symbol.endsWith(
+                            "USDT"
+                        ) &&
+                        parseFloat(
+                            coin.turnover24h
+                        ) > 0
+                )
 
-                })
+                .sort(
+                    (a, b) =>
+                        parseFloat(
+                            b.turnover24h
+                        ) -
+                        parseFloat(
+                            a.turnover24h
+                        )
+                )
 
-                .sort((a, b) => {
-
-                    return (
-                        parseFloat(b.turnover24h) -
-                        parseFloat(a.turnover24h)
-                    );
-
-                })
-
-                .slice(0, MAX_SYMBOLS);
+                .slice(
+                    0,
+                    MAX_SYMBOLS
+                );
 
 
         /*
-         * Очищаем старый список.
+         * Очищаем старый рейтинг.
          */
         symbols.length = 0;
 
@@ -519,25 +837,30 @@ async function loadSymbols() {
 
 
         /*
-         * Записываем новые монеты
-         * и их место в рейтинге.
+         * Заполняем TOP-100.
          */
-        topCoins.forEach((coin, index) => {
+        topCoins.forEach(
+            (coin, index) => {
 
-            const symbol =
-                coin.symbol;
+                const symbol =
+                    coin.symbol;
 
-            const rank =
-                index + 1;
+                const rank =
+                    index + 1;
 
-            symbols.push(symbol);
 
-            symbolRanks.set(
-                symbol,
-                rank
-            );
+                symbols.push(
+                    symbol
+                );
 
-        });
+
+                symbolRanks.set(
+                    symbol,
+                    rank
+                );
+
+            }
+        );
 
 
         coinCountDiv.innerText =
@@ -545,20 +868,8 @@ async function loadSymbols() {
 
 
         console.log(
-            "Загружено монет:",
-            symbols.length
-        );
-
-
-        console.log(
-            "ТОП-5:",
-            symbols.slice(0, 5)
-        );
-
-
-        console.log(
-            "6-20:",
-            symbols.slice(5, 20)
+            "TOP-100 загружен:",
+            symbols
         );
 
 
@@ -568,28 +879,32 @@ async function loadSymbols() {
     } catch (error) {
 
         console.error(
-            "Ошибка загрузки монет:",
+            "Ошибка загрузки TOP-100:",
             error
         );
 
 
         statusDiv.innerText =
-            "Ошибка загрузки списка";
+            "Ошибка загрузки";
 
         statusDiv.style.color =
             "#e74c3c";
 
 
         return false;
+
     }
+
 }
 
 
 /* =========================================================
-   СОЗДАЁМ ПУСТОЙ СТАКАН
+   СОЗДАНИЕ СТАКАНА
 ========================================================= */
 
-function createOrderBook(symbol) {
+function createOrderBook(
+    symbol
+) {
 
     orderBooks.set(
         symbol,
@@ -598,176 +913,218 @@ function createOrderBook(symbol) {
             asks: new Map()
         }
     );
+
 }
 
 
 /* =========================================================
-   ПРИМЕНЕНИЕ SNAPSHOT
+   SNAPSHOT
 ========================================================= */
 
-function applySnapshot(symbol, data) {
+function applySnapshot(
+    symbol,
+    data
+) {
 
-    createOrderBook(symbol);
+    createOrderBook(
+        symbol
+    );
+
 
     const book =
-        orderBooks.get(symbol);
+        orderBooks.get(
+            symbol
+        );
 
 
     /*
-     * BIDS
+     * BID
      */
-    if (Array.isArray(data.b)) {
+    if (
+        Array.isArray(data.b)
+    ) {
 
-        data.b.forEach(order => {
+        data.b.forEach(
+            order => {
 
-            const price =
-                String(order[0]);
+                const price =
+                    String(order[0]);
 
-            const qty =
-                parseFloat(order[1]);
+                const qty =
+                    parseFloat(
+                        order[1]
+                    );
 
-            if (
-                !isNaN(qty) &&
-                qty > 0
-            ) {
 
-                book.bids.set(
-                    price,
-                    qty
-                );
+                if (
+                    qty > 0
+                ) {
+
+                    book.bids.set(
+                        price,
+                        qty
+                    );
+
+                }
+
             }
-
-        });
+        );
 
     }
 
 
     /*
-     * ASKS
+     * ASK
      */
-    if (Array.isArray(data.a)) {
+    if (
+        Array.isArray(data.a)
+    ) {
 
-        data.a.forEach(order => {
+        data.a.forEach(
+            order => {
 
-            const price =
-                String(order[0]);
+                const price =
+                    String(order[0]);
 
-            const qty =
-                parseFloat(order[1]);
+                const qty =
+                    parseFloat(
+                        order[1]
+                    );
 
-            if (
-                !isNaN(qty) &&
-                qty > 0
-            ) {
 
-                book.asks.set(
-                    price,
-                    qty
-                );
+                if (
+                    qty > 0
+                ) {
+
+                    book.asks.set(
+                        price,
+                        qty
+                    );
+
+                }
+
             }
-
-        });
+        );
 
     }
+
 }
 
 
 /* =========================================================
-   ПРИМЕНЕНИЕ DELTA
+   DELTA
 ========================================================= */
 
-function applyDelta(symbol, data) {
+function applyDelta(
+    symbol,
+    data
+) {
 
-    /*
-     * Если по какой-то причине
-     * стакана ещё нет — ждём snapshot.
-     */
-    if (!orderBooks.has(symbol)) {
+    if (
+        !orderBooks.has(
+            symbol
+        )
+    ) {
+
         return;
+
     }
 
 
     const book =
-        orderBooks.get(symbol);
+        orderBooks.get(
+            symbol
+        );
 
 
     /*
-     * Обновляем BID
+     * BID
      */
-    if (Array.isArray(data.b)) {
+    if (
+        Array.isArray(data.b)
+    ) {
 
-        data.b.forEach(order => {
+        data.b.forEach(
+            order => {
 
-            const price =
-                String(order[0]);
+                const price =
+                    String(order[0]);
 
-            const qty =
-                parseFloat(order[1]);
+                const qty =
+                    parseFloat(
+                        order[1]
+                    );
 
 
-            /*
-             * qty = 0 означает,
-             * что заявку нужно удалить.
-             */
-            if (
-                isNaN(qty) ||
-                qty === 0
-            ) {
+                if (
+                    qty === 0
+                ) {
 
-                book.bids.delete(price);
+                    book.bids.delete(
+                        price
+                    );
 
-            } else {
+                } else {
 
-                book.bids.set(
-                    price,
-                    qty
-                );
+                    book.bids.set(
+                        price,
+                        qty
+                    );
+
+                }
 
             }
-
-        });
+        );
 
     }
 
 
     /*
-     * Обновляем ASK
+     * ASK
      */
-    if (Array.isArray(data.a)) {
+    if (
+        Array.isArray(data.a)
+    ) {
 
-        data.a.forEach(order => {
+        data.a.forEach(
+            order => {
 
-            const price =
-                String(order[0]);
+                const price =
+                    String(order[0]);
 
-            const qty =
-                parseFloat(order[1]);
+                const qty =
+                    parseFloat(
+                        order[1]
+                    );
 
 
-            if (
-                isNaN(qty) ||
-                qty === 0
-            ) {
+                if (
+                    qty === 0
+                ) {
 
-                book.asks.delete(price);
+                    book.asks.delete(
+                        price
+                    );
 
-            } else {
+                } else {
 
-                book.asks.set(
-                    price,
-                    qty
-                );
+                    book.asks.set(
+                        price,
+                        qty
+                    );
+
+                }
 
             }
-
-        });
+        );
 
     }
+
 }
 
 
 /* =========================================================
-   АНАЛИЗ ОДНОЙ ЗАЯВКИ
+   ПРОВЕРКА ОДНОЙ ЗАЯВКИ
 ========================================================= */
 
 function checkOrder(
@@ -785,58 +1142,71 @@ function checkOrder(
 
 
     if (
-        !isFinite(priceNumber) ||
-        !isFinite(qtyNumber) ||
+        !isFinite(
+            priceNumber
+        ) ||
+        !isFinite(
+            qtyNumber
+        ) ||
         priceNumber <= 0 ||
         qtyNumber <= 0
     ) {
 
         return;
+
     }
 
 
     /*
-     * Стоимость заявки в USDT.
+     * Размер заявки в USDT.
      */
     const value =
-        priceNumber * qtyNumber;
+        priceNumber *
+        qtyNumber;
 
 
     /*
-     * Получаем порог
-     * в зависимости от рейтинга монеты.
+     * Порог именно этой монеты.
      */
     const threshold =
-        getThreshold(symbol);
-
-
-    /*
-     * Если заявка меньше порога —
-     * удаляем старую запись.
-     */
-    if (value < threshold) {
-
-        const key =
-            `${symbol}_${side}_${price}`;
-
-        stableOrders.delete(key);
-
-        return;
-    }
+        getThreshold(
+            symbol
+        );
 
 
     const key =
         `${symbol}_${side}_${price}`;
+
+
+    /*
+     * Если ниже порога —
+     * прекращаем отслеживание.
+     */
+    if (
+        value < threshold
+    ) {
+
+        stableOrders.delete(
+            key
+        );
+
+        return;
+
+    }
+
 
     const now =
         Date.now();
 
 
     /*
-     * Если заявки ещё не было —
-     * начинаем отсчёт.
+     * Новая крупная заявка.
      */
-    if (!stableOrders.has(key)) {
+    if (
+        !stableOrders.has(
+            key
+        )
+    ) {
 
         stableOrders.set(
             key,
@@ -851,102 +1221,120 @@ function checkOrder(
         );
 
         return;
+
     }
 
 
     const order =
-        stableOrders.get(key);
+        stableOrders.get(
+            key
+        );
 
 
     /*
-     * Обновляем время последнего появления.
+     * Обновляем информацию.
      */
-    order.lastSeen = now;
+    order.lastSeen =
+        now;
 
-    order.lastValue = value;
+    order.lastValue =
+        value;
 
 
     /*
-     * Проверяем,
-     * сколько заявка существует.
+     * Сколько заявка
+     * находится выше порога.
      */
     const aliveTime =
-        now - order.firstSeen;
+        now -
+        order.firstSeen;
+
+
+    const requiredTime =
+        getStabilityTime() *
+        1000;
+
+
+    /*
+     * Ещё не достаточно времени.
+     */
+    if (
+        aliveTime <
+        requiredTime
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+     * Проверяем cooldown.
+     */
+    const lastAlert =
+        alertedOrders.get(
+            key
+        ) || 0;
 
 
     if (
-        aliveTime >=
-        STABILITY_TIME * 1000
+        now -
+        lastAlert <
+        ALERT_COOLDOWN
     ) {
 
-
-        /*
-         * Защита от мгновенного
-         * повторного уведомления.
-         */
-        const lastAlert =
-            alertedOrders.get(key) || 0;
-
-
-        /*
-         * Не сигналим по одной
-         * и той же цене чаще,
-         * чем раз в 10 секунд.
-         */
-        if (
-            now - lastAlert < 10000
-        ) {
-
-            return;
-        }
-
-
-        alertedOrders.set(
-            key,
-            now
-        );
-
-
-        const rank =
-            symbolRanks.get(symbol);
-
-
-        /*
-         * Уведомление браузера.
-         */
-        sendNotification(
-
-            `🐋 ${symbol} ${side}`,
-
-            `Заявка $${formatMoney(value)} | ` +
-            `Цена ${price}`
-
-        );
-
-
-        /*
-         * Вывод на страницу.
-         */
-        addNotification(
-
-            symbol,
-            side,
-            price,
-            value,
-            rank,
-            threshold
-
-        );
-
-
-        /*
-         * После сигнала
-         * начинаем отслеживать
-         * эту заявку заново.
-         */
-        stableOrders.delete(key);
+        return;
 
     }
+
+
+    alertedOrders.set(
+        key,
+        now
+    );
+
+
+    const rank =
+        symbolRanks.get(
+            symbol
+        );
+
+
+    /*
+     * Уведомление.
+     */
+    sendNotification(
+
+        `🐋 ${symbol} ${side}`,
+
+        `Заявка $${formatMoney(value)} ` +
+        `| рейтинг #${rank}`
+
+    );
+
+
+    /*
+     * Сигнал на экране.
+     */
+    addNotification(
+
+        symbol,
+        side,
+        price,
+        value,
+        rank,
+        threshold
+
+    );
+
+
+    /*
+     * Чтобы не получить
+     * мгновенный повтор.
+     */
+    stableOrders.delete(
+        key
+    );
 
 }
 
@@ -955,25 +1343,35 @@ function checkOrder(
    АНАЛИЗ СТАКАНА
 ========================================================= */
 
-function analyzeOrderBook(symbol) {
+function analyzeOrderBook(
+    symbol
+) {
 
-    if (!orderBooks.has(symbol)) {
+    if (
+        !orderBooks.has(
+            symbol
+        )
+    ) {
+
         return;
+
     }
 
 
     const book =
-        orderBooks.get(symbol);
-
-
-    let counter = 0;
+        orderBooks.get(
+            symbol
+        );
 
 
     /*
-     * Анализируем BID
+     * BID
      */
     for (
-        const [price, qty]
+        const [
+            price,
+            qty
+        ]
         of book.bids
     ) {
 
@@ -984,15 +1382,17 @@ function analyzeOrderBook(symbol) {
             "Buy"
         );
 
-        counter++;
     }
 
 
     /*
-     * Анализируем ASK
+     * ASK
      */
     for (
-        const [price, qty]
+        const [
+            price,
+            qty
+        ]
         of book.asks
     ) {
 
@@ -1003,39 +1403,36 @@ function analyzeOrderBook(symbol) {
             "Sell"
         );
 
-        counter++;
     }
 
-
-    orderCountDiv.innerText =
-        counter.toLocaleString();
 }
 
 
 /* =========================================================
-   ОБРАБОТКА WEBSOCKET
+   WEBSOCKET MESSAGE
 ========================================================= */
 
-function handleWebSocketMessage(event) {
+function handleWebSocketMessage(
+    event
+) {
 
     try {
 
         const data =
-            JSON.parse(event.data);
+            JSON.parse(
+                event.data
+            );
 
 
-        /*
-         * Служебные сообщения
-         * пропускаем.
-         */
-        if (!data.topic) {
+        if (
+            !data.topic
+        ) {
+
             return;
+
         }
 
 
-        /*
-         * Проверяем orderbook.
-         */
         if (
             !data.topic.startsWith(
                 "orderbook."
@@ -1043,27 +1440,26 @@ function handleWebSocketMessage(event) {
         ) {
 
             return;
+
         }
 
 
         const parts =
-            data.topic.split(".");
+            data.topic.split(
+                "."
+            );
 
 
-        /*
-         * orderbook.50.BTCUSDT
-         *
-         * parts:
-         * [0] orderbook
-         * [1] 50
-         * [2] BTCUSDT
-         */
         const symbol =
             parts[2];
 
 
-        if (!symbol) {
+        if (
+            !symbol
+        ) {
+
             return;
+
         }
 
 
@@ -1071,7 +1467,8 @@ function handleWebSocketMessage(event) {
          * SNAPSHOT
          */
         if (
-            data.type === "snapshot"
+            data.type ===
+            "snapshot"
         ) {
 
             applySnapshot(
@@ -1086,7 +1483,8 @@ function handleWebSocketMessage(event) {
          * DELTA
          */
         else if (
-            data.type === "delta"
+            data.type ===
+            "delta"
         ) {
 
             applyDelta(
@@ -1098,20 +1496,23 @@ function handleWebSocketMessage(event) {
 
 
         /*
-         * После каждого обновления
-         * проверяем стакан.
+         * Анализируем
+         * обновлённый стакан.
          */
-        analyzeOrderBook(symbol);
+        analyzeOrderBook(
+            symbol
+        );
 
 
     } catch (error) {
 
         console.error(
-            "Ошибка обработки WS:",
+            "WS processing error:",
             error
         );
 
     }
+
 }
 
 
@@ -1125,68 +1526,75 @@ function startHeartbeat() {
 
 
     heartbeatTimer =
-        setInterval(() => {
+        setInterval(
+            () => {
 
-            if (
-                ws &&
-                ws.readyState === WebSocket.OPEN
-            ) {
+                if (
+                    ws &&
+                    ws.readyState ===
+                    WebSocket.OPEN
+                ) {
 
-                ws.send(
-                    JSON.stringify({
-                        op: "ping"
-                    })
-                );
+                    ws.send(
+                        JSON.stringify({
+                            op: "ping"
+                        })
+                    );
 
-            }
+                }
 
-        }, 20000);
+            },
+            20000
+        );
+
 }
 
 
 function stopHeartbeat() {
 
-    if (heartbeatTimer) {
+    if (
+        heartbeatTimer
+    ) {
 
         clearInterval(
             heartbeatTimer
         );
 
         heartbeatTimer = null;
+
     }
+
 }
 
 
 /* =========================================================
-   ПОДКЛЮЧЕНИЕ WEBSOCKET
+   WEBSOCKET CONNECT
 ========================================================= */
 
 function connectWebSocket() {
 
-    if (!isRunning) {
+    if (
+        !isRunning
+    ) {
+
         return;
+
     }
 
 
-    /*
-     * Если старое соединение
-     * ещё существует — закрываем.
-     */
-    if (ws) {
+    if (
+        ws
+    ) {
 
         try {
+
             ws.close();
+
         } catch (e) {}
 
     }
 
 
-    /*
-     * Создаём новое соединение.
-     *
-     * Linear = USDT/USDC perpetual
-     * и USDT futures.
-     */
     ws =
         new WebSocket(
             "wss://stream.bybit.com/v5/public/linear"
@@ -1196,28 +1604,26 @@ function connectWebSocket() {
     ws.onopen = () => {
 
         console.log(
-            "WebSocket подключен"
+            "WebSocket connected"
         );
 
 
         wsStatusDiv.innerText =
-            "Подключен";
+            "ON";
 
         wsStatusDiv.className =
             "green";
 
 
         statusDiv.innerText =
-            "Сканирование (Активно)";
+            "Сканирование активно";
 
         statusDiv.style.color =
             "#27ae60";
 
 
         /*
-         * Создаём список подписок.
-         *
-         * orderbook.50.SYMBOL
+         * TOP-100.
          */
         const topics =
             symbols.map(
@@ -1226,24 +1632,14 @@ function connectWebSocket() {
             );
 
 
-        /*
-         * Bybit позволяет подписывать
-         * множество futures topics в одном
-         * public WebSocket connection.
-         */
-        const subscribeMessage = {
-
-            op: "subscribe",
-
-            args: topics
-
-        };
-
-
         ws.send(
-            JSON.stringify(
-                subscribeMessage
-            )
+            JSON.stringify({
+
+                op: "subscribe",
+
+                args: topics
+
+            })
         );
 
 
@@ -1256,41 +1652,38 @@ function connectWebSocket() {
         handleWebSocketMessage;
 
 
-    ws.onerror = (error) => {
+    ws.onerror =
+        error => {
 
-        console.error(
-            "WebSocket ошибка:",
-            error
-        );
+            console.error(
+                "WebSocket error:",
+                error
+            );
 
+            wsStatusDiv.innerText =
+                "ERROR";
 
-        wsStatusDiv.innerText =
-            "Ошибка";
+            wsStatusDiv.className =
+                "red";
 
-        wsStatusDiv.className =
-            "red";
-
-    };
+        };
 
 
     ws.onclose = () => {
-
-        console.log(
-            "WebSocket закрыт"
-        );
-
 
         stopHeartbeat();
 
 
         wsStatusDiv.innerText =
-            "Отключен";
+            "OFF";
 
         wsStatusDiv.className =
             "red";
 
 
-        if (isRunning) {
+        if (
+            isRunning
+        ) {
 
             statusDiv.innerText =
                 "Переподключение...";
@@ -1309,46 +1702,62 @@ function connectWebSocket() {
 
 
 /* =========================================================
-   АВТО-ПЕРЕПОДКЛЮЧЕНИЕ
+   RECONNECT
 ========================================================= */
 
 function scheduleReconnect() {
 
-    if (!isRunning) {
+    if (
+        !isRunning
+    ) {
+
         return;
+
     }
 
 
-    if (reconnectTimer) {
+    if (
+        reconnectTimer
+    ) {
+
         return;
+
     }
 
 
     reconnectTimer =
-        setTimeout(() => {
+        setTimeout(
+            () => {
 
-            reconnectTimer = null;
+                reconnectTimer =
+                    null;
 
-            connectWebSocket();
+                connectWebSocket();
 
-        }, 3000);
+            },
+            3000
+        );
 
 }
 
 
 /* =========================================================
-   ОБНОВЛЕНИЕ СПИСКА МОНЕТ
+   ОБНОВЛЕНИЕ TOP-100
 ========================================================= */
 
 async function refreshSymbols() {
 
-    if (!isRunning) {
+    if (
+        !isRunning
+    ) {
+
         return;
+
     }
 
 
     console.log(
-        "Обновляем список монет..."
+        "Обновление TOP-100..."
     );
 
 
@@ -1356,17 +1765,74 @@ async function refreshSymbols() {
         await loadSymbols();
 
 
-    if (!success) {
-        return;
+    if (
+        success
+    ) {
+
+        /*
+         * Очищаем старые стаканы,
+         * потому что состав рейтинга
+         * мог измениться.
+         */
+        orderBooks.clear();
+
+        stableOrders.clear();
+
+
+        connectWebSocket();
+
     }
 
+}
 
-    /*
-     * После обновления рейтинга
-     * переподключаем WebSocket,
-     * чтобы подписаться на новый TOP-180.
-     */
-    connectWebSocket();
+
+/* =========================================================
+   ПАУЗА ЭКРАНА
+========================================================= */
+
+function toggleDisplayPause() {
+
+    displayPaused =
+        !displayPaused;
+
+
+    const button =
+        document.querySelector(
+            ".pause"
+        );
+
+
+    if (
+        displayPaused
+    ) {
+
+        button.innerText =
+            "▶ Продолжить экран";
+
+
+        button.classList.add(
+            "paused"
+        );
+
+
+        statusDiv.innerText =
+            "Сканирование идёт | экран на паузе";
+
+    } else {
+
+        button.innerText =
+            "⏸ Пауза экрана";
+
+
+        button.classList.remove(
+            "paused"
+        );
+
+
+        statusDiv.innerText =
+            "Сканирование активно";
+
+    }
 
 }
 
@@ -1377,29 +1843,33 @@ async function refreshSymbols() {
 
 async function startScan() {
 
-    if (isRunning) {
+    if (
+        isRunning
+    ) {
+
         return;
+
     }
 
 
-    isRunning = true;
+    isRunning =
+        true;
 
 
     statusDiv.innerText =
-        "Загрузка монет...";
+        "Загрузка TOP-100...";
 
     statusDiv.style.color =
         "#f7931a";
 
 
     /*
-     * Запрашиваем разрешение
-     * на уведомления сразу после
-     * нажатия пользователем кнопки.
+     * Разрешение уведомлений.
      */
     if (
         "Notification" in window &&
-        Notification.permission === "default"
+        Notification.permission ===
+        "default"
     ) {
 
         try {
@@ -1412,28 +1882,32 @@ async function startScan() {
 
 
     /*
-     * Загружаем TOP-180.
+     * Получаем TOP-100.
      */
     const success =
         await loadSymbols();
 
 
-    if (!success) {
+    if (
+        !success
+    ) {
 
-        isRunning = false;
+        isRunning =
+            false;
 
         return;
+
     }
 
 
     /*
-     * Подключаемся.
+     * Подключаем WebSocket.
      */
     connectWebSocket();
 
 
     /*
-     * Периодически обновляем рейтинг.
+     * Обновляем рейтинг каждые 5 минут.
      */
     symbolRefreshTimer =
         setInterval(
@@ -1445,35 +1919,39 @@ async function startScan() {
 
 
 /* =========================================================
-   ОСТАНОВКА
+   СТОП
 ========================================================= */
 
 function stopScan() {
 
-    isRunning = false;
+    isRunning =
+        false;
 
 
-    /*
-     * Останавливаем таймеры.
-     */
-    if (reconnectTimer) {
+    if (
+        reconnectTimer
+    ) {
 
         clearTimeout(
             reconnectTimer
         );
 
-        reconnectTimer = null;
+        reconnectTimer =
+            null;
 
     }
 
 
-    if (symbolRefreshTimer) {
+    if (
+        symbolRefreshTimer
+    ) {
 
         clearInterval(
             symbolRefreshTimer
         );
 
-        symbolRefreshTimer = null;
+        symbolRefreshTimer =
+            null;
 
     }
 
@@ -1481,13 +1959,14 @@ function stopScan() {
     stopHeartbeat();
 
 
-    /*
-     * Закрываем WebSocket.
-     */
-    if (ws) {
+    if (
+        ws
+    ) {
 
         try {
+
             ws.close();
+
         } catch (e) {}
 
         ws = null;
@@ -1495,15 +1974,8 @@ function stopScan() {
     }
 
 
-    /*
-     * Очищаем стаканы.
-     */
     orderBooks.clear();
 
-
-    /*
-     * Очищаем отслеживаемые заявки.
-     */
     stableOrders.clear();
 
 
@@ -1515,20 +1987,15 @@ function stopScan() {
 
 
     wsStatusDiv.innerText =
-        "Отключен";
+        "OFF";
 
     wsStatusDiv.className = "";
-
-
-    console.log(
-        "Сканер остановлен"
-    );
 
 }
 
 
 /* =========================================================
-   ОЧИСТКА УВЕДОМЛЕНИЙ
+   ОЧИСТКА СИГНАЛОВ
 ========================================================= */
 
 function clearNotifications() {
@@ -1536,24 +2003,36 @@ function clearNotifications() {
     notificationsDiv.innerHTML = `
 
         <div
-            class="empty"
             id="emptyMessage"
+            class="empty"
         >
-            Список очищен.
-            Ждём новые крупные заявки.
+            Список очищен.<br>
+            Ждём новые сигналы.
         </div>
 
     `;
+
+
+    signalCount =
+        0;
+
+
+    signalCountDiv.innerText =
+        "0";
 
 }
 
 
 /* =========================================================
-   ВЫВОД НАСТРОЕК В CONSOLE
+   ИНИЦИАЛИЗАЦИЯ
 ========================================================= */
 
 console.log(
-    "🐋 Bybit Whale Scanner загружен"
+    "🐋 Bybit Whale Scanner initialized"
+);
+
+console.log(
+    "TOP-100"
 );
 
 console.log(
