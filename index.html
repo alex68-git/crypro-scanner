@@ -3,472 +3,473 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <title>Bybit Whale Scanner</title>
+<title>Bybit Whale Entry Scanner</title>
 
+<style>
 
-    <style>
+* {
+    box-sizing: border-box;
+}
 
-        * {
-            box-sizing: border-box;
-        }
+body {
 
+    margin: 0;
 
-        body {
+    padding: 14px;
 
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                Roboto,
-                sans-serif;
+    background: #0b0e11;
 
-            background: #0b0e11;
+    color: #eaecef;
 
-            color: #eaecef;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
+}
 
-            margin: 0;
+h1 {
 
-            padding: 15px;
+    margin: 0 0 5px;
 
-        }
+    font-size: 20px;
+}
 
+.subtitle {
 
-        h1 {
+    color: #848e9c;
 
-            font-size: 20px;
+    font-size: 12px;
 
-            margin: 0 0 15px 0;
+    margin-bottom: 15px;
+}
 
-        }
+.header {
 
+    background: #1e2329;
 
-        .header {
+    padding: 15px;
 
-            background: #1e2329;
+    border-radius: 12px;
 
-            padding: 15px;
+    margin-bottom: 15px;
+}
 
-            border-radius: 12px;
+.controls {
 
-            margin-bottom: 15px;
+    display: flex;
 
-        }
+    flex-wrap: wrap;
 
+    gap: 8px;
 
-        .settings {
+    margin-top: 12px;
+}
 
-            display: flex;
+button,
+select {
 
-            gap: 8px;
+    border: none;
 
-            flex-wrap: wrap;
+    border-radius: 8px;
 
-            margin-bottom: 12px;
+    padding: 10px 13px;
 
-            align-items: center;
+    font-weight: bold;
 
-        }
+    cursor: pointer;
+}
 
+button {
 
-        button,
-        select {
+    background: #f7931a;
 
-            background: #f7931a;
+    color: #111;
+}
 
-            border: none;
+button.stop {
 
-            color: #1e2329;
+    background: #e74c3c;
 
-            padding: 10px 14px;
+    color: white;
+}
 
-            border-radius: 8px;
+button.clear {
 
-            font-weight: bold;
+    background: #555;
 
-            cursor: pointer;
+    color: white;
+}
 
-        }
+button.pause {
 
+    background: #3498db;
 
-        select {
+    color: white;
+}
 
-            background: #2b3139;
+select {
 
-            color: #eaecef;
+    background: #2b3139;
 
-        }
+    color: #eaecef;
+}
 
+.settings-row {
 
-        button:hover {
+    display: flex;
 
-            opacity: 0.9;
+    flex-wrap: wrap;
 
-        }
+    gap: 8px;
 
+    align-items: center;
 
-        button.stop {
+    margin-top: 10px;
 
-            background: #e74c3c;
+    color: #b7bdc6;
 
-            color: white;
+    font-size: 12px;
+}
 
-        }
+.status {
 
+    margin-top: 12px;
 
-        button.pause {
+    font-size: 13px;
 
-            background: #3498db;
+    color: #848e9c;
+}
 
-            color: white;
+.stats {
 
-        }
+    display: grid;
 
+    grid-template-columns:
+        repeat(4, 1fr);
 
-        button.clear {
+    gap: 7px;
 
-            background: #555;
+    margin-top: 12px;
+}
 
-            color: white;
+.stat {
 
-        }
+    background: #161a1e;
 
+    border-radius: 8px;
 
-        .status {
+    padding: 9px;
 
-            color: #848e9c;
+    text-align: center;
 
-            font-size: 13px;
+    font-size: 11px;
 
-        }
+    color: #848e9c;
+}
 
+.stat-value {
 
-        .stats {
+    display: block;
 
-            display: grid;
+    color: #eaecef;
 
-            grid-template-columns:
-                repeat(4, 1fr);
+    font-size: 16px;
 
-            gap: 8px;
+    font-weight: bold;
 
-            margin-top: 12px;
+    margin-top: 3px;
+}
 
-        }
+.green {
+    color: #27ae60 !important;
+}
 
+.red {
+    color: #e74c3c !important;
+}
 
-        .stat {
+.orange {
+    color: #f7931a !important;
+}
 
-            background: #161a1e;
+.blue {
+    color: #3498db !important;
+}
 
-            border-radius: 8px;
+.section-title {
 
-            padding: 10px;
+    color: #848e9c;
 
-            text-align: center;
+    font-size: 13px;
 
-            font-size: 12px;
+    margin: 15px 0 8px;
+}
 
-        }
+.list {
 
+    height: 70vh;
 
-        .stat-value {
+    min-height: 400px;
 
-            display: block;
+    overflow-y: auto;
 
-            font-size: 16px;
+    padding-right: 3px;
+}
 
-            font-weight: bold;
+.empty {
 
-            margin-top: 4px;
+    text-align: center;
 
-        }
+    color: #848e9c;
 
+    padding: 70px 15px;
 
-        .green {
+    line-height: 1.7;
+}
 
-            color: #27ae60;
 
-        }
+/* =========================================================
+   SIGNAL CARD
+========================================================= */
 
+.signal {
 
-        .orange {
+    background: #1e2329;
 
-            color: #f7931a;
+    border-radius: 12px;
 
-        }
+    margin-bottom: 9px;
 
+    padding: 13px;
 
-        .red {
+    border-left: 5px solid #555;
 
-            color: #e74c3c;
+    transition:
+        opacity .2s,
+        transform .2s;
+}
 
-        }
+.signal.long {
 
+    border-left-color: #27ae60;
+}
 
-        .blue {
+.signal.short {
 
-            color: #3498db;
+    border-left-color: #e74c3c;
+}
 
-        }
+.signal.watch {
 
+    opacity: .75;
+}
 
-        .section-title {
+.signal.entry {
 
-            font-size: 14px;
+    box-shadow:
+        0 0 0 1px rgba(247,147,26,.35);
+}
 
-            color: #848e9c;
+.signal-header {
 
-            margin: 15px 0 8px;
+    display: flex;
 
-        }
+    justify-content: space-between;
 
+    align-items: center;
 
-        /*
-         * =====================================================
-         * SIGNAL BOARD
-         * =====================================================
-         *
-         * Теперь здесь НЕТ бесконечной ленты.
-         *
-         * Всегда максимум 10 карточек.
-         *
-         * Карточки обновляются на месте.
-         */
+    gap: 8px;
+}
 
-        .list {
+.coin {
 
-            height: 65vh;
+    font-size: 17px;
 
-            min-height: 350px;
+    font-weight: bold;
+}
 
-            overflow-y: auto;
+.direction {
 
-            padding-right: 4px;
+    font-size: 12px;
 
-        }
+    font-weight: bold;
+}
 
+.score {
 
-        .notification {
+    font-size: 18px;
 
-            background: #1e2329;
+    font-weight: bold;
+}
 
-            padding: 14px;
+.score-label {
 
-            margin-bottom: 10px;
+    color: #848e9c;
 
-            border-radius: 10px;
+    font-size: 10px;
 
-            border-left: 5px solid #f7931a;
+    margin-right: 3px;
+}
 
-            font-size: 14px;
+.entry-badge {
 
-            transition:
-                opacity 0.2s ease,
-                border-color 0.2s ease;
+    display: inline-block;
 
-        }
+    padding: 3px 7px;
 
+    border-radius: 5px;
 
-        .notification.buy {
+    font-size: 10px;
 
-            border-left-color:
-                #27ae60;
+    font-weight: bold;
 
-        }
+    margin-top: 5px;
+}
 
+.entry-badge.long {
 
-        .notification.sell {
+    background: rgba(39,174,96,.16);
 
-            border-left-color:
-                #e74c3c;
+    color: #27ae60;
+}
 
-        }
+.entry-badge.short {
 
+    background: rgba(231,76,60,.16);
 
-        .notification.watch {
+    color: #e74c3c;
+}
 
-            border-left-color:
-                #f7931a;
+.entry-badge.watch {
 
-        }
+    background: rgba(132,142,156,.15);
 
+    color: #848e9c;
+}
 
-        .signal-header {
+.amount {
 
-            display: flex;
+    font-size: 21px;
 
-            justify-content:
-                space-between;
+    font-weight: bold;
 
-            align-items: center;
+    margin: 7px 0 2px;
+}
 
-            gap: 10px;
+.price {
 
-        }
+    color: #b7bdc6;
 
+    font-size: 12px;
 
-        .coin {
+    margin-bottom: 9px;
+}
 
-            font-size: 17px;
+.metrics {
 
-            font-weight: bold;
+    display: grid;
 
-        }
+    grid-template-columns:
+        repeat(2, 1fr);
 
+    gap: 5px;
+}
 
-        .side {
+.metric {
 
-            font-weight: bold;
+    background: #161a1e;
 
-            margin-left: 5px;
+    border-radius: 7px;
 
-        }
+    padding: 7px;
 
+    font-size: 11px;
 
-        .score {
+    color: #848e9c;
+}
 
-            font-size: 18px;
+.metric b {
 
-            font-weight: bold;
+    display: block;
 
-            white-space: nowrap;
+    color: #eaecef;
 
-        }
+    margin-top: 2px;
 
+    font-size: 12px;
+}
 
-        .score-label {
+.progress {
 
-            font-size: 10px;
+    margin-top: 9px;
 
-            color: #848e9c;
+    height: 5px;
 
-            display: block;
+    background: #2b3139;
 
-            text-align: right;
+    border-radius: 5px;
 
-        }
+    overflow: hidden;
+}
 
+.progress-bar {
 
-        .amount {
+    height: 100%;
 
-            font-size: 20px;
+    background: #f7931a;
 
-            font-weight: bold;
+    width: 0%;
 
-            margin: 7px 0;
+    transition: width .5s;
+}
 
-        }
+.footer {
 
+    display: flex;
 
-        .details {
+    justify-content: space-between;
 
-            color: #b7bdc6;
+    margin-top: 8px;
 
-            line-height: 1.7;
+    color: #848e9c;
 
-            font-size: 13px;
+    font-size: 10px;
+}
 
-        }
+@media (max-width: 600px) {
 
+    body {
+        padding: 10px;
+    }
 
-        .progress {
+    .stats {
+        grid-template-columns:
+            repeat(4, 1fr);
+    }
 
-            height: 5px;
+    .stat {
+        padding: 7px 3px;
+    }
 
-            background: #2b3139;
+    .signal {
+        padding: 11px;
+    }
 
-            border-radius: 5px;
+    .amount {
+        font-size: 19px;
+    }
+}
 
-            overflow: hidden;
-
-            margin-top: 10px;
-
-        }
-
-
-        .progress-bar {
-
-            height: 100%;
-
-            background: #f7931a;
-
-            transition:
-                width 0.5s ease;
-
-        }
-
-
-        .time {
-
-            color: #848e9c;
-
-            font-size: 11px;
-
-            margin-top: 7px;
-
-        }
-
-
-        .empty {
-
-            text-align: center;
-
-            color: #848e9c;
-
-            padding: 50px 15px;
-
-        }
-
-
-        .paused {
-
-            opacity: 0.7;
-
-        }
-
-
-        .settings-title {
-
-            color: #848e9c;
-
-            font-size: 12px;
-
-        }
-
-
-        @media (max-width: 600px) {
-
-            .stats {
-
-                grid-template-columns:
-                    repeat(2, 1fr);
-
-            }
-
-
-            .list {
-
-                height: 60vh;
-
-            }
-
-
-            .amount {
-
-                font-size: 18px;
-
-            }
-
-        }
-
-    </style>
+</style>
 
 </head>
 
@@ -478,18 +479,18 @@
 
 <div class="header">
 
+    <h1>🐋 Bybit Whale Entry Scanner</h1>
 
-    <h1>
-        🐋 Bybit Whale Scanner
-    </h1>
+    <div class="subtitle">
+        Крупная ликвидность + устойчивость + движение цены
+    </div>
 
 
-    <div class="settings">
+    <div class="controls">
 
         <button onclick="startScan()">
             ▶ Запуск
         </button>
-
 
         <button
             class="stop"
@@ -498,14 +499,12 @@
             ⏹ Стоп
         </button>
 
-
         <button
             class="pause"
-            onclick="toggleDisplayPause()"
+            onclick="togglePause()"
         >
-            ⏸ Пауза экрана
+            ⏸ Пауза
         </button>
-
 
         <button
             class="clear"
@@ -517,78 +516,49 @@
     </div>
 
 
-    <div class="settings">
+    <div class="settings-row">
 
-        <span class="settings-title">
-            Подтверждение:
+        <span>
+            Подтверждение стены:
         </span>
-
 
         <select id="stabilitySelect">
 
             <option value="3">
-                3 секунды
+                3 сек
             </option>
 
-            <option
-                value="5"
-                selected
-            >
-                5 секунд
+            <option value="5" selected>
+                5 сек
             </option>
 
             <option value="10">
-                10 секунд
+                10 сек
             </option>
 
         </select>
 
 
-        <span class="settings-title">
+        <span>
             Минимальный Score:
         </span>
 
-
         <select id="scoreSelect">
 
-            <option value="50">
-                50
-            </option>
-
-            <option
-                value="60"
-                selected
-            >
+            <option value="60">
                 60
             </option>
 
-            <option value="70">
+            <option value="65">
+                65
+            </option>
+
+            <option value="70" selected>
                 70
             </option>
 
-            <option value="80">
-                80
-            </option>
-
-        </select>
-
-
-        <span class="settings-title">
-            Максимум:
-        </span>
-
-
-        <select id="maxSignalsSelect">
-
-            <option value="5">
-                5
-            </option>
-
-            <option
-                value="10"
-                selected
-            >
-                10
+            <option value="75">
+                75
             </option>
 
         </select>
@@ -599,7 +569,6 @@
     <div class="status">
 
         Статус:
-
         <span id="status">
             Остановлен
         </span>
@@ -609,14 +578,13 @@
 
     <div class="stats">
 
-
         <div class="stat">
 
             Монет
 
             <span
-                class="stat-value"
                 id="coinCount"
+                class="stat-value"
             >
                 0
             </span>
@@ -629,8 +597,8 @@
             WebSocket
 
             <span
-                class="stat-value"
                 id="wsStatus"
+                class="stat-value"
             >
                 OFF
             </span>
@@ -643,8 +611,8 @@
             Кандидатов
 
             <span
-                class="stat-value"
                 id="candidateCount"
+                class="stat-value"
             >
                 0
             </span>
@@ -654,17 +622,16 @@
 
         <div class="stat">
 
-            Сигналов
+            ENTRY
 
             <span
+                id="entryCount"
                 class="stat-value"
-                id="signalCount"
             >
                 0
             </span>
 
         </div>
-
 
     </div>
 
@@ -673,16 +640,15 @@
 
 <div class="section-title">
 
-    🐋 TOP сигналов
+    🎯 Лучшие торговые сигналы
 
 </div>
 
 
 <div
-    id="notifications"
+    id="signals"
     class="list"
 >
-
 
     <div
         id="emptyMessage"
@@ -691,93 +657,100 @@
 
         Запусти сканер.<br>
 
-        Здесь появятся сильные сигналы.
+        Здесь появятся только
+        подтверждённые торговые сетапы.
 
     </div>
-
 
 </div>
 
 
 <script>
 
-
 /* =========================================================
    ОСНОВНЫЕ НАСТРОЙКИ
 ========================================================= */
 
-
 const MAX_SYMBOLS = 100;
-
 
 const ORDERBOOK_DEPTH = 50;
 
 
 /*
- * Обновляем TOP-100 раз в 5 минут.
+ * На экране максимум 10 сигналов.
  */
+const MAX_SIGNALS = 10;
 
+
+/*
+ * Экран обновляется только раз в секунду.
+ */
+const DISPLAY_INTERVAL = 1000;
+
+
+/*
+ * TOP-100 пересчитываем каждые 5 минут.
+ */
 const SYMBOL_REFRESH_TIME =
     5 * 60 * 1000;
 
 
 /*
- * Экран обновляется ОДИН РАЗ В СЕКУНДУ.
+ * Сколько времени заявка должна прожить
+ * для первичного подтверждения.
  */
-
-const DISPLAY_INTERVAL =
-    1000;
+const DEFAULT_STABILITY = 5;
 
 
 /*
- * Рыночные данные REST
- * обновляем раз в 15 секунд.
+ * После исчезновения стены
+ * сигнал некоторое время остаётся,
+ * чтобы не было мгновенного прыжка.
  */
-
-const MARKET_DATA_INTERVAL =
-    15000;
+const SIGNAL_KEEP_TIME =
+    8 * 1000;
 
 
 /*
- * Максимальный срок жизни
- * сигнала без подтверждения.
+ * Повтор одного и того же сигнала.
  */
-
-const CANDIDATE_MAX_AGE =
-    60 * 1000;
-
-
-/*
- * После исчезновения крупной заявки
- * не держим её в памяти бесконечно.
- */
-
-const ORDER_CLEANUP_TIME =
-    20 * 1000;
-
-
-/*
- * Повторный сигнал по той же заявке.
- */
-
-const ALERT_COOLDOWN =
+const SIGNAL_COOLDOWN =
     30 * 1000;
 
 
 /*
- * Максимум кандидатов,
- * которые держим в памяти.
+ * Минимальная цена для подтверждения.
+ *
+ * BUY:
+ * цена должна подняться минимум
+ * на 0.15% от момента появления стены.
+ *
+ * SELL:
+ * цена должна упасть минимум
+ * на 0.15%.
  */
-
-const MAX_CANDIDATES =
-    1500;
+const PRICE_CONFIRMATION = 0.15;
 
 
-/* =========================================================
-   ПОРОГИ
-========================================================= */
+/*
+ * Минимальный Score.
+ */
+const DEFAULT_MIN_SCORE = 70;
 
 
+/*
+ * Насколько заявка может уменьшиться,
+ * не потеряв статус устойчивой.
+ *
+ * Например 0.60 = допускаем падение
+ * размера до 60% от первоначального.
+ */
+const MIN_WALL_RATIO = 0.60;
+
+
+/*
+ * Пороговая структура.
+ */
 const THRESHOLDS = {
 
     top5: 500000,
@@ -795,191 +768,136 @@ const THRESHOLDS = {
    СОСТОЯНИЕ
 ========================================================= */
 
-
 let ws = null;
-
 
 let isRunning = false;
 
-
 let displayPaused = false;
-
 
 let reconnectTimer = null;
 
-
 let symbolRefreshTimer = null;
 
-
 let heartbeatTimer = null;
-
 
 let displayTimer = null;
 
 
-let marketDataTimer = null;
-
-
 /*
- * TOP-100
+ * TOP-100.
  */
-
 const symbols = [];
 
 
 /*
- * Ранги монет.
+ * Ранги.
  */
-
-const symbolRanks =
-    new Map();
+const symbolRanks = new Map();
 
 
 /*
- * Локальные стаканы.
+ * Стаканы.
  */
-
-const orderBooks =
-    new Map();
+const orderBooks = new Map();
 
 
 /*
- * Только крупные заявки.
- *
- * key:
- *
- * BTCUSDT_Buy_100000
+ * Кандидаты крупных стен.
  */
-
-const candidates =
-    new Map();
+const candidates = new Map();
 
 
 /*
- * Уже показанные сигналы.
- */
-
-const alertedOrders =
-    new Map();
-
-
-/*
- * Рыночные данные.
- */
-
-const marketData =
-    new Map();
-
-
-/*
- * Текущие сигналы.
+ * Готовые сигналы.
  *
  * key -> signal
  */
-
-const activeSignals =
-    new Map();
+const signals = new Map();
 
 
 /*
- * Статистика.
+ * Последнее время сигнала.
  */
+const signalCooldowns = new Map();
 
-let signalCount = 0;
+
+/*
+ * Последние цены.
+ *
+ * symbol ->
+ * {
+ *   price,
+ *   time
+ * }
+ */
+const priceHistory = new Map();
+
+
+/*
+ * Активность рынка.
+ *
+ * symbol ->
+ * {
+ *   current,
+ *   previous,
+ *   time
+ * }
+ */
+const marketActivity = new Map();
 
 
 /* =========================================================
    DOM
 ========================================================= */
 
-
-const notificationsDiv =
-    document.getElementById(
-        "notifications"
-    );
-
-
 const statusDiv =
-    document.getElementById(
-        "status"
-    );
-
+    document.getElementById("status");
 
 const wsStatusDiv =
-    document.getElementById(
-        "wsStatus"
-    );
-
+    document.getElementById("wsStatus");
 
 const coinCountDiv =
-    document.getElementById(
-        "coinCount"
-    );
-
+    document.getElementById("coinCount");
 
 const candidateCountDiv =
-    document.getElementById(
-        "candidateCount"
-    );
+    document.getElementById("candidateCount");
 
+const entryCountDiv =
+    document.getElementById("entryCount");
 
-const signalCountDiv =
-    document.getElementById(
-        "signalCount"
-    );
-
+const signalsDiv =
+    document.getElementById("signals");
 
 const stabilitySelect =
-    document.getElementById(
-        "stabilitySelect"
-    );
-
+    document.getElementById("stabilitySelect");
 
 const scoreSelect =
-    document.getElementById(
-        "scoreSelect"
-    );
-
-
-const maxSignalsSelect =
-    document.getElementById(
-        "maxSignalsSelect"
-    );
+    document.getElementById("scoreSelect");
 
 
 /* =========================================================
    НАСТРОЙКИ
 ========================================================= */
 
-
 function getStabilityTime() {
 
     return (
         parseInt(
             stabilitySelect.value
-        ) || 5
+        ) ||
+        DEFAULT_STABILITY
     );
 
 }
 
 
-function getMinimumScore() {
+function getMinScore() {
 
     return (
         parseInt(
             scoreSelect.value
-        ) || 60
-    );
-
-}
-
-
-function getMaxSignals() {
-
-    return (
-        parseInt(
-            maxSignalsSelect.value
-        ) || 10
+        ) ||
+        DEFAULT_MIN_SCORE
     );
 
 }
@@ -989,12 +907,10 @@ function getMaxSignals() {
    ПОРОГ
 ========================================================= */
 
-
 function getThreshold(symbol) {
 
     const rank =
         symbolRanks.get(symbol);
-
 
     if (!rank) {
 
@@ -1002,13 +918,11 @@ function getThreshold(symbol) {
 
     }
 
-
     if (rank <= 5) {
 
         return THRESHOLDS.top5;
 
     }
-
 
     if (rank <= 20) {
 
@@ -1016,13 +930,11 @@ function getThreshold(symbol) {
 
     }
 
-
     if (rank <= 50) {
 
         return THRESHOLDS.top50;
 
     }
-
 
     return THRESHOLDS.top100;
 
@@ -1033,8 +945,11 @@ function getThreshold(symbol) {
    ФОРМАТИРОВАНИЕ
 ========================================================= */
 
-
 function formatMoney(value) {
+
+    if (!isFinite(value)) {
+        return "0";
+    }
 
     return Number(value).toLocaleString(
         "en-US",
@@ -1048,74 +963,372 @@ function formatMoney(value) {
 
 function formatPrice(value) {
 
-    const number =
-        Number(value);
+    if (!isFinite(value)) {
+        return "-";
+    }
 
+    if (value >= 1000) {
 
-    if (
-        number >= 1000
-    ) {
-
-        return number.toLocaleString(
+        return value.toLocaleString(
             "en-US",
             {
+                minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             }
         );
 
     }
 
+    if (value >= 1) {
 
-    if (
-        number >= 1
-    ) {
-
-        return number.toFixed(4);
+        return value.toFixed(4);
 
     }
 
+    if (value >= 0.01) {
 
-    return number.toFixed(6);
+        return value.toFixed(5);
+
+    }
+
+    return value.toPrecision(6);
+
+}
+
+
+function formatPercent(value) {
+
+    if (!isFinite(value)) {
+        return "0.00%";
+    }
+
+    const sign =
+        value >= 0
+            ? "+"
+            : "";
+
+    return (
+        sign +
+        value.toFixed(2) +
+        "%"
+    );
+
+}
+
+
+function formatTime(seconds) {
+
+    if (!isFinite(seconds)) {
+        return "0.0 сек";
+    }
+
+    return seconds.toFixed(1) + " сек";
 
 }
 
 
 function formatThreshold(value) {
 
-    if (
-        value >= 1000000
-    ) {
+    if (value >= 1000000) {
 
-        return "$" +
-            (
-                value / 1000000
-            ).toFixed(1) +
-            "M";
+        return (
+            "$" +
+            (value / 1000000).toFixed(1) +
+            "M"
+        );
 
     }
 
-
-    return "$" +
-        (
-            value / 1000
-        ).toFixed(0) +
-        "K";
+    return (
+        "$" +
+        (value / 1000).toFixed(0) +
+        "K"
+    );
 
 }
 
 
 /* =========================================================
-   NOTIFICATION
+   SCORE
 ========================================================= */
 
+/*
+ * Размер стены:
+ *
+ * максимум 25 баллов.
+ */
+function scoreWallSize(
+    value,
+    threshold
+) {
 
-function sendNotification(
-    title,
-    body
+    const ratio =
+        value / threshold;
+
+    if (ratio >= 3) {
+        return 25;
+    }
+
+    if (ratio >= 2) {
+        return 22;
+    }
+
+    if (ratio >= 1.5) {
+        return 18;
+    }
+
+    if (ratio >= 1.2) {
+        return 14;
+    }
+
+    return 8;
+
+}
+
+
+/*
+ * Устойчивость:
+ *
+ * максимум 20.
+ */
+function scoreStability(
+    aliveSeconds
+) {
+
+    if (aliveSeconds >= 20) {
+        return 20;
+    }
+
+    if (aliveSeconds >= 15) {
+        return 18;
+    }
+
+    if (aliveSeconds >= 10) {
+        return 15;
+    }
+
+    if (aliveSeconds >= 7) {
+        return 12;
+    }
+
+    if (aliveSeconds >= 5) {
+        return 9;
+    }
+
+    return 0;
+
+}
+
+
+/*
+ * Движение цены:
+ *
+ * максимум 30.
+ */
+function scorePriceMove(
+    side,
+    priceMove
+) {
+
+    let favorable = 0;
+
+    if (side === "Buy") {
+
+        favorable =
+            priceMove;
+
+    } else {
+
+        favorable =
+            -priceMove;
+
+    }
+
+    if (favorable >= 0.80) {
+        return 30;
+    }
+
+    if (favorable >= 0.50) {
+        return 26;
+    }
+
+    if (favorable >= 0.35) {
+        return 22;
+    }
+
+    if (favorable >= 0.25) {
+        return 18;
+    }
+
+    if (favorable >= 0.15) {
+        return 14;
+    }
+
+    if (favorable >= 0.05) {
+        return 7;
+    }
+
+    return 0;
+
+}
+
+
+/*
+ * Активность:
+ *
+ * максимум 15.
+ */
+function scoreActivity(
+    activityPercent
+) {
+
+    if (activityPercent >= 100) {
+        return 15;
+    }
+
+    if (activityPercent >= 70) {
+        return 13;
+    }
+
+    if (activityPercent >= 50) {
+        return 11;
+    }
+
+    if (activityPercent >= 30) {
+        return 8;
+    }
+
+    if (activityPercent >= 15) {
+        return 5;
+    }
+
+    return 0;
+
+}
+
+
+/*
+ * Дополнительные 10 баллов
+ * за устойчивость размера стены.
+ */
+function scoreWallIntegrity(
+    ratio
+) {
+
+    if (ratio >= 0.95) {
+        return 10;
+    }
+
+    if (ratio >= 0.85) {
+        return 8;
+    }
+
+    if (ratio >= 0.75) {
+        return 6;
+    }
+
+    if (ratio >= 0.60) {
+        return 3;
+    }
+
+    return 0;
+
+}
+
+
+/* =========================================================
+   ЦЕНА
+========================================================= */
+
+function getCurrentPrice(
+    symbol
+) {
+
+    const book =
+        orderBooks.get(symbol);
+
+    if (!book) {
+        return null;
+    }
+
+
+    let bestBid = null;
+
+    let bestAsk = null;
+
+
+    for (
+        const price of book.bids.keys()
+    ) {
+
+        const p =
+            parseFloat(price);
+
+        if (
+            bestBid === null ||
+            p > bestBid
+        ) {
+
+            bestBid = p;
+
+        }
+
+    }
+
+
+    for (
+        const price of book.asks.keys()
+    ) {
+
+        const p =
+            parseFloat(price);
+
+        if (
+            bestAsk === null ||
+            p < bestAsk
+        ) {
+
+            bestAsk = p;
+
+        }
+
+    }
+
+
+    if (
+        bestBid !== null &&
+        bestAsk !== null
+    ) {
+
+        return (
+            bestBid +
+            bestAsk
+        ) / 2;
+
+    }
+
+
+    return (
+        bestBid ||
+        bestAsk ||
+        null
+    );
+
+}
+
+
+/* =========================================================
+   ИСТОРИЯ ЦЕНЫ
+========================================================= */
+
+function updatePriceHistory(
+    symbol,
+    price
 ) {
 
     if (
-        !("Notification" in window)
+        !isFinite(price) ||
+        price <= 0
     ) {
 
         return;
@@ -1124,30 +1337,206 @@ function sendNotification(
 
 
     if (
-        Notification.permission ===
-        "granted"
+        !priceHistory.has(symbol)
     ) {
 
-        try {
+        priceHistory.set(
+            symbol,
+            []
+        );
 
-            new Notification(
-                title,
-                {
-                    body: body
-                }
-            );
+    }
 
-        } catch (e) {}
+
+    const history =
+        priceHistory.get(symbol);
+
+    const now =
+        Date.now();
+
+
+    history.push({
+        price: price,
+        time: now
+    });
+
+
+    /*
+     * Храним 90 секунд.
+     */
+    const cutoff =
+        now - 90000;
+
+
+    while (
+        history.length &&
+        history[0].time < cutoff
+    ) {
+
+        history.shift();
 
     }
 
 }
 
 
+/*
+ * Цена в момент появления стены.
+ */
+function getPriceAtTime(
+    symbol,
+    time
+) {
+
+    const history =
+        priceHistory.get(symbol);
+
+    if (
+        !history ||
+        !history.length
+    ) {
+
+        return null;
+
+    }
+
+
+    let closest =
+        history[0];
+
+
+    for (
+        const item of history
+    ) {
+
+        if (
+            item.time <= time
+        ) {
+
+            closest = item;
+
+        } else {
+
+            break;
+
+        }
+
+    }
+
+
+    return closest.price;
+
+}
+
+
 /* =========================================================
-   СОЗДАНИЕ СТАКА
+   АКТИВНОСТЬ
 ========================================================= */
 
+function updateMarketActivity(
+    symbol
+) {
+
+    /*
+     * Мы используем количество
+     * изменений стакана как индикатор
+     * активности.
+     *
+     * Это НЕ объём в USDT.
+     *
+     * Но это хороший фильтр:
+     * крупная стена + ускорение рынка.
+     */
+
+    if (
+        !marketActivity.has(symbol)
+    ) {
+
+        marketActivity.set(
+            symbol,
+            {
+                current: 0,
+                previous: 0,
+                time: Date.now()
+            }
+        );
+
+    }
+
+
+    const activity =
+        marketActivity.get(symbol);
+
+    activity.current++;
+
+}
+
+
+/*
+ * Раз в 5 секунд пересчитываем
+ * скорость изменений.
+ */
+setInterval(
+    () => {
+
+        const now =
+            Date.now();
+
+
+        marketActivity.forEach(
+            activity => {
+
+                activity.previous =
+                    activity.current;
+
+                activity.current = 0;
+
+                activity.time =
+                    now;
+
+            }
+        );
+
+    },
+    5000
+);
+
+
+/*
+ * Получить условный рост активности.
+ */
+function getActivityPercent(
+    symbol
+) {
+
+    const activity =
+        marketActivity.get(symbol);
+
+    if (!activity) {
+        return 0;
+    }
+
+
+    /*
+     * Используем текущее число
+     * изменений за последние 5 сек.
+     *
+     * Базовый уровень — 10.
+     */
+    return Math.min(
+        200,
+        (
+            activity.previous /
+            10
+        ) * 100
+    );
+
+}
+
+
+/* =========================================================
+   СОЗДАНИЕ СТАКАНА
+========================================================= */
 
 function createOrderBook(
     symbol
@@ -1168,21 +1557,15 @@ function createOrderBook(
    SNAPSHOT
 ========================================================= */
 
-
 function applySnapshot(
     symbol,
     data
 ) {
 
-    createOrderBook(
-        symbol
-    );
-
+    createOrderBook(symbol);
 
     const book =
-        orderBooks.get(
-            symbol
-        );
+        orderBooks.get(symbol);
 
 
     if (
@@ -1195,11 +1578,8 @@ function applySnapshot(
                 const price =
                     String(order[0]);
 
-
                 const qty =
-                    parseFloat(
-                        order[1]
-                    );
+                    parseFloat(order[1]);
 
 
                 if (
@@ -1229,11 +1609,8 @@ function applySnapshot(
                 const price =
                     String(order[0]);
 
-
                 const qty =
-                    parseFloat(
-                        order[1]
-                    );
+                    parseFloat(order[1]);
 
 
                 if (
@@ -1254,12 +1631,18 @@ function applySnapshot(
 
 
     /*
-     * После snapshot один раз
-     * проверяем крупные заявки.
+     * После snapshot ищем крупные стены.
      */
+    scanChangedLevels(
+        symbol,
+        data.b,
+        "Buy"
+    );
 
-    inspectSnapshot(
-        symbol
+    scanChangedLevels(
+        symbol,
+        data.a,
+        "Sell"
     );
 
 }
@@ -1269,16 +1652,13 @@ function applySnapshot(
    DELTA
 ========================================================= */
 
-
 function applyDelta(
     symbol,
     data
 ) {
 
     if (
-        !orderBooks.has(
-            symbol
-        )
+        !orderBooks.has(symbol)
     ) {
 
         return;
@@ -1287,18 +1667,17 @@ function applyDelta(
 
 
     const book =
-        orderBooks.get(
-            symbol
-        );
+        orderBooks.get(symbol);
 
 
     /*
      * ВАЖНО:
      *
-     * Мы больше НЕ перебираем весь стакан.
+     * Мы больше НЕ перебираем
+     * весь стакан после каждого delta.
      *
-     * Проверяем только те цены,
-     * которые реально изменились.
+     * Проверяем только изменившиеся
+     * уровни.
      */
 
 
@@ -1309,14 +1688,36 @@ function applyDelta(
         data.b.forEach(
             order => {
 
-                processBookChange(
-                    symbol,
-                    book.bids,
-                    order,
-                    "Buy"
-                );
+                const price =
+                    String(order[0]);
+
+                const qty =
+                    parseFloat(order[1]);
+
+
+                if (qty === 0) {
+
+                    book.bids.delete(
+                        price
+                    );
+
+                } else {
+
+                    book.bids.set(
+                        price,
+                        qty
+                    );
+
+                }
 
             }
+        );
+
+
+        scanChangedLevels(
+            symbol,
+            data.b,
+            "Buy"
         );
 
     }
@@ -1329,154 +1730,35 @@ function applyDelta(
         data.a.forEach(
             order => {
 
-                processBookChange(
-                    symbol,
-                    book.asks,
-                    order,
-                    "Sell"
-                );
+                const price =
+                    String(order[0]);
+
+                const qty =
+                    parseFloat(order[1]);
+
+
+                if (qty === 0) {
+
+                    book.asks.delete(
+                        price
+                    );
+
+                } else {
+
+                    book.asks.set(
+                        price,
+                        qty
+                    );
+
+                }
 
             }
         );
 
-    }
 
-}
-
-
-/* =========================================================
-   ОБРАБОТКА ИЗМЕНЕНИЯ ЗАЯВКИ
-========================================================= */
-
-
-function processBookChange(
-    symbol,
-    sideMap,
-    order,
-    side
-) {
-
-    const price =
-        String(order[0]);
-
-
-    const qty =
-        parseFloat(
-            order[1]
-        );
-
-
-    if (
-        qty === 0
-    ) {
-
-        sideMap.delete(
-            price
-        );
-
-
-        /*
-         * Заявка исчезла.
-         *
-         * Кандидат удаляем.
-         */
-
-        const key =
-            makeOrderKey(
-                symbol,
-                side,
-                price
-            );
-
-
-        candidates.delete(
-            key
-        );
-
-
-        return;
-
-    }
-
-
-    sideMap.set(
-        price,
-        qty
-    );
-
-
-    /*
-     * Проверяем только эту заявку.
-     */
-
-    evaluateOrder(
-        symbol,
-        price,
-        qty,
-        side
-    );
-
-}
-
-
-/* =========================================================
-   SNAPSHOT ANALYSIS
-========================================================= */
-
-
-function inspectSnapshot(
-    symbol
-) {
-
-    const book =
-        orderBooks.get(
-            symbol
-        );
-
-
-    if (!book) {
-
-        return;
-
-    }
-
-
-    /*
-     * Snapshot проверяем один раз.
-     *
-     * После этого работают только delta.
-     */
-
-    for (
-        const [
-            price,
-            qty
-        ]
-        of book.bids
-    ) {
-
-        evaluateOrder(
+        scanChangedLevels(
             symbol,
-            price,
-            qty,
-            "Buy"
-        );
-
-    }
-
-
-    for (
-        const [
-            price,
-            qty
-        ]
-        of book.asks
-    ) {
-
-        evaluateOrder(
-            symbol,
-            price,
-            qty,
+            data.a,
             "Sell"
         );
 
@@ -1486,273 +1768,155 @@ function inspectSnapshot(
 
 
 /* =========================================================
-   KEY
+   СКАНИРОВАНИЕ ИЗМЕНЁННЫХ УРОВНЕЙ
 ========================================================= */
 
-
-function makeOrderKey(
+function scanChangedLevels(
     symbol,
-    side,
-    price
-) {
-
-    return (
-        symbol +
-        "_" +
-        side +
-        "_" +
-        price
-    );
-
-}
-
-
-/* =========================================================
-   ОЦЕНКА КРУПНОЙ ЗАЯВКИ
-========================================================= */
-
-
-function evaluateOrder(
-    symbol,
-    price,
-    qty,
+    levels,
     side
 ) {
 
-    const priceNumber =
-        Number(price);
-
-
-    const qtyNumber =
-        Number(qty);
-
-
     if (
-        !isFinite(priceNumber) ||
-        !isFinite(qtyNumber) ||
-        priceNumber <= 0 ||
-        qtyNumber <= 0
+        !Array.isArray(levels)
     ) {
 
         return;
 
     }
-
-
-    const value =
-        priceNumber *
-        qtyNumber;
 
 
     const threshold =
-        getThreshold(
-            symbol
-        );
+        getThreshold(symbol);
 
-
-    const key =
-        makeOrderKey(
-            symbol,
-            side,
-            price
-        );
-
-
-    /*
-     * Если заявка стала меньше порога,
-     * она больше не кандидат.
-     */
-
-    if (
-        value < threshold
-    ) {
-
-        candidates.delete(
-            key
-        );
-
-        activeSignals.delete(
-            key
-        );
-
-        return;
-
-    }
-
-
-    const now =
-        Date.now();
-
-
-    /*
-     * Уже существует.
-     */
-
-    if (
-        candidates.has(
-            key
-        )
-    ) {
-
-        const candidate =
-            candidates.get(
-                key
-            );
-
-
-        /*
-         * Если заявка сильно изменилась,
-         * обновляем её.
-         */
-
-        candidate.lastValue =
-            value;
-
-
-        candidate.lastQty =
-            qtyNumber;
-
-
-        candidate.lastSeen =
-            now;
-
-
-        /*
-         * Отслеживаем максимальный размер.
-         */
-
-        if (
-            value >
-            candidate.maxValue
-        ) {
-
-            candidate.maxValue =
-                value;
-
-        }
-
-
-        return;
-
-    }
-
-
-    /*
-     * Новая крупная заявка.
-     */
-
-    candidates.set(
-        key,
-        {
-
-            key,
-
-            symbol,
-
-            side,
-
-            price: priceNumber,
-
-            firstSeen: now,
-
-            lastSeen: now,
-
-            lastValue: value,
-
-            maxValue: value,
-
-            threshold
-
-        }
-    );
-
-
-    /*
-     * Ограничиваем память.
-     */
-
-    if (
-        candidates.size >
-        MAX_CANDIDATES
-    ) {
-
-        cleanupOldCandidates();
-
-    }
-
-}
-
-
-/* =========================================================
-   ОЧИСТКА СТАРЫХ КАНДИДАТОВ
-========================================================= */
-
-
-function cleanupOldCandidates() {
 
     const now =
         Date.now();
 
 
     for (
-        const [
-            key,
-            candidate
-        ]
-        of candidates
+        const order of levels
     ) {
 
+        const price =
+            parseFloat(order[0]);
+
+        const qty =
+            parseFloat(order[1]);
+
+
         if (
-            now -
-            candidate.lastSeen >
-            ORDER_CLEANUP_TIME
+            !isFinite(price) ||
+            !isFinite(qty) ||
+            price <= 0
         ) {
 
-            candidates.delete(
-                key
-            );
+            continue;
 
         }
 
-    }
+
+        const value =
+            price * qty;
 
 
-    /*
-     * Если всё ещё слишком много,
-     * удаляем самые старые.
-     */
-
-    if (
-        candidates.size >
-        MAX_CANDIDATES
-    ) {
-
-        const sorted =
-            [...candidates.values()]
-                .sort(
-                    (
-                        a,
-                        b
-                    ) =>
-                        a.lastSeen -
-                        b.lastSeen
-                );
+        const key =
+            `${symbol}_${side}_${price}`;
 
 
-        const removeCount =
-            candidates.size -
-            MAX_CANDIDATES;
-
-
-        for (
-            let i = 0;
-            i < removeCount;
-            i++
+        /*
+         * Если заявка исчезла —
+         * помечаем кандидата как исчезнувший.
+         */
+        if (
+            qty <= 0 ||
+            value < threshold
         ) {
 
-            candidates.delete(
-                sorted[i].key
+            const candidate =
+                candidates.get(key);
+
+            if (candidate) {
+
+                candidate.lastSeen =
+                    now;
+
+                candidate.lastValue =
+                    0;
+
+            }
+
+            continue;
+
+        }
+
+
+        /*
+         * Новая крупная заявка.
+         */
+        if (
+            !candidates.has(key)
+        ) {
+
+            const currentPrice =
+                getCurrentPrice(symbol);
+
+
+            candidates.set(
+                key,
+                {
+
+                    key,
+
+                    symbol,
+
+                    side,
+
+                    price,
+
+                    initialValue: value,
+
+                    lastValue: value,
+
+                    firstSeen: now,
+
+                    lastSeen: now,
+
+                    initialPrice:
+                        currentPrice,
+
+                    peakValue: value
+
+                }
             );
+
+
+            continue;
+
+        }
+
+
+        const candidate =
+            candidates.get(key);
+
+
+        /*
+         * Обновляем.
+         */
+        candidate.lastSeen =
+            now;
+
+        candidate.lastValue =
+            value;
+
+
+        if (
+            value >
+            candidate.peakValue
+        ) {
+
+            candidate.peakValue =
+                value;
 
         }
 
@@ -1762,376 +1926,37 @@ function cleanupOldCandidates() {
 
 
 /* =========================================================
-   SCORE
+   УДАЛЕНИЕ СТАРЫХ КАНДИДАТОВ
 ========================================================= */
 
+function cleanupCandidates() {
 
-/*
- * Score 0–100.
- *
- * Состав:
- *
- * размер заявки       0–25
- * время удержания     0–20
- * размер относительно
- * порога              0–15
- * движение цены       0–15
- * изменение объёма    0–15
- * стабильность        0–10
- */
+    const now =
+        Date.now();
 
 
-function calculateScore(
-    candidate
-) {
-
-    const market =
-        marketData.get(
-            candidate.symbol
-        );
-
-
-    const aliveSeconds =
+    candidates.forEach(
         (
-            Date.now() -
-            candidate.firstSeen
-        ) / 1000;
+            candidate,
+            key
+        ) => {
 
-
-    let score =
-        0;
-
-
-    /*
-     * =====================================================
-     * 1. РАЗМЕР ЗАЯВКИ — 25
-     * =====================================================
-     */
-
-
-    const sizeRatio =
-        candidate.lastValue /
-        candidate.threshold;
-
-
-    if (
-        sizeRatio >= 4
-    ) {
-
-        score += 25;
-
-    }
-
-    else if (
-        sizeRatio >= 3
-    ) {
-
-        score += 22;
-
-    }
-
-    else if (
-        sizeRatio >= 2
-    ) {
-
-        score += 18;
-
-    }
-
-    else if (
-        sizeRatio >= 1.5
-    ) {
-
-        score += 12;
-
-    }
-
-    else {
-
-        score += 7;
-
-    }
-
-
-    /*
-     * =====================================================
-     * 2. ДЛИТЕЛЬНОСТЬ — 20
-     * =====================================================
-     */
-
-
-    const required =
-        getStabilityTime();
-
-
-    if (
-        aliveSeconds >= 20
-    ) {
-
-        score += 20;
-
-    }
-
-    else if (
-        aliveSeconds >= 15
-    ) {
-
-        score += 18;
-
-    }
-
-    else if (
-        aliveSeconds >= 10
-    ) {
-
-        score += 15;
-
-    }
-
-    else if (
-        aliveSeconds >= required
-    ) {
-
-        score += 10;
-
-    }
-
-
-    /*
-     * =====================================================
-     * 3. РАЗМЕР ОТНОСИТЕЛЬНО ПОРОГА — 15
-     * =====================================================
-     */
-
-
-    if (
-        sizeRatio >= 3
-    ) {
-
-        score += 15;
-
-    }
-
-    else if (
-        sizeRatio >= 2
-    ) {
-
-        score += 12;
-
-    }
-
-    else if (
-        sizeRatio >= 1.5
-    ) {
-
-        score += 8;
-
-    }
-
-    else {
-
-        score += 5;
-
-    }
-
-
-    /*
-     * =====================================================
-     * 4. ЦЕНА — 15
-     * =====================================================
-     *
-     * Для BUY:
-     *
-     * цена растёт = хорошо
-     *
-     * Для SELL:
-     *
-     * цена падает = хорошо
-     */
-
-
-    if (
-        market
-    ) {
-
-        const priceChange =
-            market.priceChange1m;
-
-
-        if (
-            candidate.side ===
-            "Buy"
-        ) {
-
+            /*
+             * Если уровень не обновлялся
+             * более 3 секунд — считаем,
+             * что стена исчезла.
+             */
             if (
-                priceChange >= 1
+                now -
+                candidate.lastSeen >
+                3000
             ) {
 
-                score += 15;
-
-            }
-
-            else if (
-                priceChange >= 0.5
-            ) {
-
-                score += 12;
-
-            }
-
-            else if (
-                priceChange > 0
-            ) {
-
-                score += 8;
-
-            }
-
-            else if (
-                priceChange > -0.5
-            ) {
-
-                score += 4;
+                candidates.delete(key);
 
             }
 
         }
-
-        else {
-
-            if (
-                priceChange <= -1
-            ) {
-
-                score += 15;
-
-            }
-
-            else if (
-                priceChange <= -0.5
-            ) {
-
-                score += 12;
-
-            }
-
-            else if (
-                priceChange < 0
-            ) {
-
-                score += 8;
-
-            }
-
-            else if (
-                priceChange < 0.5
-            ) {
-
-                score += 4;
-
-            }
-
-        }
-
-    }
-
-
-    /*
-     * =====================================================
-     * 5. ОБЪЁМ — 15
-     * =====================================================
-     */
-
-
-    if (
-        market
-    ) {
-
-        const volumeChange =
-            market.volumeChange;
-
-
-        if (
-            volumeChange >= 200
-        ) {
-
-            score += 15;
-
-        }
-
-        else if (
-            volumeChange >= 100
-        ) {
-
-            score += 12;
-
-        }
-
-        else if (
-            volumeChange >= 50
-        ) {
-
-            score += 9;
-
-        }
-
-        else if (
-            volumeChange >= 20
-        ) {
-
-            score += 6;
-
-        }
-
-        else if (
-            volumeChange > 0
-        ) {
-
-            score += 3;
-
-        }
-
-    }
-
-
-    /*
-     * =====================================================
-     * 6. СТАБИЛЬНОСТЬ — 10
-     * =====================================================
-     */
-
-
-    if (
-        candidate.lastValue >=
-        candidate.maxValue * 0.95
-    ) {
-
-        score += 10;
-
-    }
-
-    else if (
-        candidate.lastValue >=
-        candidate.maxValue * 0.8
-    ) {
-
-        score += 7;
-
-    }
-
-    else if (
-        candidate.lastValue >=
-        candidate.maxValue * 0.6
-    ) {
-
-        score += 4;
-
-    }
-
-
-    return Math.min(
-        100,
-        Math.round(score)
     );
 
 }
@@ -2141,11 +1966,382 @@ function calculateScore(
    АНАЛИЗ КАНДИДАТОВ
 ========================================================= */
 
+function evaluateCandidates() {
 
-function analyzeCandidates() {
+    const now =
+        Date.now();
+
+
+    cleanupCandidates();
+
+
+    candidates.forEach(
+        candidate => {
+
+            evaluateCandidate(
+                candidate,
+                now
+            );
+
+        }
+    );
+
+
+    /*
+     * Обновляем список сигналов.
+     */
+    cleanupSignals(now);
+
+}
+
+
+/* =========================================================
+   ОЦЕНКА ОДНОЙ СТЕНЫ
+========================================================= */
+
+function evaluateCandidate(
+    candidate,
+    now
+) {
+
+    const symbol =
+        candidate.symbol;
+
+    const side =
+        candidate.side;
+
+
+    const threshold =
+        getThreshold(symbol);
+
+
+    const aliveSeconds =
+        (
+            now -
+            candidate.firstSeen
+        ) / 1000;
+
+
+    /*
+     * Стена должна прожить
+     * минимум заданное время.
+     */
+    if (
+        aliveSeconds <
+        getStabilityTime()
+    ) {
+
+        return;
+
+    }
+
+
+    const currentPrice =
+        getCurrentPrice(symbol);
+
 
     if (
-        !isRunning
+        !currentPrice ||
+        !candidate.initialPrice
+    ) {
+
+        return;
+
+    }
+
+
+    const priceMove =
+        (
+            (
+                currentPrice -
+                candidate.initialPrice
+            ) /
+            candidate.initialPrice
+        ) *
+        100;
+
+
+    const wallRatio =
+        candidate.lastValue /
+        candidate.initialValue;
+
+
+    /*
+     * Если стена сильно уменьшилась —
+     * не считаем её надёжной.
+     */
+    if (
+        wallRatio <
+        MIN_WALL_RATIO
+    ) {
+
+        return;
+
+    }
+
+
+    const activity =
+        getActivityPercent(symbol);
+
+
+    /*
+     * Считаем компоненты Score.
+     */
+    const wallScore =
+        scoreWallSize(
+            candidate.lastValue,
+            threshold
+        );
+
+
+    const stabilityScore =
+        scoreStability(
+            aliveSeconds
+        );
+
+
+    const priceScore =
+        scorePriceMove(
+            side,
+            priceMove
+        );
+
+
+    const activityScore =
+        scoreActivity(
+            activity
+        );
+
+
+    const integrityScore =
+        scoreWallIntegrity(
+            wallRatio
+        );
+
+
+    let score =
+        wallScore +
+        stabilityScore +
+        priceScore +
+        activityScore +
+        integrityScore;
+
+
+    score =
+        Math.min(
+            100,
+            Math.round(score)
+        );
+
+
+    /*
+     * Цена должна подтвердить направление.
+     */
+    const favorableMove =
+        side === "Buy"
+            ? priceMove
+            : -priceMove;
+
+
+    /*
+     * Определяем состояние.
+     */
+    let state =
+        "WATCH";
+
+
+    if (
+        score >= 60 &&
+        favorableMove >= 0.05
+    ) {
+
+        state =
+            "SETUP";
+
+    }
+
+
+    if (
+        score >= getMinScore() &&
+        favorableMove >=
+        PRICE_CONFIRMATION &&
+        aliveSeconds >=
+        getStabilityTime()
+    ) {
+
+        state =
+            "ENTRY";
+
+    }
+
+
+    /*
+     * Если цена идёт против стены —
+     * сигнал не даём.
+     */
+    if (
+        side === "Buy" &&
+        priceMove < -0.10
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        side === "Sell" &&
+        priceMove > 0.10
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+     * Показываем только достаточно
+     * сильные сигналы.
+     */
+    if (
+        score <
+        getMinScore()
+    ) {
+
+        return;
+
+    }
+
+
+    const key =
+        candidate.key;
+
+
+    const existing =
+        signals.get(key);
+
+
+    /*
+     * Создаём / обновляем сигнал.
+     */
+    const signal = {
+
+        key,
+
+        symbol,
+
+        side,
+
+        price:
+            candidate.price,
+
+        value:
+            candidate.lastValue,
+
+        threshold,
+
+        rank:
+            symbolRanks.get(symbol),
+
+        firstSeen:
+            candidate.firstSeen,
+
+        aliveSeconds,
+
+        initialPrice:
+            candidate.initialPrice,
+
+        currentPrice,
+
+        priceMove,
+
+        favorableMove,
+
+        wallRatio,
+
+        activity,
+
+        score,
+
+        state,
+
+        updatedAt:
+            now
+
+    };
+
+
+    signals.set(
+        key,
+        signal
+    );
+
+
+    /*
+     * Если получился ENTRY —
+     * отправляем browser notification
+     * только один раз за cooldown.
+     */
+    if (
+        state === "ENTRY"
+    ) {
+
+        maybeNotify(
+            signal
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   УВЕДОМЛЕНИЯ
+========================================================= */
+
+async function requestNotifications() {
+
+    if (
+        !("Notification" in window)
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        Notification.permission ===
+        "default"
+    ) {
+
+        try {
+
+            await Notification.requestPermission();
+
+        } catch (e) {}
+
+    }
+
+}
+
+
+function maybeNotify(
+    signal
+) {
+
+    if (
+        !("Notification" in window)
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        Notification.permission !==
+        "granted"
     ) {
 
         return;
@@ -2157,122 +2353,143 @@ function analyzeCandidates() {
         Date.now();
 
 
-    const minimumScore =
-        getMinimumScore();
+    const last =
+        signalCooldowns.get(
+            signal.key
+        ) || 0;
 
 
-    /*
-     * Удаляем исчезнувшие заявки.
-     */
-
-    for (
-        const [
-            key,
-            candidate
-        ]
-        of candidates
+    if (
+        now - last <
+        SIGNAL_COOLDOWN
     ) {
 
-        if (
-            now -
-            candidate.lastSeen >
-            ORDER_CLEANUP_TIME
-        ) {
-
-            candidates.delete(
-                key
-            );
-
-            activeSignals.delete(
-                key
-            );
-
-        }
+        return;
 
     }
 
 
-    /*
-     * Рассчитываем Score.
-     */
-
-    const signals = [];
-
-
-    for (
-        const candidate
-        of candidates.values()
-    ) {
-
-        const aliveSeconds =
-            (
-                now -
-                candidate.firstSeen
-            ) / 1000;
+    signalCooldowns.set(
+        signal.key,
+        now
+    );
 
 
-        /*
-         * Заявка ещё не подтверждена.
-         */
+    const direction =
+        signal.side === "Buy"
+            ? "🟢 LONG"
+            : "🔴 SHORT";
 
-        if (
-            aliveSeconds <
-            getStabilityTime()
-        ) {
 
-            continue;
+    new Notification(
+        `${direction} ${signal.symbol}`,
+        {
+
+            body:
+                `ENTRY | Score ${signal.score}/100 | ` +
+                `$${formatMoney(signal.value)} | ` +
+                `Цена ${formatPercent(signal.priceMove)}`
 
         }
+    );
+
+}
 
 
-        const score =
-            calculateScore(
-                candidate
-            );
+/* =========================================================
+   УДАЛЕНИЕ СТАРЫХ СИГНАЛОВ
+========================================================= */
 
+function cleanupSignals(now) {
 
-        /*
-         * Ниже минимального Score
-         * на экран не попадает.
-         */
-
-        if (
-            score <
-            minimumScore
-        ) {
-
-            continue;
-
-        }
-
-
-        signals.push({
-
-            ...candidate,
-
-            score,
-
-            aliveSeconds
-
-        });
-
-    }
-
-
-    /*
-     * Сначала самые сильные.
-     */
-
-    signals.sort(
+    signals.forEach(
         (
-            a,
-            b
+            signal,
+            key
         ) => {
 
             /*
-             * Сначала Score.
+             * Если кандидат исчез —
+             * сохраняем сигнал ненадолго.
              */
+            const candidate =
+                candidates.get(key);
 
+
+            if (!candidate) {
+
+                if (
+                    now -
+                    signal.updatedAt >
+                    SIGNAL_KEEP_TIME
+                ) {
+
+                    signals.delete(key);
+
+                }
+
+                return;
+
+            }
+
+
+            /*
+             * Если Score сильно упал —
+             * удаляем.
+             */
+            if (
+                signal.score <
+                getMinScore() - 10
+            ) {
+
+                signals.delete(key);
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   РАНЖИРОВАНИЕ
+========================================================= */
+
+function getBestSignals() {
+
+    return Array.from(
+        signals.values()
+    )
+
+    .sort(
+        (a, b) => {
+
+            /*
+             * Сначала ENTRY.
+             */
+            if (
+                a.state === "ENTRY" &&
+                b.state !== "ENTRY"
+            ) {
+
+                return -1;
+
+            }
+
+            if (
+                b.state === "ENTRY" &&
+                a.state !== "ENTRY"
+            ) {
+
+                return 1;
+
+            }
+
+
+            /*
+             * Затем Score.
+             */
             if (
                 b.score !==
                 a.score
@@ -2287,60 +2504,29 @@ function analyzeCandidates() {
 
 
             /*
-             * Если Score одинаковый —
-             * большая заявка выше.
+             * Затем устойчивость.
              */
-
             return (
-                b.lastValue -
-                a.lastValue
+                b.aliveSeconds -
+                a.aliveSeconds
             );
 
         }
+    )
+
+    .slice(
+        0,
+        MAX_SIGNALS
     );
-
-
-    const topSignals =
-        signals.slice(
-            0,
-            getMaxSignals()
-        );
-
-
-    /*
-     * Обновляем экран.
-     */
-
-    renderSignals(
-        topSignals
-    );
-
-
-    /*
-     * Статистика.
-     */
-
-    candidateCountDiv.innerText =
-        candidates.size;
-
-
-    /*
-     * Сигналы могут быть
-     * не только те, что сейчас
-     * отображаются.
-     */
 
 }
 
 
 /* =========================================================
-   RENDER
+   ОТРИСОВКА
 ========================================================= */
 
-
-function renderSignals(
-    signals
-) {
+function renderSignals() {
 
     if (
         displayPaused
@@ -2351,24 +2537,37 @@ function renderSignals(
     }
 
 
-    const existing =
-        new Map();
+    const best =
+        getBestSignals();
 
 
+    const currentKeys =
+        new Set(
+            best.map(
+                signal =>
+                    signal.key
+            )
+        );
+
+
+    /*
+     * Удаляем карточки,
+     * которых больше нет в TOP-10.
+     */
     Array.from(
-        notificationsDiv.children
+        signalsDiv.querySelectorAll(
+            ".signal"
+        )
     ).forEach(
         element => {
 
             if (
-                element.dataset &&
-                element.dataset.key
+                !currentKeys.has(
+                    element.dataset.key
+                )
             ) {
 
-                existing.set(
-                    element.dataset.key,
-                    element
-                );
+                element.remove();
 
             }
 
@@ -2376,16 +2575,11 @@ function renderSignals(
     );
 
 
-    const usedKeys =
-        new Set();
-
-
     /*
-     * Если ничего нет.
+     * Пустой экран.
      */
-
     if (
-        signals.length === 0
+        best.length === 0
     ) {
 
         if (
@@ -2394,14 +2588,19 @@ function renderSignals(
             )
         ) {
 
-            notificationsDiv.innerHTML = `
+            signalsDiv.innerHTML = `
 
                 <div
                     id="emptyMessage"
                     class="empty"
                 >
-                    🔎 Сильных сигналов пока нет.<br>
-                    Сканер продолжает анализировать рынок.
+
+                    🔎 Ищем подтверждённые
+                    сетапы...<br><br>
+
+                    Быстрые стены
+                    отфильтровываются.
+
                 </div>
 
             `;
@@ -2418,117 +2617,79 @@ function renderSignals(
             "emptyMessage"
         );
 
-
-    if (
-        empty
-    ) {
-
+    if (empty) {
         empty.remove();
-
     }
 
 
     /*
-     * Создаём / обновляем карточки.
+     * Обновляем / создаём карточки.
+     *
+     * ВАЖНО:
+     * мы НЕ очищаем контейнер.
+     *
+     * Поэтому экран не прыгает.
      */
-
-    signals.forEach(
+    best.forEach(
         (
             signal,
             index
         ) => {
 
-            usedKeys.add(
-                signal.key
-            );
-
-
-            let element =
-                existing.get(
-                    signal.key
-                );
-
-
-            if (
-                !element
-            ) {
-
-                element =
-                    document.createElement(
-                        "div"
-                    );
-
-                element.dataset.key =
-                    signal.key;
-
-                notificationsDiv.appendChild(
-                    element
-                );
-
-            }
-
-
-            updateSignalCard(
-                element,
-                signal,
-                index + 1
-            );
-
-        }
-    );
-
-
-    /*
-     * Удаляем карточки,
-     * которые больше не входят
-     * в TOP.
-     */
-
-    existing.forEach(
-        (
-            element,
-            key
-        ) => {
-
-            if (
-                !usedKeys.has(
-                    key
-                )
-            ) {
-
-                element.remove();
-
-            }
-
-        }
-    );
-
-
-    /*
-     * Правильный порядок.
-     *
-     * Используем DOM move,
-     * а не пересоздание всех карточек.
-     */
-
-    signals.forEach(
-        signal => {
-
-            const element =
-                existing.get(
-                    signal.key
-                ) ||
-                document.querySelector(
+            let card =
+                signalsDiv.querySelector(
                     `[data-key="${CSS.escape(signal.key)}"]`
                 );
 
 
-            if (
-                element
-            ) {
+            if (!card) {
 
-                notificationsDiv.appendChild(
-                    element
+                card =
+                    document.createElement(
+                        "div"
+                    );
+
+                card.className =
+                    "signal";
+
+                card.dataset.key =
+                    signal.key;
+
+                signalsDiv.appendChild(
+                    card
+                );
+
+            }
+
+
+            updateCard(
+                card,
+                signal,
+                index
+            );
+
+        }
+    );
+
+
+    /*
+     * Переставляем только если
+     * действительно изменился рейтинг.
+     *
+     * Не создаём новые элементы.
+     */
+    best.forEach(
+        signal => {
+
+            const card =
+                signalsDiv.querySelector(
+                    `[data-key="${CSS.escape(signal.key)}"]`
+                );
+
+            if (card) {
+
+                signalsDiv.appendChild(
+                    card
                 );
 
             }
@@ -2540,126 +2701,119 @@ function renderSignals(
 
 
 /* =========================================================
-   SIGNAL CARD
+   КАРТОЧКА
 ========================================================= */
 
-
-function updateSignalCard(
-    element,
+function updateCard(
+    card,
     signal,
-    position
+    index
 ) {
 
-    const isBuy =
-        signal.side ===
-        "Buy";
+    const isLong =
+        signal.side === "Buy";
 
 
-    const sideText =
-        isBuy
-            ? "🟢 BUY WALL"
-            : "🔴 SELL WALL";
+    const direction =
+        isLong
+            ? "🟢 LONG"
+            : "🔴 SHORT";
 
 
-    const sideClass =
-        isBuy
-            ? "buy"
-            : "sell";
+    const directionClass =
+        isLong
+            ? "long"
+            : "short";
 
 
-    element.className =
-        "notification " +
-        sideClass;
-
-
-    const market =
-        marketData.get(
-            signal.symbol
+    card.className =
+        "signal " +
+        directionClass +
+        (
+            signal.state === "ENTRY"
+                ? " entry"
+                : " watch"
         );
 
 
-    let priceChange =
-        0;
+    let badgeText =
+        "👀 WATCH";
 
 
-    let volumeChange =
-        0;
+    let badgeClass =
+        "watch";
 
 
     if (
-        market
+        signal.state === "SETUP"
     ) {
 
-        priceChange =
-            market.priceChange1m;
+        badgeText =
+            "⚡ SETUP";
 
-
-        volumeChange =
-            market.volumeChange;
+        badgeClass =
+            directionClass;
 
     }
 
 
-    const priceArrow =
-        priceChange > 0
-            ? "↗"
-            : priceChange < 0
-                ? "↘"
-                : "→";
+    if (
+        signal.state === "ENTRY"
+    ) {
+
+        badgeText =
+            "🎯 ENTRY";
+
+        badgeClass =
+            directionClass;
+
+    }
 
 
-    const volumeText =
-        volumeChange >= 0
-            ? "+" +
-                volumeChange.toFixed(0) +
-                "%"
-            :
-                volumeChange.toFixed(0) +
-                "%";
-
-
-    const required =
-        getStabilityTime();
-
-
-    const progress =
+    const scorePercent =
         Math.min(
             100,
-            (
-                signal.aliveSeconds /
-                required
-            ) * 100
+            signal.score
         );
 
 
-    element.innerHTML = `
+    card.innerHTML = `
 
         <div class="signal-header">
 
-            <div class="coin">
+            <div>
 
-                🐋 ${signal.symbol}
+                <div class="coin">
 
-                <span class="side">
+                    #${index + 1}
+                    ${signal.symbol}
 
-                    ${sideText}
+                </div>
 
-                </span>
+                <div
+                    class="direction
+                    ${directionClass}"
+                >
+
+                    ${direction}
+
+                </div>
 
             </div>
 
 
             <div>
 
-                <div class="score">
-
-                    ${signal.score}/100
-
-                </div>
-
                 <span class="score-label">
-
                     SCORE
+                </span>
+
+                <span
+                    class="score
+                    ${directionClass}"
+                >
+
+                    ${signal.score}
 
                 </span>
 
@@ -2668,74 +2822,137 @@ function updateSignalCard(
         </div>
 
 
-        <div class="amount">
+        <div
+            class="entry-badge
+            ${badgeClass}"
+        >
 
-            $${formatMoney(
-                signal.lastValue
-            )}
+            ${badgeText}
 
         </div>
 
 
-        <div class="details">
+        <div class="amount">
 
-            📍 Позиция:
-            <b>#${position}</b>
+            $${formatMoney(signal.value)}
+
+        </div>
+
+
+        <div class="price">
+
+            Цена стены:
+            <b>
+                ${formatPrice(signal.price)}
+            </b>
 
             &nbsp; | &nbsp;
 
-            Рейтинг монеты:
-            <b>#${symbolRanks.get(
-                signal.symbol
-            )}</b>
-
-            <br>
-
-
-            💵 Цена заявки:
+            Текущая:
             <b>
-                ${formatPrice(
-                    signal.price
-                )}
+                ${formatPrice(signal.currentPrice)}
             </b>
 
-            <br>
+        </div>
 
 
-            ⏱ Держится:
-            <b>
-                ${signal.aliveSeconds.toFixed(1)}
-                сек
-            </b>
-
-            <br>
+        <div class="metrics">
 
 
-            🎯 Порог:
-            <b>
-                ${formatThreshold(
-                    signal.threshold
-                )}
-            </b>
+            <div class="metric">
 
-            <br>
+                🐋 Стена
 
+                <b>
 
-            ${priceArrow}
+                    ${(
+                        signal.value /
+                        signal.threshold
+                    ).toFixed(1)}× порога
 
-            Цена за 1 мин:
-            <b>
-                ${priceChange >= 0 ? "+" : ""}
-                ${priceChange.toFixed(2)}%
-            </b>
+                </b>
 
-            <br>
+            </div>
 
 
-            📊 Объём:
-            <b>
-                ${volumeText}
-            </b>
+            <div class="metric">
+
+                ⏱ Держится
+
+                <b>
+
+                    ${formatTime(
+                        signal.aliveSeconds
+                    )}
+
+                </b>
+
+            </div>
+
+
+            <div class="metric">
+
+                📈 Цена
+
+                <b class="
+                    ${
+                        signal.favorableMove >= 0
+                            ? "green"
+                            : "red"
+                    }
+                ">
+
+                    ${formatPercent(
+                        signal.priceMove
+                    )}
+
+                </b>
+
+            </div>
+
+
+            <div class="metric">
+
+                ⚡ Активность
+
+                <b>
+
+                    ${Math.round(
+                        signal.activity
+                    )}%
+
+                </b>
+
+            </div>
+
+
+            <div class="metric">
+
+                🧱 Стена сохранилась
+
+                <b>
+
+                    ${Math.round(
+                        signal.wallRatio * 100
+                    )}%
+
+                </b>
+
+            </div>
+
+
+            <div class="metric">
+
+                # Ранг
+
+                <b>
+
+                    #${signal.rank || "-"}
+
+                </b>
+
+            </div>
+
 
         </div>
 
@@ -2745,22 +2962,31 @@ function updateSignalCard(
             <div
                 class="progress-bar"
                 style="
-                    width: ${progress}%;
+                    width:${scorePercent}%
                 "
             ></div>
 
         </div>
 
 
-        <div class="time">
+        <div class="footer">
 
-            Подтверждение:
-            ${required} сек
+            <span>
 
-            &nbsp; • &nbsp;
+                ${signal.state === "ENTRY"
+                    ? "Подтверждённый сигнал"
+                    : "Наблюдение"
+                }
 
-            Обновлено:
-            ${new Date().toLocaleTimeString()}
+            </span>
+
+            <span>
+
+                ${new Date(
+                    signal.updatedAt
+                ).toLocaleTimeString()}
+
+            </span>
 
         </div>
 
@@ -2770,9 +2996,124 @@ function updateSignalCard(
 
 
 /* =========================================================
-   ЗАГРУЗКА TOP-100
+   СТАТИСТИКА
 ========================================================= */
 
+function updateStats() {
+
+    candidateCountDiv.innerText =
+        candidates.size;
+
+
+    let entries = 0;
+
+
+    signals.forEach(
+        signal => {
+
+            if (
+                signal.state === "ENTRY"
+            ) {
+
+                entries++;
+
+            }
+
+        }
+    );
+
+
+    entryCountDiv.innerText =
+        entries;
+
+}
+
+
+/* =========================================================
+   ГЛАВНЫЙ ЦИКЛ АНАЛИЗА
+========================================================= */
+
+function startAnalysisLoop() {
+
+    if (displayTimer) {
+
+        clearInterval(
+            displayTimer
+        );
+
+    }
+
+
+    displayTimer =
+        setInterval(
+            () => {
+
+                /*
+                 * Цена и история.
+                 */
+                symbols.forEach(
+                    symbol => {
+
+                        const price =
+                            getCurrentPrice(
+                                symbol
+                            );
+
+                        if (price) {
+
+                            updatePriceHistory(
+                                symbol,
+                                price
+                            );
+
+                        }
+
+                    }
+                );
+
+
+                /*
+                 * Оцениваем кандидатов
+                 * только раз в секунду.
+                 */
+                evaluateCandidates();
+
+
+                /*
+                 * Обновляем экран
+                 * только раз в секунду.
+                 */
+                renderSignals();
+
+
+                updateStats();
+
+            },
+            DISPLAY_INTERVAL
+        );
+
+}
+
+
+function stopAnalysisLoop() {
+
+    if (displayTimer) {
+
+        clearInterval(
+            displayTimer
+        );
+
+        displayTimer =
+            null;
+
+    }
+
+}
+
+
+/* =========================================================
+   TOP-100
+========================================================= */
 
 async function loadSymbols() {
 
@@ -2782,19 +3123,13 @@ async function loadSymbols() {
             "Загрузка TOP-100...";
 
 
-        statusDiv.style.color =
-            "#f7931a";
-
-
         const response =
             await fetch(
                 "https://api.bybit.com/v5/market/tickers?category=linear"
             );
 
 
-        if (
-            !response.ok
-        ) {
+        if (!response.ok) {
 
             throw new Error(
                 "HTTP " +
@@ -2827,33 +3162,23 @@ async function loadSymbols() {
 
                 .filter(
                     coin =>
-
                         coin.symbol &&
-
                         coin.symbol.endsWith(
                             "USDT"
                         ) &&
-
                         parseFloat(
                             coin.turnover24h
                         ) > 0
-
                 )
 
                 .sort(
-                    (
-                        a,
-                        b
-                    ) =>
-
+                    (a, b) =>
                         parseFloat(
                             b.turnover24h
                         ) -
-
                         parseFloat(
                             a.turnover24h
                         )
-
                 )
 
                 .slice(
@@ -2862,9 +3187,7 @@ async function loadSymbols() {
                 );
 
 
-        symbols.length =
-            0;
-
+        symbols.length = 0;
 
         symbolRanks.clear();
 
@@ -2875,29 +3198,13 @@ async function loadSymbols() {
                 index
             ) => {
 
-                const symbol =
-                    coin.symbol;
-
-
                 symbols.push(
-                    symbol
+                    coin.symbol
                 );
-
 
                 symbolRanks.set(
-                    symbol,
+                    coin.symbol,
                     index + 1
-                );
-
-
-                updateMarketData(
-                    symbol,
-                    parseFloat(
-                        coin.lastPrice
-                    ),
-                    parseFloat(
-                        coin.turnover24h
-                    )
                 );
 
             }
@@ -2914,14 +3221,13 @@ async function loadSymbols() {
     } catch (error) {
 
         console.error(
-            "Ошибка TOP-100:",
+            "TOP-100 error:",
             error
         );
 
 
         statusDiv.innerText =
             "Ошибка загрузки TOP-100";
-
 
         statusDiv.style.color =
             "#e74c3c";
@@ -2935,317 +3241,158 @@ async function loadSymbols() {
 
 
 /* =========================================================
-   MARKET DATA
+   WEBSOCKET
 ========================================================= */
 
+function connectWebSocket() {
 
-function updateMarketData(
-    symbol,
-    price,
-    turnover24h
-) {
-
-    if (
-        !isFinite(price) ||
-        price <= 0
-    ) {
-
+    if (!isRunning) {
         return;
+    }
+
+
+    if (ws) {
+
+        try {
+            ws.close();
+        } catch (e) {}
 
     }
 
 
-    const now =
-        Date.now();
-
-
-    let data =
-        marketData.get(
-            symbol
+    ws =
+        new WebSocket(
+            "wss://stream.bybit.com/v5/public/linear"
         );
 
 
-    if (
-        !data
-    ) {
+    ws.onopen = () => {
 
-        data = {
+        console.log(
+            "WebSocket connected"
+        );
 
-            symbol,
 
-            price,
+        wsStatusDiv.innerText =
+            "ON";
 
-            previousPrice:
-                price,
+        wsStatusDiv.className =
+            "stat-value green";
 
-            turnover24h,
 
-            previousTurnover:
-                turnover24h,
+        statusDiv.innerText =
+            "Сканирование активно";
 
-            priceSamples: [
+        statusDiv.style.color =
+            "#27ae60";
 
-                {
-                    time: now,
-                    price
-                }
 
-            ],
+        /*
+         * Только стакан.
+         *
+         * Экран от него напрямую
+         * НЕ обновляется.
+         */
+        const topics =
+            symbols.map(
+                symbol =>
+                    `orderbook.${ORDERBOOK_DEPTH}.${symbol}`
+            );
 
-            volumeSamples: [
 
-                {
-                    time: now,
-                    turnover:
-                        turnover24h
-                }
+        /*
+         * Можно добавить ticker,
+         * но для текущей архитектуры
+         * mid-price берём из стакана.
+         */
+        ws.send(
+            JSON.stringify({
 
-            ],
+                op: "subscribe",
 
-            priceChange1m: 0,
+                args: topics
 
-            volumeChange: 0
+            })
+        );
+
+
+        startHeartbeat();
+
+    };
+
+
+    ws.onmessage =
+        handleWebSocketMessage;
+
+
+    ws.onerror =
+        error => {
+
+            console.error(
+                "WebSocket error:",
+                error
+            );
+
+
+            wsStatusDiv.innerText =
+                "ERROR";
+
+            wsStatusDiv.className =
+                "stat-value red";
 
         };
 
 
-        marketData.set(
-            symbol,
-            data
-        );
+    ws.onclose = () => {
+
+        stopHeartbeat();
 
 
-        return;
+        wsStatusDiv.innerText =
+            "OFF";
 
-    }
-
-
-    data.previousPrice =
-        data.price;
+        wsStatusDiv.className =
+            "stat-value red";
 
 
-    data.price =
-        price;
+        if (isRunning) {
+
+            statusDiv.innerText =
+                "Переподключение...";
+
+            statusDiv.style.color =
+                "#f7931a";
 
 
-    data.previousTurnover =
-        data.turnover24h;
-
-
-    data.turnover24h =
-        turnover24h;
-
-
-    data.priceSamples.push({
-
-        time: now,
-
-        price
-
-    });
-
-
-    data.volumeSamples.push({
-
-        time: now,
-
-        turnover:
-            turnover24h
-
-    });
-
-
-    /*
-     * Оставляем примерно
-     * 2 минуты истории.
-     */
-
-    const cutoff =
-        now -
-        2 * 60 * 1000;
-
-
-    data.priceSamples =
-        data.priceSamples.filter(
-            item =>
-                item.time >= cutoff
-        );
-
-
-    data.volumeSamples =
-        data.volumeSamples.filter(
-            item =>
-                item.time >= cutoff
-        );
-
-
-    /*
-     * Находим точку около
-     * 1 минуты назад.
-     */
-
-    const target =
-        now -
-        60 * 1000;
-
-
-    let oldPrice =
-        null;
-
-
-    for (
-        let i =
-            data.priceSamples.length -
-            1;
-
-        i >= 0;
-
-        i--
-    ) {
-
-        if (
-            data.priceSamples[i].time <=
-            target
-        ) {
-
-            oldPrice =
-                data.priceSamples[i].price;
-
-            break;
+            scheduleReconnect();
 
         }
 
-    }
-
-
-    if (
-        oldPrice &&
-        oldPrice > 0
-    ) {
-
-        data.priceChange1m =
-            (
-                (
-                    price -
-                    oldPrice
-                ) /
-                oldPrice
-            ) *
-            100;
-
-    }
-
-
-    /*
-     * Здесь turnover24h —
-     * накопительный оборот.
-     *
-     * Сравниваем прирост
-     * за последние интервалы.
-     */
-
-    const recentSamples =
-        data.volumeSamples;
-
-
-    if (
-        recentSamples.length >= 2
-    ) {
-
-        const oldest =
-            recentSamples[0];
-
-
-        const newest =
-            recentSamples[
-                recentSamples.length - 1
-            ];
-
-
-        const turnoverDiff =
-            newest.turnover -
-            oldest.turnover;
-
-
-        /*
-         * Относительная оценка
-         * активности.
-         *
-         * Это именно индикатор
-         * ускорения оборота,
-         * а не абсолютный объём.
-         */
-
-        if (
-            oldest.turnover > 0
-        ) {
-
-            const base =
-                Math.max(
-                    oldest.turnover *
-                    0.00001,
-                    1
-                );
-
-
-            data.volumeChange =
-                Math.min(
-                    500,
-                    (
-                        turnoverDiff /
-                        base
-                    ) *
-                    100
-                );
-
-        }
-
-    }
+    };
 
 }
 
 
 /* =========================================================
-   ОБНОВЛЕНИЕ MARKET DATA
+   MESSAGE
 ========================================================= */
 
-
-async function refreshMarketData() {
-
-    if (
-        !isRunning
-    ) {
-
-        return;
-
-    }
-
+function handleWebSocketMessage(
+    event
+) {
 
     try {
 
-        const response =
-            await fetch(
-                "https://api.bybit.com/v5/market/tickers?category=linear"
+        const data =
+            JSON.parse(
+                event.data
             );
 
 
         if (
-            !response.ok
-        ) {
-
-            return;
-
-        }
-
-
-        const json =
-            await response.json();
-
-
-        if (
-            !json.result ||
-            !Array.isArray(
-                json.result.list
+            !data.topic ||
+            !data.topic.startsWith(
+                "orderbook."
             )
         ) {
 
@@ -3254,42 +3401,59 @@ async function refreshMarketData() {
         }
 
 
-        json.result.list.forEach(
-            coin => {
-
-                if (
-                    !symbolRanks.has(
-                        coin.symbol
-                    )
-                ) {
-
-                    return;
-
-                }
+        const parts =
+            data.topic.split(".");
 
 
-                updateMarketData(
+        const symbol =
+            parts[2];
 
-                    coin.symbol,
 
-                    parseFloat(
-                        coin.lastPrice
-                    ),
+        if (!symbol) {
+            return;
+        }
 
-                    parseFloat(
-                        coin.turnover24h
-                    )
 
-                );
-
-            }
+        /*
+         * Каждое сообщение увеличивает
+         * показатель активности.
+         *
+         * Но НИЧЕГО не рисуем.
+         */
+        updateMarketActivity(
+            symbol
         );
 
+
+        if (
+            data.type ===
+            "snapshot"
+        ) {
+
+            applySnapshot(
+                symbol,
+                data.data
+            );
+
+        }
+
+
+        else if (
+            data.type ===
+            "delta"
+        ) {
+
+            applyDelta(
+                symbol,
+                data.data
+            );
+
+        }
 
     } catch (error) {
 
         console.error(
-            "Market data error:",
+            "WS message error:",
             error
         );
 
@@ -3301,7 +3465,6 @@ async function refreshMarketData() {
 /* =========================================================
    HEARTBEAT
 ========================================================= */
-
 
 function startHeartbeat() {
 
@@ -3335,260 +3498,13 @@ function startHeartbeat() {
 
 function stopHeartbeat() {
 
-    if (
-        heartbeatTimer
-    ) {
+    if (heartbeatTimer) {
 
         clearInterval(
             heartbeatTimer
         );
 
-
-        heartbeatTimer =
-            null;
-
-    }
-
-}
-
-
-/* =========================================================
-   WEBSOCKET
-========================================================= */
-
-
-function connectWebSocket() {
-
-    if (
-        !isRunning
-    ) {
-
-        return;
-
-    }
-
-
-    if (
-        ws
-    ) {
-
-        try {
-
-            ws.close();
-
-        } catch (e) {}
-
-    }
-
-
-    ws =
-        new WebSocket(
-            "wss://stream.bybit.com/v5/public/linear"
-        );
-
-
-    ws.onopen =
-        () => {
-
-            console.log(
-                "WebSocket connected"
-            );
-
-
-            wsStatusDiv.innerText =
-                "ON";
-
-
-            wsStatusDiv.className =
-                "green";
-
-
-            statusDiv.innerText =
-                "Сканирование активно";
-
-
-            statusDiv.style.color =
-                "#27ae60";
-
-
-            /*
-             * Подписываемся на TOP-100.
-             */
-
-            const topics =
-                symbols.map(
-                    symbol =>
-                        `orderbook.${ORDERBOOK_DEPTH}.${symbol}`
-                );
-
-
-            ws.send(
-                JSON.stringify({
-
-                    op:
-                        "subscribe",
-
-                    args:
-                        topics
-
-                })
-            );
-
-
-            startHeartbeat();
-
-        };
-
-
-    ws.onmessage =
-        handleWebSocketMessage;
-
-
-    ws.onerror =
-        error => {
-
-            console.error(
-                "WebSocket error:",
-                error
-            );
-
-
-            wsStatusDiv.innerText =
-                "ERROR";
-
-
-            wsStatusDiv.className =
-                "red";
-
-        };
-
-
-    ws.onclose =
-        () => {
-
-            stopHeartbeat();
-
-
-            wsStatusDiv.innerText =
-                "OFF";
-
-
-            wsStatusDiv.className =
-                "red";
-
-
-            if (
-                isRunning
-            ) {
-
-                statusDiv.innerText =
-                    "Переподключение...";
-
-
-                statusDiv.style.color =
-                    "#f7931a";
-
-
-                scheduleReconnect();
-
-            }
-
-        };
-
-}
-
-
-/* =========================================================
-   WS MESSAGE
-========================================================= */
-
-
-function handleWebSocketMessage(
-    event
-) {
-
-    try {
-
-        const data =
-            JSON.parse(
-                event.data
-            );
-
-
-        if (
-            !data.topic
-        ) {
-
-            return;
-
-        }
-
-
-        if (
-            !data.topic.startsWith(
-                "orderbook."
-            )
-        ) {
-
-            return;
-
-        }
-
-
-        const parts =
-            data.topic.split(
-                "."
-            );
-
-
-        const symbol =
-            parts[2];
-
-
-        if (
-            !symbol ||
-            !symbolRanks.has(
-                symbol
-            )
-        ) {
-
-            return;
-
-        }
-
-
-        if (
-            data.type ===
-            "snapshot"
-        ) {
-
-            applySnapshot(
-                symbol,
-                data.data
-            );
-
-        }
-
-
-        else if (
-            data.type ===
-            "delta"
-        ) {
-
-            applyDelta(
-                symbol,
-                data.data
-            );
-
-        }
-
-
-    } catch (error) {
-
-        console.error(
-            "WS processing error:",
-            error
-        );
+        heartbeatTimer = null;
 
     }
 
@@ -3599,24 +3515,15 @@ function handleWebSocketMessage(
    RECONNECT
 ========================================================= */
 
-
 function scheduleReconnect() {
 
-    if (
-        !isRunning
-    ) {
-
+    if (!isRunning) {
         return;
-
     }
 
 
-    if (
-        reconnectTimer
-    ) {
-
+    if (reconnectTimer) {
         return;
-
     }
 
 
@@ -3626,7 +3533,6 @@ function scheduleReconnect() {
 
                 reconnectTimer =
                     null;
-
 
                 connectWebSocket();
 
@@ -3638,93 +3544,36 @@ function scheduleReconnect() {
 
 
 /* =========================================================
-   DISPLAY LOOP
+   ОБНОВЛЕНИЕ TOP-100
 ========================================================= */
-
-
-function startDisplayLoop() {
-
-    stopDisplayLoop();
-
-
-    displayTimer =
-        setInterval(
-            () => {
-
-                analyzeCandidates();
-
-            },
-            DISPLAY_INTERVAL
-        );
-
-}
-
-
-function stopDisplayLoop() {
-
-    if (
-        displayTimer
-    ) {
-
-        clearInterval(
-            displayTimer
-        );
-
-
-        displayTimer =
-            null;
-
-    }
-
-}
-
-
-/* =========================================================
-   TOP-100 REFRESH
-========================================================= */
-
 
 async function refreshSymbols() {
 
-    if (
-        !isRunning
-    ) {
-
+    if (!isRunning) {
         return;
-
     }
-
-
-    console.log(
-        "Обновление TOP-100..."
-    );
 
 
     const success =
         await loadSymbols();
 
 
-    if (
-        !success
-    ) {
-
+    if (!success) {
         return;
-
     }
 
 
     /*
-     * Перезапускаем стаканы,
-     * потому что состав TOP мог измениться.
+     * Старый стакан больше
+     * не используем.
      */
-
     orderBooks.clear();
-
 
     candidates.clear();
 
+    priceHistory.clear();
 
-    activeSignals.clear();
+    marketActivity.clear();
 
 
     connectWebSocket();
@@ -3733,11 +3582,10 @@ async function refreshSymbols() {
 
 
 /* =========================================================
-   PAUSE
+   ПАУЗА
 ========================================================= */
 
-
-function toggleDisplayPause() {
+function togglePause() {
 
     displayPaused =
         !displayPaused;
@@ -3749,44 +3597,28 @@ function toggleDisplayPause() {
         );
 
 
-    if (
-        displayPaused
-    ) {
+    if (displayPaused) {
 
         button.innerText =
-            "▶ Продолжить экран";
-
-
-        button.classList.add(
-            "paused"
-        );
+            "▶ Продолжить";
 
 
         statusDiv.innerText =
             "Сканирование идёт | экран на паузе";
 
+    }
 
-    } else {
-
+    else {
 
         button.innerText =
-            "⏸ Пауза экрана";
-
-
-        button.classList.remove(
-            "paused"
-        );
+            "⏸ Пауза";
 
 
         statusDiv.innerText =
             "Сканирование активно";
 
 
-        /*
-         * Сразу обновляем экран.
-         */
-
-        analyzeCandidates();
+        renderSignals();
 
     }
 
@@ -3794,18 +3626,13 @@ function toggleDisplayPause() {
 
 
 /* =========================================================
-   START
+   ЗАПУСК
 ========================================================= */
-
 
 async function startScan() {
 
-    if (
-        isRunning
-    ) {
-
+    if (isRunning) {
         return;
-
     }
 
 
@@ -3813,40 +3640,14 @@ async function startScan() {
         true;
 
 
-    statusDiv.innerText =
-        "Загрузка TOP-100...";
-
-
-    statusDiv.style.color =
-        "#f7931a";
-
-
-    /*
-     * Browser notification.
-     */
-
-    if (
-        "Notification" in window &&
-        Notification.permission ===
-        "default"
-    ) {
-
-        try {
-
-            await Notification.requestPermission();
-
-        } catch (e) {}
-
-    }
+    await requestNotifications();
 
 
     const success =
         await loadSymbols();
 
 
-    if (
-        !success
-    ) {
+    if (!success) {
 
         isRunning =
             false;
@@ -3856,37 +3657,10 @@ async function startScan() {
     }
 
 
-    /*
-     * WebSocket.
-     */
+    startAnalysisLoop();
 
     connectWebSocket();
 
-
-    /*
-     * Анализ раз в секунду.
-     */
-
-    startDisplayLoop();
-
-
-    /*
-     * Market data.
-     */
-
-    await refreshMarketData();
-
-
-    marketDataTimer =
-        setInterval(
-            refreshMarketData,
-            MARKET_DATA_INTERVAL
-        );
-
-
-    /*
-     * TOP-100 каждые 5 минут.
-     */
 
     symbolRefreshTimer =
         setInterval(
@@ -3898,9 +3672,8 @@ async function startScan() {
 
 
 /* =========================================================
-   STOP
+   СТОП
 ========================================================= */
-
 
 function stopScan() {
 
@@ -3908,14 +3681,11 @@ function stopScan() {
         false;
 
 
-    if (
-        reconnectTimer
-    ) {
+    if (reconnectTimer) {
 
         clearTimeout(
             reconnectTimer
         );
-
 
         reconnectTimer =
             null;
@@ -3923,14 +3693,11 @@ function stopScan() {
     }
 
 
-    if (
-        symbolRefreshTimer
-    ) {
+    if (symbolRefreshTimer) {
 
         clearInterval(
             symbolRefreshTimer
         );
-
 
         symbolRefreshTimer =
             null;
@@ -3938,85 +3705,71 @@ function stopScan() {
     }
 
 
-    if (
-        marketDataTimer
-    ) {
-
-        clearInterval(
-            marketDataTimer
-        );
-
-
-        marketDataTimer =
-            null;
-
-    }
-
-
-    stopDisplayLoop();
-
-
     stopHeartbeat();
 
+    stopAnalysisLoop();
 
-    if (
-        ws
-    ) {
+
+    if (ws) {
 
         try {
-
             ws.close();
-
         } catch (e) {}
 
-
-        ws =
-            null;
+        ws = null;
 
     }
 
 
     orderBooks.clear();
 
-
     candidates.clear();
 
+    priceHistory.clear();
 
-    activeSignals.clear();
+    marketActivity.clear();
 
-
-    statusDiv.innerText =
-        "Остановлен";
-
-
-    statusDiv.style.color =
-        "#848e9c";
-
-
-    wsStatusDiv.innerText =
-        "OFF";
-
-
-    wsStatusDiv.className = "";
+    signals.clear();
 
 
     candidateCountDiv.innerText =
         "0";
 
+    entryCountDiv.innerText =
+        "0";
+
+
+    wsStatusDiv.innerText =
+        "OFF";
+
+    wsStatusDiv.className =
+        "stat-value";
+
+
+    statusDiv.innerText =
+        "Остановлен";
+
+    statusDiv.style.color =
+        "#848e9c";
+
+
+    renderSignals();
+
 }
 
 
 /* =========================================================
-   CLEAR
+   ОЧИСТКА
 ========================================================= */
-
 
 function clearSignals() {
 
-    activeSignals.clear();
+    signals.clear();
+
+    signalCooldowns.clear();
 
 
-    notificationsDiv.innerHTML = `
+    signalsDiv.innerHTML = `
 
         <div
             id="emptyMessage"
@@ -4025,115 +3778,47 @@ function clearSignals() {
 
             Список очищен.<br>
 
-            Ждём новые сигналы.
+            Ждём новые
+            подтверждённые сигналы.
 
         </div>
 
     `;
 
 
-    signalCount =
-        0;
-
-
-    signalCountDiv.innerText =
+    entryCountDiv.innerText =
         "0";
 
 }
 
 
 /* =========================================================
-   SETTINGS CHANGE
+   ИНИЦИАЛИЗАЦИЯ
 ========================================================= */
 
-
-stabilitySelect.addEventListener(
-    "change",
-    () => {
-
-        /*
-         * Не перезапускаем WebSocket.
-         *
-         * Просто меняем критерий
-         * подтверждения.
-         */
-
-        analyzeCandidates();
-
-    }
-);
-
-
-scoreSelect.addEventListener(
-    "change",
-    () => {
-
-        analyzeCandidates();
-
-    }
-);
-
-
-maxSignalsSelect.addEventListener(
-    "change",
-    () => {
-
-        analyzeCandidates();
-
-    }
-);
-
-
-/* =========================================================
-   INIT
-========================================================= */
-
-
 console.log(
-    "🐋 Bybit Whale Scanner"
+    "🐋 Bybit Whale Entry Scanner"
 );
-
-
-console.log(
-    "Architecture:"
-);
-
 
 console.log(
     "TOP-100"
 );
 
-
 console.log(
-    "OrderBook depth:",
-    ORDERBOOK_DEPTH
+    "MAX SIGNALS:",
+    MAX_SIGNALS
 );
 
-
 console.log(
-    "Display interval:",
-    DISPLAY_INTERVAL,
-    "ms"
+    "MIN SCORE:",
+    DEFAULT_MIN_SCORE
 );
 
-
 console.log(
-    "Max signals:",
-    getMaxSignals()
+    "STABILITY:",
+    DEFAULT_STABILITY,
+    "seconds"
 );
-
-
-console.log(
-    "Minimum score:",
-    getMinimumScore()
-);
-
-
-console.log(
-    "Thresholds:",
-    THRESHOLDS
-);
-
 
 </script>
 
