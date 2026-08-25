@@ -1,217 +1,488 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Bybit Whale Scanner</title>
 
+
     <style>
+
         * {
             box-sizing: border-box;
         }
 
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                         Roboto, sans-serif;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                sans-serif;
+
             background: #0b0e11;
+
             color: #eaecef;
+
             margin: 0;
+
             padding: 15px;
+
         }
+
 
         h1 {
+
             font-size: 20px;
+
             margin: 0 0 15px 0;
+
         }
+
 
         .header {
+
             background: #1e2329;
+
             padding: 15px;
+
             border-radius: 12px;
+
             margin-bottom: 15px;
+
         }
 
+
         .settings {
+
             display: flex;
+
             gap: 8px;
+
             flex-wrap: wrap;
+
             margin-bottom: 12px;
+
+            align-items: center;
+
         }
+
 
         button,
         select {
+
             background: #f7931a;
+
             border: none;
+
             color: #1e2329;
+
             padding: 10px 14px;
+
             border-radius: 8px;
+
             font-weight: bold;
+
             cursor: pointer;
+
         }
+
 
         select {
+
             background: #2b3139;
+
             color: #eaecef;
+
         }
+
 
         button:hover {
+
             opacity: 0.9;
+
         }
+
 
         button.stop {
+
             background: #e74c3c;
+
             color: white;
+
         }
+
 
         button.pause {
+
             background: #3498db;
+
             color: white;
+
         }
+
 
         button.clear {
+
             background: #555;
+
             color: white;
+
         }
+
 
         .status {
+
             color: #848e9c;
+
             font-size: 13px;
+
         }
+
 
         .stats {
+
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
             gap: 8px;
+
             margin-top: 12px;
+
         }
+
 
         .stat {
+
             background: #161a1e;
+
             border-radius: 8px;
+
             padding: 10px;
+
             text-align: center;
+
             font-size: 12px;
+
         }
+
 
         .stat-value {
+
             display: block;
+
             font-size: 16px;
+
             font-weight: bold;
+
             margin-top: 4px;
+
         }
+
 
         .green {
+
             color: #27ae60;
+
         }
+
 
         .orange {
+
             color: #f7931a;
+
         }
+
 
         .red {
+
             color: #e74c3c;
+
         }
+
 
         .blue {
+
             color: #3498db;
+
         }
+
 
         .section-title {
+
             font-size: 14px;
+
             color: #848e9c;
+
             margin: 15px 0 8px;
+
         }
+
 
         /*
-         * ВАЖНО:
-         * Список сигналов НЕ прокручивается автоматически.
-         * У него фиксированная высота.
+         * =====================================================
+         * SIGNAL BOARD
+         * =====================================================
+         *
+         * Теперь здесь НЕТ бесконечной ленты.
+         *
+         * Всегда максимум 10 карточек.
+         *
+         * Карточки обновляются на месте.
          */
+
         .list {
+
             height: 65vh;
+
             min-height: 350px;
+
             overflow-y: auto;
+
             padding-right: 4px;
+
         }
+
 
         .notification {
+
             background: #1e2329;
+
             padding: 14px;
+
             margin-bottom: 10px;
+
             border-radius: 10px;
+
             border-left: 5px solid #f7931a;
+
             font-size: 14px;
+
+            transition:
+                opacity 0.2s ease,
+                border-color 0.2s ease;
+
         }
+
 
         .notification.buy {
-            border-left-color: #27ae60;
+
+            border-left-color:
+                #27ae60;
+
         }
+
 
         .notification.sell {
-            border-left-color: #e74c3c;
+
+            border-left-color:
+                #e74c3c;
+
         }
+
+
+        .notification.watch {
+
+            border-left-color:
+                #f7931a;
+
+        }
+
+
+        .signal-header {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items: center;
+
+            gap: 10px;
+
+        }
+
 
         .coin {
+
             font-size: 17px;
+
             font-weight: bold;
+
         }
+
 
         .side {
+
             font-weight: bold;
+
             margin-left: 5px;
+
         }
+
+
+        .score {
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+
+        }
+
+
+        .score-label {
+
+            font-size: 10px;
+
+            color: #848e9c;
+
+            display: block;
+
+            text-align: right;
+
+        }
+
 
         .amount {
+
             font-size: 20px;
+
             font-weight: bold;
+
             margin: 7px 0;
+
         }
+
 
         .details {
+
             color: #b7bdc6;
+
             line-height: 1.7;
+
             font-size: 13px;
+
         }
+
+
+        .progress {
+
+            height: 5px;
+
+            background: #2b3139;
+
+            border-radius: 5px;
+
+            overflow: hidden;
+
+            margin-top: 10px;
+
+        }
+
+
+        .progress-bar {
+
+            height: 100%;
+
+            background: #f7931a;
+
+            transition:
+                width 0.5s ease;
+
+        }
+
 
         .time {
+
             color: #848e9c;
+
             font-size: 11px;
+
             margin-top: 7px;
+
         }
+
 
         .empty {
+
             text-align: center;
+
             color: #848e9c;
+
             padding: 50px 15px;
+
         }
 
+
         .paused {
+
             opacity: 0.7;
+
         }
+
+
+        .settings-title {
+
+            color: #848e9c;
+
+            font-size: 12px;
+
+        }
+
 
         @media (max-width: 600px) {
 
             .stats {
-                grid-template-columns: 1fr 1fr 1fr;
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
             }
+
 
             .list {
+
                 height: 60vh;
+
             }
 
+
             .amount {
+
                 font-size: 18px;
+
             }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
+
 <div class="header">
 
-    <h1>🐋 Bybit Whale Scanner</h1>
+
+    <h1>
+        🐋 Bybit Whale Scanner
+    </h1>
+
 
     <div class="settings">
 
@@ -219,15 +490,27 @@
             ▶ Запуск
         </button>
 
-        <button class="stop" onclick="stopScan()">
+
+        <button
+            class="stop"
+            onclick="stopScan()"
+        >
             ⏹ Стоп
         </button>
 
-        <button class="pause" onclick="toggleDisplayPause()">
+
+        <button
+            class="pause"
+            onclick="toggleDisplayPause()"
+        >
             ⏸ Пауза экрана
         </button>
 
-        <button class="clear" onclick="clearNotifications()">
+
+        <button
+            class="clear"
+            onclick="clearSignals()"
+        >
             🗑 Очистить
         </button>
 
@@ -236,14 +519,78 @@
 
     <div class="settings">
 
-        <label>
-            Подтверждение заявки:
-        </label>
+        <span class="settings-title">
+            Подтверждение:
+        </span>
+
 
         <select id="stabilitySelect">
-            <option value="3">3 секунды</option>
-            <option value="5">5 секунд</option>
-            <option value="10">10 секунд</option>
+
+            <option value="3">
+                3 секунды
+            </option>
+
+            <option
+                value="5"
+                selected
+            >
+                5 секунд
+            </option>
+
+            <option value="10">
+                10 секунд
+            </option>
+
+        </select>
+
+
+        <span class="settings-title">
+            Минимальный Score:
+        </span>
+
+
+        <select id="scoreSelect">
+
+            <option value="50">
+                50
+            </option>
+
+            <option
+                value="60"
+                selected
+            >
+                60
+            </option>
+
+            <option value="70">
+                70
+            </option>
+
+            <option value="80">
+                80
+            </option>
+
+        </select>
+
+
+        <span class="settings-title">
+            Максимум:
+        </span>
+
+
+        <select id="maxSignalsSelect">
+
+            <option value="5">
+                5
+            </option>
+
+            <option
+                value="10"
+                selected
+            >
+                10
+            </option>
+
         </select>
 
     </div>
@@ -252,6 +599,7 @@
     <div class="status">
 
         Статус:
+
         <span id="status">
             Остановлен
         </span>
@@ -260,6 +608,7 @@
 
 
     <div class="stats">
+
 
         <div class="stat">
 
@@ -291,6 +640,20 @@
 
         <div class="stat">
 
+            Кандидатов
+
+            <span
+                class="stat-value"
+                id="candidateCount"
+            >
+                0
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
             Сигналов
 
             <span
@@ -302,6 +665,7 @@
 
         </div>
 
+
     </div>
 
 </div>
@@ -309,7 +673,7 @@
 
 <div class="section-title">
 
-    🐋 Подтверждённые крупные заявки
+    🐋 TOP сигналов
 
 </div>
 
@@ -319,50 +683,100 @@
     class="list"
 >
 
+
     <div
         id="emptyMessage"
         class="empty"
     >
+
         Запусти сканер.<br>
-        Здесь появятся подтверждённые заявки.
+
+        Здесь появятся сильные сигналы.
+
     </div>
+
 
 </div>
 
 
 <script>
 
+
 /* =========================================================
    ОСНОВНЫЕ НАСТРОЙКИ
 ========================================================= */
 
-// Теперь сканируем только TOP-100
+
 const MAX_SYMBOLS = 100;
 
-// Глубина стакана
+
 const ORDERBOOK_DEPTH = 50;
 
-// Обновляем рейтинг монет каждые 5 минут
-const SYMBOL_REFRESH_TIME = 5 * 60 * 1000;
 
-// Максимум сигналов на экране
-const MAX_SIGNALS = 50;
+/*
+ * Обновляем TOP-100 раз в 5 минут.
+ */
 
-// Минимальное время между повторными
-// сигналами одной и той же заявки
-const ALERT_COOLDOWN = 10000;
+const SYMBOL_REFRESH_TIME =
+    5 * 60 * 1000;
+
+
+/*
+ * Экран обновляется ОДИН РАЗ В СЕКУНДУ.
+ */
+
+const DISPLAY_INTERVAL =
+    1000;
+
+
+/*
+ * Рыночные данные REST
+ * обновляем раз в 15 секунд.
+ */
+
+const MARKET_DATA_INTERVAL =
+    15000;
+
+
+/*
+ * Максимальный срок жизни
+ * сигнала без подтверждения.
+ */
+
+const CANDIDATE_MAX_AGE =
+    60 * 1000;
+
+
+/*
+ * После исчезновения крупной заявки
+ * не держим её в памяти бесконечно.
+ */
+
+const ORDER_CLEANUP_TIME =
+    20 * 1000;
+
+
+/*
+ * Повторный сигнал по той же заявке.
+ */
+
+const ALERT_COOLDOWN =
+    30 * 1000;
+
+
+/*
+ * Максимум кандидатов,
+ * которые держим в памяти.
+ */
+
+const MAX_CANDIDATES =
+    1500;
 
 
 /* =========================================================
    ПОРОГИ
-=========================================================
-
-   1–5      = $500,000
-   6–20     = $300,000
-   21–50    = $180,000
-   51–100   = $100,000
-
 ========================================================= */
+
 
 const THRESHOLDS = {
 
@@ -381,56 +795,96 @@ const THRESHOLDS = {
    СОСТОЯНИЕ
 ========================================================= */
 
+
 let ws = null;
+
 
 let isRunning = false;
 
+
 let displayPaused = false;
+
 
 let reconnectTimer = null;
 
+
 let symbolRefreshTimer = null;
+
 
 let heartbeatTimer = null;
 
 
+let displayTimer = null;
+
+
+let marketDataTimer = null;
+
+
 /*
- * Список TOP-100
+ * TOP-100
  */
+
 const symbols = [];
 
 
 /*
- * Рейтинг:
- *
- * BTCUSDT -> 1
- * ETHUSDT -> 2
- * ...
+ * Ранги монет.
  */
-const symbolRanks = new Map();
+
+const symbolRanks =
+    new Map();
 
 
 /*
  * Локальные стаканы.
  */
-const orderBooks = new Map();
+
+const orderBooks =
+    new Map();
 
 
 /*
- * Заявки, которые мы отслеживаем.
+ * Только крупные заявки.
+ *
+ * key:
+ *
+ * BTCUSDT_Buy_100000
  */
-const stableOrders = new Map();
+
+const candidates =
+    new Map();
 
 
 /*
- * Последние сигналы по заявкам.
+ * Уже показанные сигналы.
  */
-const alertedOrders = new Map();
+
+const alertedOrders =
+    new Map();
 
 
 /*
- * Счётчик сигналов.
+ * Рыночные данные.
  */
+
+const marketData =
+    new Map();
+
+
+/*
+ * Текущие сигналы.
+ *
+ * key -> signal
+ */
+
+const activeSignals =
+    new Map();
+
+
+/*
+ * Статистика.
+ */
+
 let signalCount = 0;
 
 
@@ -438,46 +892,109 @@ let signalCount = 0;
    DOM
 ========================================================= */
 
+
 const notificationsDiv =
-    document.getElementById("notifications");
+    document.getElementById(
+        "notifications"
+    );
+
 
 const statusDiv =
-    document.getElementById("status");
+    document.getElementById(
+        "status"
+    );
+
 
 const wsStatusDiv =
-    document.getElementById("wsStatus");
+    document.getElementById(
+        "wsStatus"
+    );
+
 
 const coinCountDiv =
-    document.getElementById("coinCount");
+    document.getElementById(
+        "coinCount"
+    );
+
+
+const candidateCountDiv =
+    document.getElementById(
+        "candidateCount"
+    );
+
 
 const signalCountDiv =
-    document.getElementById("signalCount");
+    document.getElementById(
+        "signalCount"
+    );
+
 
 const stabilitySelect =
-    document.getElementById("stabilitySelect");
+    document.getElementById(
+        "stabilitySelect"
+    );
+
+
+const scoreSelect =
+    document.getElementById(
+        "scoreSelect"
+    );
+
+
+const maxSignalsSelect =
+    document.getElementById(
+        "maxSignalsSelect"
+    );
 
 
 /* =========================================================
-   ПОЛУЧЕНИЕ ТЕКУЩЕГО ВРЕМЕНИ ПОДТВЕРЖДЕНИЯ
+   НАСТРОЙКИ
 ========================================================= */
+
 
 function getStabilityTime() {
 
-    return parseInt(
-        stabilitySelect.value
-    ) || 3;
+    return (
+        parseInt(
+            stabilitySelect.value
+        ) || 5
+    );
+
+}
+
+
+function getMinimumScore() {
+
+    return (
+        parseInt(
+            scoreSelect.value
+        ) || 60
+    );
+
+}
+
+
+function getMaxSignals() {
+
+    return (
+        parseInt(
+            maxSignalsSelect.value
+        ) || 10
+    );
 
 }
 
 
 /* =========================================================
-   ПОЛУЧЕНИЕ ПОРОГА
+   ПОРОГ
 ========================================================= */
+
 
 function getThreshold(symbol) {
 
     const rank =
         symbolRanks.get(symbol);
+
 
     if (!rank) {
 
@@ -486,9 +1003,6 @@ function getThreshold(symbol) {
     }
 
 
-    /*
-     * 1–5
-     */
     if (rank <= 5) {
 
         return THRESHOLDS.top5;
@@ -496,9 +1010,6 @@ function getThreshold(symbol) {
     }
 
 
-    /*
-     * 6–20
-     */
     if (rank <= 20) {
 
         return THRESHOLDS.top20;
@@ -506,9 +1017,6 @@ function getThreshold(symbol) {
     }
 
 
-    /*
-     * 21–50
-     */
     if (rank <= 50) {
 
         return THRESHOLDS.top50;
@@ -516,17 +1024,15 @@ function getThreshold(symbol) {
     }
 
 
-    /*
-     * 51–100
-     */
     return THRESHOLDS.top100;
 
 }
 
 
 /* =========================================================
-   ФОРМАТИРОВАНИЕ ДЕНЕГ
+   ФОРМАТИРОВАНИЕ
 ========================================================= */
+
 
 function formatMoney(value) {
 
@@ -540,30 +1046,68 @@ function formatMoney(value) {
 }
 
 
-/* =========================================================
-   ФОРМАТИРОВАНИЕ ПОРОГА
-========================================================= */
+function formatPrice(value) {
+
+    const number =
+        Number(value);
+
+
+    if (
+        number >= 1000
+    ) {
+
+        return number.toLocaleString(
+            "en-US",
+            {
+                maximumFractionDigits: 2
+            }
+        );
+
+    }
+
+
+    if (
+        number >= 1
+    ) {
+
+        return number.toFixed(4);
+
+    }
+
+
+    return number.toFixed(6);
+
+}
+
 
 function formatThreshold(value) {
 
-    if (value >= 1000000) {
+    if (
+        value >= 1000000
+    ) {
 
         return "$" +
-            (value / 1000000).toFixed(1) +
+            (
+                value / 1000000
+            ).toFixed(1) +
             "M";
 
     }
 
+
     return "$" +
-        (value / 1000).toFixed(0) +
+        (
+            value / 1000
+        ).toFixed(0) +
         "K";
 
 }
 
 
 /* =========================================================
-   УВЕДОМЛЕНИЕ БРАУЗЕРА
+   NOTIFICATION
 ========================================================= */
+
 
 function sendNotification(
     title,
@@ -584,10 +1128,214 @@ function sendNotification(
         "granted"
     ) {
 
-        new Notification(
-            title,
-            {
-                body: body
+        try {
+
+            new Notification(
+                title,
+                {
+                    body: body
+                }
+            );
+
+        } catch (e) {}
+
+    }
+
+}
+
+
+/* =========================================================
+   СОЗДАНИЕ СТАКА
+========================================================= */
+
+
+function createOrderBook(
+    symbol
+) {
+
+    orderBooks.set(
+        symbol,
+        {
+            bids: new Map(),
+            asks: new Map()
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SNAPSHOT
+========================================================= */
+
+
+function applySnapshot(
+    symbol,
+    data
+) {
+
+    createOrderBook(
+        symbol
+    );
+
+
+    const book =
+        orderBooks.get(
+            symbol
+        );
+
+
+    if (
+        Array.isArray(data.b)
+    ) {
+
+        data.b.forEach(
+            order => {
+
+                const price =
+                    String(order[0]);
+
+
+                const qty =
+                    parseFloat(
+                        order[1]
+                    );
+
+
+                if (
+                    qty > 0
+                ) {
+
+                    book.bids.set(
+                        price,
+                        qty
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    if (
+        Array.isArray(data.a)
+    ) {
+
+        data.a.forEach(
+            order => {
+
+                const price =
+                    String(order[0]);
+
+
+                const qty =
+                    parseFloat(
+                        order[1]
+                    );
+
+
+                if (
+                    qty > 0
+                ) {
+
+                    book.asks.set(
+                        price,
+                        qty
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /*
+     * После snapshot один раз
+     * проверяем крупные заявки.
+     */
+
+    inspectSnapshot(
+        symbol
+    );
+
+}
+
+
+/* =========================================================
+   DELTA
+========================================================= */
+
+
+function applyDelta(
+    symbol,
+    data
+) {
+
+    if (
+        !orderBooks.has(
+            symbol
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const book =
+        orderBooks.get(
+            symbol
+        );
+
+
+    /*
+     * ВАЖНО:
+     *
+     * Мы больше НЕ перебираем весь стакан.
+     *
+     * Проверяем только те цены,
+     * которые реально изменились.
+     */
+
+
+    if (
+        Array.isArray(data.b)
+    ) {
+
+        data.b.forEach(
+            order => {
+
+                processBookChange(
+                    symbol,
+                    book.bids,
+                    order,
+                    "Buy"
+                );
+
+            }
+        );
+
+    }
+
+
+    if (
+        Array.isArray(data.a)
+    ) {
+
+        data.a.forEach(
+            order => {
+
+                processBookChange(
+                    symbol,
+                    book.asks,
+                    order,
+                    "Sell"
+                );
+
             }
         );
 
@@ -597,25 +1345,1068 @@ function sendNotification(
 
 
 /* =========================================================
-   ДОБАВЛЕНИЕ СИГНАЛА
+   ОБРАБОТКА ИЗМЕНЕНИЯ ЗАЯВКИ
 ========================================================= */
 
-function addNotification(
+
+function processBookChange(
     symbol,
-    side,
-    price,
-    value,
-    rank,
-    threshold
+    sideMap,
+    order,
+    side
 ) {
 
+    const price =
+        String(order[0]);
+
+
+    const qty =
+        parseFloat(
+            order[1]
+        );
+
+
+    if (
+        qty === 0
+    ) {
+
+        sideMap.delete(
+            price
+        );
+
+
+        /*
+         * Заявка исчезла.
+         *
+         * Кандидат удаляем.
+         */
+
+        const key =
+            makeOrderKey(
+                symbol,
+                side,
+                price
+            );
+
+
+        candidates.delete(
+            key
+        );
+
+
+        return;
+
+    }
+
+
+    sideMap.set(
+        price,
+        qty
+    );
+
+
     /*
-     * Если отображение поставлено
-     * на паузу — сигнал НЕ теряется
-     * в логике сканера, но не появляется
-     * на экране.
+     * Проверяем только эту заявку.
      */
-    if (displayPaused) {
+
+    evaluateOrder(
+        symbol,
+        price,
+        qty,
+        side
+    );
+
+}
+
+
+/* =========================================================
+   SNAPSHOT ANALYSIS
+========================================================= */
+
+
+function inspectSnapshot(
+    symbol
+) {
+
+    const book =
+        orderBooks.get(
+            symbol
+        );
+
+
+    if (!book) {
+
+        return;
+
+    }
+
+
+    /*
+     * Snapshot проверяем один раз.
+     *
+     * После этого работают только delta.
+     */
+
+    for (
+        const [
+            price,
+            qty
+        ]
+        of book.bids
+    ) {
+
+        evaluateOrder(
+            symbol,
+            price,
+            qty,
+            "Buy"
+        );
+
+    }
+
+
+    for (
+        const [
+            price,
+            qty
+        ]
+        of book.asks
+    ) {
+
+        evaluateOrder(
+            symbol,
+            price,
+            qty,
+            "Sell"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   KEY
+========================================================= */
+
+
+function makeOrderKey(
+    symbol,
+    side,
+    price
+) {
+
+    return (
+        symbol +
+        "_" +
+        side +
+        "_" +
+        price
+    );
+
+}
+
+
+/* =========================================================
+   ОЦЕНКА КРУПНОЙ ЗАЯВКИ
+========================================================= */
+
+
+function evaluateOrder(
+    symbol,
+    price,
+    qty,
+    side
+) {
+
+    const priceNumber =
+        Number(price);
+
+
+    const qtyNumber =
+        Number(qty);
+
+
+    if (
+        !isFinite(priceNumber) ||
+        !isFinite(qtyNumber) ||
+        priceNumber <= 0 ||
+        qtyNumber <= 0
+    ) {
+
+        return;
+
+    }
+
+
+    const value =
+        priceNumber *
+        qtyNumber;
+
+
+    const threshold =
+        getThreshold(
+            symbol
+        );
+
+
+    const key =
+        makeOrderKey(
+            symbol,
+            side,
+            price
+        );
+
+
+    /*
+     * Если заявка стала меньше порога,
+     * она больше не кандидат.
+     */
+
+    if (
+        value < threshold
+    ) {
+
+        candidates.delete(
+            key
+        );
+
+        activeSignals.delete(
+            key
+        );
+
+        return;
+
+    }
+
+
+    const now =
+        Date.now();
+
+
+    /*
+     * Уже существует.
+     */
+
+    if (
+        candidates.has(
+            key
+        )
+    ) {
+
+        const candidate =
+            candidates.get(
+                key
+            );
+
+
+        /*
+         * Если заявка сильно изменилась,
+         * обновляем её.
+         */
+
+        candidate.lastValue =
+            value;
+
+
+        candidate.lastQty =
+            qtyNumber;
+
+
+        candidate.lastSeen =
+            now;
+
+
+        /*
+         * Отслеживаем максимальный размер.
+         */
+
+        if (
+            value >
+            candidate.maxValue
+        ) {
+
+            candidate.maxValue =
+                value;
+
+        }
+
+
+        return;
+
+    }
+
+
+    /*
+     * Новая крупная заявка.
+     */
+
+    candidates.set(
+        key,
+        {
+
+            key,
+
+            symbol,
+
+            side,
+
+            price: priceNumber,
+
+            firstSeen: now,
+
+            lastSeen: now,
+
+            lastValue: value,
+
+            maxValue: value,
+
+            threshold
+
+        }
+    );
+
+
+    /*
+     * Ограничиваем память.
+     */
+
+    if (
+        candidates.size >
+        MAX_CANDIDATES
+    ) {
+
+        cleanupOldCandidates();
+
+    }
+
+}
+
+
+/* =========================================================
+   ОЧИСТКА СТАРЫХ КАНДИДАТОВ
+========================================================= */
+
+
+function cleanupOldCandidates() {
+
+    const now =
+        Date.now();
+
+
+    for (
+        const [
+            key,
+            candidate
+        ]
+        of candidates
+    ) {
+
+        if (
+            now -
+            candidate.lastSeen >
+            ORDER_CLEANUP_TIME
+        ) {
+
+            candidates.delete(
+                key
+            );
+
+        }
+
+    }
+
+
+    /*
+     * Если всё ещё слишком много,
+     * удаляем самые старые.
+     */
+
+    if (
+        candidates.size >
+        MAX_CANDIDATES
+    ) {
+
+        const sorted =
+            [...candidates.values()]
+                .sort(
+                    (
+                        a,
+                        b
+                    ) =>
+                        a.lastSeen -
+                        b.lastSeen
+                );
+
+
+        const removeCount =
+            candidates.size -
+            MAX_CANDIDATES;
+
+
+        for (
+            let i = 0;
+            i < removeCount;
+            i++
+        ) {
+
+            candidates.delete(
+                sorted[i].key
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   SCORE
+========================================================= */
+
+
+/*
+ * Score 0–100.
+ *
+ * Состав:
+ *
+ * размер заявки       0–25
+ * время удержания     0–20
+ * размер относительно
+ * порога              0–15
+ * движение цены       0–15
+ * изменение объёма    0–15
+ * стабильность        0–10
+ */
+
+
+function calculateScore(
+    candidate
+) {
+
+    const market =
+        marketData.get(
+            candidate.symbol
+        );
+
+
+    const aliveSeconds =
+        (
+            Date.now() -
+            candidate.firstSeen
+        ) / 1000;
+
+
+    let score =
+        0;
+
+
+    /*
+     * =====================================================
+     * 1. РАЗМЕР ЗАЯВКИ — 25
+     * =====================================================
+     */
+
+
+    const sizeRatio =
+        candidate.lastValue /
+        candidate.threshold;
+
+
+    if (
+        sizeRatio >= 4
+    ) {
+
+        score += 25;
+
+    }
+
+    else if (
+        sizeRatio >= 3
+    ) {
+
+        score += 22;
+
+    }
+
+    else if (
+        sizeRatio >= 2
+    ) {
+
+        score += 18;
+
+    }
+
+    else if (
+        sizeRatio >= 1.5
+    ) {
+
+        score += 12;
+
+    }
+
+    else {
+
+        score += 7;
+
+    }
+
+
+    /*
+     * =====================================================
+     * 2. ДЛИТЕЛЬНОСТЬ — 20
+     * =====================================================
+     */
+
+
+    const required =
+        getStabilityTime();
+
+
+    if (
+        aliveSeconds >= 20
+    ) {
+
+        score += 20;
+
+    }
+
+    else if (
+        aliveSeconds >= 15
+    ) {
+
+        score += 18;
+
+    }
+
+    else if (
+        aliveSeconds >= 10
+    ) {
+
+        score += 15;
+
+    }
+
+    else if (
+        aliveSeconds >= required
+    ) {
+
+        score += 10;
+
+    }
+
+
+    /*
+     * =====================================================
+     * 3. РАЗМЕР ОТНОСИТЕЛЬНО ПОРОГА — 15
+     * =====================================================
+     */
+
+
+    if (
+        sizeRatio >= 3
+    ) {
+
+        score += 15;
+
+    }
+
+    else if (
+        sizeRatio >= 2
+    ) {
+
+        score += 12;
+
+    }
+
+    else if (
+        sizeRatio >= 1.5
+    ) {
+
+        score += 8;
+
+    }
+
+    else {
+
+        score += 5;
+
+    }
+
+
+    /*
+     * =====================================================
+     * 4. ЦЕНА — 15
+     * =====================================================
+     *
+     * Для BUY:
+     *
+     * цена растёт = хорошо
+     *
+     * Для SELL:
+     *
+     * цена падает = хорошо
+     */
+
+
+    if (
+        market
+    ) {
+
+        const priceChange =
+            market.priceChange1m;
+
+
+        if (
+            candidate.side ===
+            "Buy"
+        ) {
+
+            if (
+                priceChange >= 1
+            ) {
+
+                score += 15;
+
+            }
+
+            else if (
+                priceChange >= 0.5
+            ) {
+
+                score += 12;
+
+            }
+
+            else if (
+                priceChange > 0
+            ) {
+
+                score += 8;
+
+            }
+
+            else if (
+                priceChange > -0.5
+            ) {
+
+                score += 4;
+
+            }
+
+        }
+
+        else {
+
+            if (
+                priceChange <= -1
+            ) {
+
+                score += 15;
+
+            }
+
+            else if (
+                priceChange <= -0.5
+            ) {
+
+                score += 12;
+
+            }
+
+            else if (
+                priceChange < 0
+            ) {
+
+                score += 8;
+
+            }
+
+            else if (
+                priceChange < 0.5
+            ) {
+
+                score += 4;
+
+            }
+
+        }
+
+    }
+
+
+    /*
+     * =====================================================
+     * 5. ОБЪЁМ — 15
+     * =====================================================
+     */
+
+
+    if (
+        market
+    ) {
+
+        const volumeChange =
+            market.volumeChange;
+
+
+        if (
+            volumeChange >= 200
+        ) {
+
+            score += 15;
+
+        }
+
+        else if (
+            volumeChange >= 100
+        ) {
+
+            score += 12;
+
+        }
+
+        else if (
+            volumeChange >= 50
+        ) {
+
+            score += 9;
+
+        }
+
+        else if (
+            volumeChange >= 20
+        ) {
+
+            score += 6;
+
+        }
+
+        else if (
+            volumeChange > 0
+        ) {
+
+            score += 3;
+
+        }
+
+    }
+
+
+    /*
+     * =====================================================
+     * 6. СТАБИЛЬНОСТЬ — 10
+     * =====================================================
+     */
+
+
+    if (
+        candidate.lastValue >=
+        candidate.maxValue * 0.95
+    ) {
+
+        score += 10;
+
+    }
+
+    else if (
+        candidate.lastValue >=
+        candidate.maxValue * 0.8
+    ) {
+
+        score += 7;
+
+    }
+
+    else if (
+        candidate.lastValue >=
+        candidate.maxValue * 0.6
+    ) {
+
+        score += 4;
+
+    }
+
+
+    return Math.min(
+        100,
+        Math.round(score)
+    );
+
+}
+
+
+/* =========================================================
+   АНАЛИЗ КАНДИДАТОВ
+========================================================= */
+
+
+function analyzeCandidates() {
+
+    if (
+        !isRunning
+    ) {
+
+        return;
+
+    }
+
+
+    const now =
+        Date.now();
+
+
+    const minimumScore =
+        getMinimumScore();
+
+
+    /*
+     * Удаляем исчезнувшие заявки.
+     */
+
+    for (
+        const [
+            key,
+            candidate
+        ]
+        of candidates
+    ) {
+
+        if (
+            now -
+            candidate.lastSeen >
+            ORDER_CLEANUP_TIME
+        ) {
+
+            candidates.delete(
+                key
+            );
+
+            activeSignals.delete(
+                key
+            );
+
+        }
+
+    }
+
+
+    /*
+     * Рассчитываем Score.
+     */
+
+    const signals = [];
+
+
+    for (
+        const candidate
+        of candidates.values()
+    ) {
+
+        const aliveSeconds =
+            (
+                now -
+                candidate.firstSeen
+            ) / 1000;
+
+
+        /*
+         * Заявка ещё не подтверждена.
+         */
+
+        if (
+            aliveSeconds <
+            getStabilityTime()
+        ) {
+
+            continue;
+
+        }
+
+
+        const score =
+            calculateScore(
+                candidate
+            );
+
+
+        /*
+         * Ниже минимального Score
+         * на экран не попадает.
+         */
+
+        if (
+            score <
+            minimumScore
+        ) {
+
+            continue;
+
+        }
+
+
+        signals.push({
+
+            ...candidate,
+
+            score,
+
+            aliveSeconds
+
+        });
+
+    }
+
+
+    /*
+     * Сначала самые сильные.
+     */
+
+    signals.sort(
+        (
+            a,
+            b
+        ) => {
+
+            /*
+             * Сначала Score.
+             */
+
+            if (
+                b.score !==
+                a.score
+            ) {
+
+                return (
+                    b.score -
+                    a.score
+                );
+
+            }
+
+
+            /*
+             * Если Score одинаковый —
+             * большая заявка выше.
+             */
+
+            return (
+                b.lastValue -
+                a.lastValue
+            );
+
+        }
+    );
+
+
+    const topSignals =
+        signals.slice(
+            0,
+            getMaxSignals()
+        );
+
+
+    /*
+     * Обновляем экран.
+     */
+
+    renderSignals(
+        topSignals
+    );
+
+
+    /*
+     * Статистика.
+     */
+
+    candidateCountDiv.innerText =
+        candidates.size;
+
+
+    /*
+     * Сигналы могут быть
+     * не только те, что сейчас
+     * отображаются.
+     */
+
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+
+function renderSignals(
+    signals
+) {
+
+    if (
+        displayPaused
+    ) {
+
+        return;
+
+    }
+
+
+    const existing =
+        new Map();
+
+
+    Array.from(
+        notificationsDiv.children
+    ).forEach(
+        element => {
+
+            if (
+                element.dataset &&
+                element.dataset.key
+            ) {
+
+                existing.set(
+                    element.dataset.key,
+                    element
+                );
+
+            }
+
+        }
+    );
+
+
+    const usedKeys =
+        new Set();
+
+
+    /*
+     * Если ничего нет.
+     */
+
+    if (
+        signals.length === 0
+    ) {
+
+        if (
+            !document.getElementById(
+                "emptyMessage"
+            )
+        ) {
+
+            notificationsDiv.innerHTML = `
+
+                <div
+                    id="emptyMessage"
+                    class="empty"
+                >
+                    🔎 Сильных сигналов пока нет.<br>
+                    Сканер продолжает анализировать рынок.
+                </div>
+
+            `;
+
+        }
 
         return;
 
@@ -628,120 +2419,352 @@ function addNotification(
         );
 
 
-    if (empty) {
+    if (
+        empty
+    ) {
 
         empty.remove();
 
     }
 
 
-    const div =
-        document.createElement(
-            "div"
-        );
+    /*
+     * Создаём / обновляем карточки.
+     */
+
+    signals.forEach(
+        (
+            signal,
+            index
+        ) => {
+
+            usedKeys.add(
+                signal.key
+            );
+
+
+            let element =
+                existing.get(
+                    signal.key
+                );
+
+
+            if (
+                !element
+            ) {
+
+                element =
+                    document.createElement(
+                        "div"
+                    );
+
+                element.dataset.key =
+                    signal.key;
+
+                notificationsDiv.appendChild(
+                    element
+                );
+
+            }
+
+
+            updateSignalCard(
+                element,
+                signal,
+                index + 1
+            );
+
+        }
+    );
+
+
+    /*
+     * Удаляем карточки,
+     * которые больше не входят
+     * в TOP.
+     */
+
+    existing.forEach(
+        (
+            element,
+            key
+        ) => {
+
+            if (
+                !usedKeys.has(
+                    key
+                )
+            ) {
+
+                element.remove();
+
+            }
+
+        }
+    );
+
+
+    /*
+     * Правильный порядок.
+     *
+     * Используем DOM move,
+     * а не пересоздание всех карточек.
+     */
+
+    signals.forEach(
+        signal => {
+
+            const element =
+                existing.get(
+                    signal.key
+                ) ||
+                document.querySelector(
+                    `[data-key="${CSS.escape(signal.key)}"]`
+                );
+
+
+            if (
+                element
+            ) {
+
+                notificationsDiv.appendChild(
+                    element
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SIGNAL CARD
+========================================================= */
+
+
+function updateSignalCard(
+    element,
+    signal,
+    position
+) {
+
+    const isBuy =
+        signal.side ===
+        "Buy";
 
 
     const sideText =
-        side === "Buy"
-            ? "🟢 BUY"
-            : "🔴 SELL";
+        isBuy
+            ? "🟢 BUY WALL"
+            : "🔴 SELL WALL";
 
 
     const sideClass =
-        side === "Buy"
+        isBuy
             ? "buy"
             : "sell";
 
 
-    div.className =
+    element.className =
         "notification " +
         sideClass;
 
 
-    div.innerHTML = `
+    const market =
+        marketData.get(
+            signal.symbol
+        );
 
-        <div class="coin">
 
-            🐋 ${symbol}
+    let priceChange =
+        0;
 
-            <span class="side">
-                ${sideText}
-            </span>
+
+    let volumeChange =
+        0;
+
+
+    if (
+        market
+    ) {
+
+        priceChange =
+            market.priceChange1m;
+
+
+        volumeChange =
+            market.volumeChange;
+
+    }
+
+
+    const priceArrow =
+        priceChange > 0
+            ? "↗"
+            : priceChange < 0
+                ? "↘"
+                : "→";
+
+
+    const volumeText =
+        volumeChange >= 0
+            ? "+" +
+                volumeChange.toFixed(0) +
+                "%"
+            :
+                volumeChange.toFixed(0) +
+                "%";
+
+
+    const required =
+        getStabilityTime();
+
+
+    const progress =
+        Math.min(
+            100,
+            (
+                signal.aliveSeconds /
+                required
+            ) * 100
+        );
+
+
+    element.innerHTML = `
+
+        <div class="signal-header">
+
+            <div class="coin">
+
+                🐋 ${signal.symbol}
+
+                <span class="side">
+
+                    ${sideText}
+
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <div class="score">
+
+                    ${signal.score}/100
+
+                </div>
+
+                <span class="score-label">
+
+                    SCORE
+
+                </span>
+
+            </div>
 
         </div>
 
 
         <div class="amount">
 
-            $${formatMoney(value)}
+            $${formatMoney(
+                signal.lastValue
+            )}
 
         </div>
 
 
         <div class="details">
 
-            💵 Цена:
-            <b>${price}</b>
+            📍 Позиция:
+            <b>#${position}</b>
+
+            &nbsp; | &nbsp;
+
+            Рейтинг монеты:
+            <b>#${symbolRanks.get(
+                signal.symbol
+            )}</b>
 
             <br>
 
-            📊 Рейтинг:
-            <b>#${rank}</b>
+
+            💵 Цена заявки:
+            <b>
+                ${formatPrice(
+                    signal.price
+                )}
+            </b>
 
             <br>
+
+
+            ⏱ Держится:
+            <b>
+                ${signal.aliveSeconds.toFixed(1)}
+                сек
+            </b>
+
+            <br>
+
 
             🎯 Порог:
-            <b>${formatThreshold(threshold)}</b>
+            <b>
+                ${formatThreshold(
+                    signal.threshold
+                )}
+            </b>
+
+            <br>
+
+
+            ${priceArrow}
+
+            Цена за 1 мин:
+            <b>
+                ${priceChange >= 0 ? "+" : ""}
+                ${priceChange.toFixed(2)}%
+            </b>
+
+            <br>
+
+
+            📊 Объём:
+            <b>
+                ${volumeText}
+            </b>
+
+        </div>
+
+
+        <div class="progress">
+
+            <div
+                class="progress-bar"
+                style="
+                    width: ${progress}%;
+                "
+            ></div>
 
         </div>
 
 
         <div class="time">
 
-            Сигнал:
+            Подтверждение:
+            ${required} сек
+
+            &nbsp; • &nbsp;
+
+            Обновлено:
             ${new Date().toLocaleTimeString()}
 
         </div>
 
     `;
-
-
-    /*
-     * ВАЖНО:
-     *
-     * Добавляем в конец,
-     * а не prepend().
-     *
-     * Поэтому экран не будет
-     * постоянно прыгать.
-     */
-    notificationsDiv.appendChild(
-        div
-    );
-
-
-    /*
-     * Если сигналов стало больше 50,
-     * удаляем самый старый.
-     */
-    while (
-        notificationsDiv
-            .children
-            .length > MAX_SIGNALS
-    ) {
-
-        notificationsDiv
-            .removeChild(
-                notificationsDiv.firstElementChild
-            );
-
-    }
-
-
-    signalCount++;
-
-    signalCountDiv.innerText =
-        signalCount;
 
 }
 
@@ -750,12 +2773,14 @@ function addNotification(
    ЗАГРУЗКА TOP-100
 ========================================================= */
 
+
 async function loadSymbols() {
 
     try {
 
         statusDiv.innerText =
             "Загрузка TOP-100...";
+
 
         statusDiv.style.color =
             "#f7931a";
@@ -767,7 +2792,9 @@ async function loadSymbols() {
             );
 
 
-        if (!response.ok) {
+        if (
+            !response.ok
+        ) {
 
             throw new Error(
                 "HTTP " +
@@ -795,31 +2822,38 @@ async function loadSymbols() {
         }
 
 
-        /*
-         * Только USDT perpetual.
-         */
         const topCoins =
             json.result.list
 
                 .filter(
                     coin =>
+
                         coin.symbol &&
+
                         coin.symbol.endsWith(
                             "USDT"
                         ) &&
+
                         parseFloat(
                             coin.turnover24h
                         ) > 0
+
                 )
 
                 .sort(
-                    (a, b) =>
+                    (
+                        a,
+                        b
+                    ) =>
+
                         parseFloat(
                             b.turnover24h
                         ) -
+
                         parseFloat(
                             a.turnover24h
                         )
+
                 )
 
                 .slice(
@@ -828,25 +2862,21 @@ async function loadSymbols() {
                 );
 
 
-        /*
-         * Очищаем старый рейтинг.
-         */
-        symbols.length = 0;
+        symbols.length =
+            0;
+
 
         symbolRanks.clear();
 
 
-        /*
-         * Заполняем TOP-100.
-         */
         topCoins.forEach(
-            (coin, index) => {
+            (
+                coin,
+                index
+            ) => {
 
                 const symbol =
                     coin.symbol;
-
-                const rank =
-                    index + 1;
 
 
                 symbols.push(
@@ -856,7 +2886,18 @@ async function loadSymbols() {
 
                 symbolRanks.set(
                     symbol,
-                    rank
+                    index + 1
+                );
+
+
+                updateMarketData(
+                    symbol,
+                    parseFloat(
+                        coin.lastPrice
+                    ),
+                    parseFloat(
+                        coin.turnover24h
+                    )
                 );
 
             }
@@ -867,25 +2908,20 @@ async function loadSymbols() {
             symbols.length;
 
 
-        console.log(
-            "TOP-100 загружен:",
-            symbols
-        );
-
-
         return true;
 
 
     } catch (error) {
 
         console.error(
-            "Ошибка загрузки TOP-100:",
+            "Ошибка TOP-100:",
             error
         );
 
 
         statusDiv.innerText =
-            "Ошибка загрузки";
+            "Ошибка загрузки TOP-100";
+
 
         statusDiv.style.color =
             "#e74c3c";
@@ -899,296 +2935,20 @@ async function loadSymbols() {
 
 
 /* =========================================================
-   СОЗДАНИЕ СТАКАНА
+   MARKET DATA
 ========================================================= */
 
-function createOrderBook(
-    symbol
-) {
 
-    orderBooks.set(
-        symbol,
-        {
-            bids: new Map(),
-            asks: new Map()
-        }
-    );
-
-}
-
-
-/* =========================================================
-   SNAPSHOT
-========================================================= */
-
-function applySnapshot(
-    symbol,
-    data
-) {
-
-    createOrderBook(
-        symbol
-    );
-
-
-    const book =
-        orderBooks.get(
-            symbol
-        );
-
-
-    /*
-     * BID
-     */
-    if (
-        Array.isArray(data.b)
-    ) {
-
-        data.b.forEach(
-            order => {
-
-                const price =
-                    String(order[0]);
-
-                const qty =
-                    parseFloat(
-                        order[1]
-                    );
-
-
-                if (
-                    qty > 0
-                ) {
-
-                    book.bids.set(
-                        price,
-                        qty
-                    );
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /*
-     * ASK
-     */
-    if (
-        Array.isArray(data.a)
-    ) {
-
-        data.a.forEach(
-            order => {
-
-                const price =
-                    String(order[0]);
-
-                const qty =
-                    parseFloat(
-                        order[1]
-                    );
-
-
-                if (
-                    qty > 0
-                ) {
-
-                    book.asks.set(
-                        price,
-                        qty
-                    );
-
-                }
-
-            }
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   DELTA
-========================================================= */
-
-function applyDelta(
-    symbol,
-    data
-) {
-
-    if (
-        !orderBooks.has(
-            symbol
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    const book =
-        orderBooks.get(
-            symbol
-        );
-
-
-    /*
-     * BID
-     */
-    if (
-        Array.isArray(data.b)
-    ) {
-
-        data.b.forEach(
-            order => {
-
-                const price =
-                    String(order[0]);
-
-                const qty =
-                    parseFloat(
-                        order[1]
-                    );
-
-
-                if (
-                    qty === 0
-                ) {
-
-                    book.bids.delete(
-                        price
-                    );
-
-                } else {
-
-                    book.bids.set(
-                        price,
-                        qty
-                    );
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /*
-     * ASK
-     */
-    if (
-        Array.isArray(data.a)
-    ) {
-
-        data.a.forEach(
-            order => {
-
-                const price =
-                    String(order[0]);
-
-                const qty =
-                    parseFloat(
-                        order[1]
-                    );
-
-
-                if (
-                    qty === 0
-                ) {
-
-                    book.asks.delete(
-                        price
-                    );
-
-                } else {
-
-                    book.asks.set(
-                        price,
-                        qty
-                    );
-
-                }
-
-            }
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   ПРОВЕРКА ОДНОЙ ЗАЯВКИ
-========================================================= */
-
-function checkOrder(
+function updateMarketData(
     symbol,
     price,
-    qty,
-    side
+    turnover24h
 ) {
 
-    const priceNumber =
-        parseFloat(price);
-
-    const qtyNumber =
-        parseFloat(qty);
-
-
     if (
-        !isFinite(
-            priceNumber
-        ) ||
-        !isFinite(
-            qtyNumber
-        ) ||
-        priceNumber <= 0 ||
-        qtyNumber <= 0
+        !isFinite(price) ||
+        price <= 0
     ) {
-
-        return;
-
-    }
-
-
-    /*
-     * Размер заявки в USDT.
-     */
-    const value =
-        priceNumber *
-        qtyNumber;
-
-
-    /*
-     * Порог именно этой монеты.
-     */
-    const threshold =
-        getThreshold(
-            symbol
-        );
-
-
-    const key =
-        `${symbol}_${side}_${price}`;
-
-
-    /*
-     * Если ниже порога —
-     * прекращаем отслеживание.
-     */
-    if (
-        value < threshold
-    ) {
-
-        stableOrders.delete(
-            key
-        );
 
         return;
 
@@ -1199,208 +2959,338 @@ function checkOrder(
         Date.now();
 
 
-    /*
-     * Новая крупная заявка.
-     */
+    let data =
+        marketData.get(
+            symbol
+        );
+
+
     if (
-        !stableOrders.has(
-            key
-        )
+        !data
     ) {
 
-        stableOrders.set(
-            key,
-            {
-                firstSeen: now,
-                lastSeen: now,
-                lastValue: value,
-                side: side,
-                price: price,
-                symbol: symbol
+        data = {
+
+            symbol,
+
+            price,
+
+            previousPrice:
+                price,
+
+            turnover24h,
+
+            previousTurnover:
+                turnover24h,
+
+            priceSamples: [
+
+                {
+                    time: now,
+                    price
+                }
+
+            ],
+
+            volumeSamples: [
+
+                {
+                    time: now,
+                    turnover:
+                        turnover24h
+                }
+
+            ],
+
+            priceChange1m: 0,
+
+            volumeChange: 0
+
+        };
+
+
+        marketData.set(
+            symbol,
+            data
+        );
+
+
+        return;
+
+    }
+
+
+    data.previousPrice =
+        data.price;
+
+
+    data.price =
+        price;
+
+
+    data.previousTurnover =
+        data.turnover24h;
+
+
+    data.turnover24h =
+        turnover24h;
+
+
+    data.priceSamples.push({
+
+        time: now,
+
+        price
+
+    });
+
+
+    data.volumeSamples.push({
+
+        time: now,
+
+        turnover:
+            turnover24h
+
+    });
+
+
+    /*
+     * Оставляем примерно
+     * 2 минуты истории.
+     */
+
+    const cutoff =
+        now -
+        2 * 60 * 1000;
+
+
+    data.priceSamples =
+        data.priceSamples.filter(
+            item =>
+                item.time >= cutoff
+        );
+
+
+    data.volumeSamples =
+        data.volumeSamples.filter(
+            item =>
+                item.time >= cutoff
+        );
+
+
+    /*
+     * Находим точку около
+     * 1 минуты назад.
+     */
+
+    const target =
+        now -
+        60 * 1000;
+
+
+    let oldPrice =
+        null;
+
+
+    for (
+        let i =
+            data.priceSamples.length -
+            1;
+
+        i >= 0;
+
+        i--
+    ) {
+
+        if (
+            data.priceSamples[i].time <=
+            target
+        ) {
+
+            oldPrice =
+                data.priceSamples[i].price;
+
+            break;
+
+        }
+
+    }
+
+
+    if (
+        oldPrice &&
+        oldPrice > 0
+    ) {
+
+        data.priceChange1m =
+            (
+                (
+                    price -
+                    oldPrice
+                ) /
+                oldPrice
+            ) *
+            100;
+
+    }
+
+
+    /*
+     * Здесь turnover24h —
+     * накопительный оборот.
+     *
+     * Сравниваем прирост
+     * за последние интервалы.
+     */
+
+    const recentSamples =
+        data.volumeSamples;
+
+
+    if (
+        recentSamples.length >= 2
+    ) {
+
+        const oldest =
+            recentSamples[0];
+
+
+        const newest =
+            recentSamples[
+                recentSamples.length - 1
+            ];
+
+
+        const turnoverDiff =
+            newest.turnover -
+            oldest.turnover;
+
+
+        /*
+         * Относительная оценка
+         * активности.
+         *
+         * Это именно индикатор
+         * ускорения оборота,
+         * а не абсолютный объём.
+         */
+
+        if (
+            oldest.turnover > 0
+        ) {
+
+            const base =
+                Math.max(
+                    oldest.turnover *
+                    0.00001,
+                    1
+                );
+
+
+            data.volumeChange =
+                Math.min(
+                    500,
+                    (
+                        turnoverDiff /
+                        base
+                    ) *
+                    100
+                );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   ОБНОВЛЕНИЕ MARKET DATA
+========================================================= */
+
+
+async function refreshMarketData() {
+
+    if (
+        !isRunning
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "https://api.bybit.com/v5/market/tickers?category=linear"
+            );
+
+
+        if (
+            !response.ok
+        ) {
+
+            return;
+
+        }
+
+
+        const json =
+            await response.json();
+
+
+        if (
+            !json.result ||
+            !Array.isArray(
+                json.result.list
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        json.result.list.forEach(
+            coin => {
+
+                if (
+                    !symbolRanks.has(
+                        coin.symbol
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                updateMarketData(
+
+                    coin.symbol,
+
+                    parseFloat(
+                        coin.lastPrice
+                    ),
+
+                    parseFloat(
+                        coin.turnover24h
+                    )
+
+                );
+
             }
         );
 
-        return;
 
-    }
+    } catch (error) {
 
-
-    const order =
-        stableOrders.get(
-            key
-        );
-
-
-    /*
-     * Обновляем информацию.
-     */
-    order.lastSeen =
-        now;
-
-    order.lastValue =
-        value;
-
-
-    /*
-     * Сколько заявка
-     * находится выше порога.
-     */
-    const aliveTime =
-        now -
-        order.firstSeen;
-
-
-    const requiredTime =
-        getStabilityTime() *
-        1000;
-
-
-    /*
-     * Ещё не достаточно времени.
-     */
-    if (
-        aliveTime <
-        requiredTime
-    ) {
-
-        return;
-
-    }
-
-
-    /*
-     * Проверяем cooldown.
-     */
-    const lastAlert =
-        alertedOrders.get(
-            key
-        ) || 0;
-
-
-    if (
-        now -
-        lastAlert <
-        ALERT_COOLDOWN
-    ) {
-
-        return;
-
-    }
-
-
-    alertedOrders.set(
-        key,
-        now
-    );
-
-
-    const rank =
-        symbolRanks.get(
-            symbol
-        );
-
-
-    /*
-     * Уведомление.
-     */
-    sendNotification(
-
-        `🐋 ${symbol} ${side}`,
-
-        `Заявка $${formatMoney(value)} ` +
-        `| рейтинг #${rank}`
-
-    );
-
-
-    /*
-     * Сигнал на экране.
-     */
-    addNotification(
-
-        symbol,
-        side,
-        price,
-        value,
-        rank,
-        threshold
-
-    );
-
-
-    /*
-     * Чтобы не получить
-     * мгновенный повтор.
-     */
-    stableOrders.delete(
-        key
-    );
-
-}
-
-
-/* =========================================================
-   АНАЛИЗ СТАКАНА
-========================================================= */
-
-function analyzeOrderBook(
-    symbol
-) {
-
-    if (
-        !orderBooks.has(
-            symbol
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    const book =
-        orderBooks.get(
-            symbol
-        );
-
-
-    /*
-     * BID
-     */
-    for (
-        const [
-            price,
-            qty
-        ]
-        of book.bids
-    ) {
-
-        checkOrder(
-            symbol,
-            price,
-            qty,
-            "Buy"
-        );
-
-    }
-
-
-    /*
-     * ASK
-     */
-    for (
-        const [
-            price,
-            qty
-        ]
-        of book.asks
-    ) {
-
-        checkOrder(
-            symbol,
-            price,
-            qty,
-            "Sell"
+        console.error(
+            "Market data error:",
+            error
         );
 
     }
@@ -1409,8 +3299,209 @@ function analyzeOrderBook(
 
 
 /* =========================================================
-   WEBSOCKET MESSAGE
+   HEARTBEAT
 ========================================================= */
+
+
+function startHeartbeat() {
+
+    stopHeartbeat();
+
+
+    heartbeatTimer =
+        setInterval(
+            () => {
+
+                if (
+                    ws &&
+                    ws.readyState ===
+                    WebSocket.OPEN
+                ) {
+
+                    ws.send(
+                        JSON.stringify({
+                            op: "ping"
+                        })
+                    );
+
+                }
+
+            },
+            20000
+        );
+
+}
+
+
+function stopHeartbeat() {
+
+    if (
+        heartbeatTimer
+    ) {
+
+        clearInterval(
+            heartbeatTimer
+        );
+
+
+        heartbeatTimer =
+            null;
+
+    }
+
+}
+
+
+/* =========================================================
+   WEBSOCKET
+========================================================= */
+
+
+function connectWebSocket() {
+
+    if (
+        !isRunning
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        ws
+    ) {
+
+        try {
+
+            ws.close();
+
+        } catch (e) {}
+
+    }
+
+
+    ws =
+        new WebSocket(
+            "wss://stream.bybit.com/v5/public/linear"
+        );
+
+
+    ws.onopen =
+        () => {
+
+            console.log(
+                "WebSocket connected"
+            );
+
+
+            wsStatusDiv.innerText =
+                "ON";
+
+
+            wsStatusDiv.className =
+                "green";
+
+
+            statusDiv.innerText =
+                "Сканирование активно";
+
+
+            statusDiv.style.color =
+                "#27ae60";
+
+
+            /*
+             * Подписываемся на TOP-100.
+             */
+
+            const topics =
+                symbols.map(
+                    symbol =>
+                        `orderbook.${ORDERBOOK_DEPTH}.${symbol}`
+                );
+
+
+            ws.send(
+                JSON.stringify({
+
+                    op:
+                        "subscribe",
+
+                    args:
+                        topics
+
+                })
+            );
+
+
+            startHeartbeat();
+
+        };
+
+
+    ws.onmessage =
+        handleWebSocketMessage;
+
+
+    ws.onerror =
+        error => {
+
+            console.error(
+                "WebSocket error:",
+                error
+            );
+
+
+            wsStatusDiv.innerText =
+                "ERROR";
+
+
+            wsStatusDiv.className =
+                "red";
+
+        };
+
+
+    ws.onclose =
+        () => {
+
+            stopHeartbeat();
+
+
+            wsStatusDiv.innerText =
+                "OFF";
+
+
+            wsStatusDiv.className =
+                "red";
+
+
+            if (
+                isRunning
+            ) {
+
+                statusDiv.innerText =
+                    "Переподключение...";
+
+
+                statusDiv.style.color =
+                    "#f7931a";
+
+
+                scheduleReconnect();
+
+            }
+
+        };
+
+}
+
+
+/* =========================================================
+   WS MESSAGE
+========================================================= */
+
 
 function handleWebSocketMessage(
     event
@@ -1455,7 +3546,10 @@ function handleWebSocketMessage(
 
 
         if (
-            !symbol
+            !symbol ||
+            !symbolRanks.has(
+                symbol
+            )
         ) {
 
             return;
@@ -1463,9 +3557,6 @@ function handleWebSocketMessage(
         }
 
 
-        /*
-         * SNAPSHOT
-         */
         if (
             data.type ===
             "snapshot"
@@ -1479,9 +3570,6 @@ function handleWebSocketMessage(
         }
 
 
-        /*
-         * DELTA
-         */
         else if (
             data.type ===
             "delta"
@@ -1493,15 +3581,6 @@ function handleWebSocketMessage(
             );
 
         }
-
-
-        /*
-         * Анализируем
-         * обновлённый стакан.
-         */
-        analyzeOrderBook(
-            symbol
-        );
 
 
     } catch (error) {
@@ -1517,193 +3596,9 @@ function handleWebSocketMessage(
 
 
 /* =========================================================
-   HEARTBEAT
-========================================================= */
-
-function startHeartbeat() {
-
-    stopHeartbeat();
-
-
-    heartbeatTimer =
-        setInterval(
-            () => {
-
-                if (
-                    ws &&
-                    ws.readyState ===
-                    WebSocket.OPEN
-                ) {
-
-                    ws.send(
-                        JSON.stringify({
-                            op: "ping"
-                        })
-                    );
-
-                }
-
-            },
-            20000
-        );
-
-}
-
-
-function stopHeartbeat() {
-
-    if (
-        heartbeatTimer
-    ) {
-
-        clearInterval(
-            heartbeatTimer
-        );
-
-        heartbeatTimer = null;
-
-    }
-
-}
-
-
-/* =========================================================
-   WEBSOCKET CONNECT
-========================================================= */
-
-function connectWebSocket() {
-
-    if (
-        !isRunning
-    ) {
-
-        return;
-
-    }
-
-
-    if (
-        ws
-    ) {
-
-        try {
-
-            ws.close();
-
-        } catch (e) {}
-
-    }
-
-
-    ws =
-        new WebSocket(
-            "wss://stream.bybit.com/v5/public/linear"
-        );
-
-
-    ws.onopen = () => {
-
-        console.log(
-            "WebSocket connected"
-        );
-
-
-        wsStatusDiv.innerText =
-            "ON";
-
-        wsStatusDiv.className =
-            "green";
-
-
-        statusDiv.innerText =
-            "Сканирование активно";
-
-        statusDiv.style.color =
-            "#27ae60";
-
-
-        /*
-         * TOP-100.
-         */
-        const topics =
-            symbols.map(
-                symbol =>
-                    `orderbook.${ORDERBOOK_DEPTH}.${symbol}`
-            );
-
-
-        ws.send(
-            JSON.stringify({
-
-                op: "subscribe",
-
-                args: topics
-
-            })
-        );
-
-
-        startHeartbeat();
-
-    };
-
-
-    ws.onmessage =
-        handleWebSocketMessage;
-
-
-    ws.onerror =
-        error => {
-
-            console.error(
-                "WebSocket error:",
-                error
-            );
-
-            wsStatusDiv.innerText =
-                "ERROR";
-
-            wsStatusDiv.className =
-                "red";
-
-        };
-
-
-    ws.onclose = () => {
-
-        stopHeartbeat();
-
-
-        wsStatusDiv.innerText =
-            "OFF";
-
-        wsStatusDiv.className =
-            "red";
-
-
-        if (
-            isRunning
-        ) {
-
-            statusDiv.innerText =
-                "Переподключение...";
-
-            statusDiv.style.color =
-                "#f7931a";
-
-
-            scheduleReconnect();
-
-        }
-
-    };
-
-}
-
-
-/* =========================================================
    RECONNECT
 ========================================================= */
+
 
 function scheduleReconnect() {
 
@@ -1732,6 +3627,7 @@ function scheduleReconnect() {
                 reconnectTimer =
                     null;
 
+
                 connectWebSocket();
 
             },
@@ -1742,8 +3638,51 @@ function scheduleReconnect() {
 
 
 /* =========================================================
-   ОБНОВЛЕНИЕ TOP-100
+   DISPLAY LOOP
 ========================================================= */
+
+
+function startDisplayLoop() {
+
+    stopDisplayLoop();
+
+
+    displayTimer =
+        setInterval(
+            () => {
+
+                analyzeCandidates();
+
+            },
+            DISPLAY_INTERVAL
+        );
+
+}
+
+
+function stopDisplayLoop() {
+
+    if (
+        displayTimer
+    ) {
+
+        clearInterval(
+            displayTimer
+        );
+
+
+        displayTimer =
+            null;
+
+    }
+
+}
+
+
+/* =========================================================
+   TOP-100 REFRESH
+========================================================= */
+
 
 async function refreshSymbols() {
 
@@ -1766,29 +3705,37 @@ async function refreshSymbols() {
 
 
     if (
-        success
+        !success
     ) {
 
-        /*
-         * Очищаем старые стаканы,
-         * потому что состав рейтинга
-         * мог измениться.
-         */
-        orderBooks.clear();
-
-        stableOrders.clear();
-
-
-        connectWebSocket();
+        return;
 
     }
+
+
+    /*
+     * Перезапускаем стаканы,
+     * потому что состав TOP мог измениться.
+     */
+
+    orderBooks.clear();
+
+
+    candidates.clear();
+
+
+    activeSignals.clear();
+
+
+    connectWebSocket();
 
 }
 
 
 /* =========================================================
-   ПАУЗА ЭКРАНА
+   PAUSE
 ========================================================= */
+
 
 function toggleDisplayPause() {
 
@@ -1818,7 +3765,9 @@ function toggleDisplayPause() {
         statusDiv.innerText =
             "Сканирование идёт | экран на паузе";
 
+
     } else {
+
 
         button.innerText =
             "⏸ Пауза экрана";
@@ -1832,14 +3781,22 @@ function toggleDisplayPause() {
         statusDiv.innerText =
             "Сканирование активно";
 
+
+        /*
+         * Сразу обновляем экран.
+         */
+
+        analyzeCandidates();
+
     }
 
 }
 
 
 /* =========================================================
-   ЗАПУСК
+   START
 ========================================================= */
+
 
 async function startScan() {
 
@@ -1859,13 +3816,15 @@ async function startScan() {
     statusDiv.innerText =
         "Загрузка TOP-100...";
 
+
     statusDiv.style.color =
         "#f7931a";
 
 
     /*
-     * Разрешение уведомлений.
+     * Browser notification.
      */
+
     if (
         "Notification" in window &&
         Notification.permission ===
@@ -1881,9 +3840,6 @@ async function startScan() {
     }
 
 
-    /*
-     * Получаем TOP-100.
-     */
     const success =
         await loadSymbols();
 
@@ -1901,14 +3857,37 @@ async function startScan() {
 
 
     /*
-     * Подключаем WebSocket.
+     * WebSocket.
      */
+
     connectWebSocket();
 
 
     /*
-     * Обновляем рейтинг каждые 5 минут.
+     * Анализ раз в секунду.
      */
+
+    startDisplayLoop();
+
+
+    /*
+     * Market data.
+     */
+
+    await refreshMarketData();
+
+
+    marketDataTimer =
+        setInterval(
+            refreshMarketData,
+            MARKET_DATA_INTERVAL
+        );
+
+
+    /*
+     * TOP-100 каждые 5 минут.
+     */
+
     symbolRefreshTimer =
         setInterval(
             refreshSymbols,
@@ -1919,8 +3898,9 @@ async function startScan() {
 
 
 /* =========================================================
-   СТОП
+   STOP
 ========================================================= */
+
 
 function stopScan() {
 
@@ -1936,6 +3916,7 @@ function stopScan() {
             reconnectTimer
         );
 
+
         reconnectTimer =
             null;
 
@@ -1950,10 +3931,29 @@ function stopScan() {
             symbolRefreshTimer
         );
 
+
         symbolRefreshTimer =
             null;
 
     }
+
+
+    if (
+        marketDataTimer
+    ) {
+
+        clearInterval(
+            marketDataTimer
+        );
+
+
+        marketDataTimer =
+            null;
+
+    }
+
+
+    stopDisplayLoop();
 
 
     stopHeartbeat();
@@ -1969,18 +3969,25 @@ function stopScan() {
 
         } catch (e) {}
 
-        ws = null;
+
+        ws =
+            null;
 
     }
 
 
     orderBooks.clear();
 
-    stableOrders.clear();
+
+    candidates.clear();
+
+
+    activeSignals.clear();
 
 
     statusDiv.innerText =
         "Остановлен";
+
 
     statusDiv.style.color =
         "#848e9c";
@@ -1989,16 +3996,25 @@ function stopScan() {
     wsStatusDiv.innerText =
         "OFF";
 
+
     wsStatusDiv.className = "";
+
+
+    candidateCountDiv.innerText =
+        "0";
 
 }
 
 
 /* =========================================================
-   ОЧИСТКА СИГНАЛОВ
+   CLEAR
 ========================================================= */
 
-function clearNotifications() {
+
+function clearSignals() {
+
+    activeSignals.clear();
+
 
     notificationsDiv.innerHTML = `
 
@@ -2006,8 +4022,11 @@ function clearNotifications() {
             id="emptyMessage"
             class="empty"
         >
+
             Список очищен.<br>
+
             Ждём новые сигналы.
+
         </div>
 
     `;
@@ -2024,23 +4043,100 @@ function clearNotifications() {
 
 
 /* =========================================================
-   ИНИЦИАЛИЗАЦИЯ
+   SETTINGS CHANGE
 ========================================================= */
 
-console.log(
-    "🐋 Bybit Whale Scanner initialized"
+
+stabilitySelect.addEventListener(
+    "change",
+    () => {
+
+        /*
+         * Не перезапускаем WebSocket.
+         *
+         * Просто меняем критерий
+         * подтверждения.
+         */
+
+        analyzeCandidates();
+
+    }
 );
+
+
+scoreSelect.addEventListener(
+    "change",
+    () => {
+
+        analyzeCandidates();
+
+    }
+);
+
+
+maxSignalsSelect.addEventListener(
+    "change",
+    () => {
+
+        analyzeCandidates();
+
+    }
+);
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+
+console.log(
+    "🐋 Bybit Whale Scanner"
+);
+
+
+console.log(
+    "Architecture:"
+);
+
 
 console.log(
     "TOP-100"
 );
 
+
 console.log(
-    "Пороги:",
+    "OrderBook depth:",
+    ORDERBOOK_DEPTH
+);
+
+
+console.log(
+    "Display interval:",
+    DISPLAY_INTERVAL,
+    "ms"
+);
+
+
+console.log(
+    "Max signals:",
+    getMaxSignals()
+);
+
+
+console.log(
+    "Minimum score:",
+    getMinimumScore()
+);
+
+
+console.log(
+    "Thresholds:",
     THRESHOLDS
 );
+
 
 </script>
 
 </body>
+
 </html>
