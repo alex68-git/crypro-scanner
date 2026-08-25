@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bybit Whale Scanner (Top-180)</title>
+    <title>Bybit Whale Scanner (Fixed)</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #0b0e11; color: #eaecef; margin: 0; padding: 15px; }
         h1 { font-size: 20px; margin-bottom: 10px; }
@@ -17,7 +17,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>🐋 Bybit Whale Scanner (Top-180)</h1>
+        <h1>🐋 Bybit Whale Scanner (Fixed)</h1>
         <div class="settings">
             <button onclick="startScan()">▶ Запустить сканер</button>
             <button onclick="stopScan()">⏹ Стоп</button>
@@ -34,6 +34,7 @@
         const symbolInfos = new Map();
         const stableOrders = new Map();
         const priceChanges = new Map();
+
         const notificationsDiv = document.getElementById('notifications');
         const statusDiv = document.getElementById('status');
 
@@ -42,6 +43,7 @@
         const PRICE_CHANGE_THRESHOLD = 50000;
         const STABILITY_TIME = 3;
         const DEPTH_LEVELS = 50;
+        const CHUNK_SIZE = 10; // Максимальная подписка на топики (Bybit требует не более 10 за раз)
 
         function sendNotification(title, body) {
             if (Notification.permission === "granted") {
@@ -130,11 +132,16 @@
             ws.onopen = () => {
                 statusDiv.innerText = "Сканирование (Активно)";
                 statusDiv.style.color = "#27ae60";
-                const subscribeMsg = {
-                    "op": "subscribe",
-                    "args": symbols.map(sym => `orderbook.50.${sym}`)
-                };
-                ws.send(JSON.stringify(subscribeMsg));
+                
+                // Разбиваем подписку на куски по 10 штук
+                for (let i = 0; i < symbols.length; i += CHUNK_SIZE) {
+                    const chunk = symbols.slice(i, i + CHUNK_SIZE);
+                    const msg = {
+                        "op": "subscribe",
+                        "args": chunk.map(sym => `orderbook.50.${sym}`)
+                    };
+                    ws.send(JSON.stringify(msg));
+                }
             };
 
             ws.onmessage = (event) => {
