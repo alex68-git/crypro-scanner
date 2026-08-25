@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bybit Whale Scanner (Авто-Режим)</title>
+    <title>Bybit Whale Scanner (Top-180)</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #0b0e11; color: #eaecef; margin: 0; padding: 15px; }
         h1 { font-size: 20px; margin-bottom: 10px; }
@@ -17,7 +17,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>🐋 Bybit Кит Сканер (Топ-180)</h1>
+        <h1>🐋 Bybit Whale Scanner (Top-180)</h1>
         <div class="settings">
             <button onclick="startScan()">▶ Запустить сканер</button>
             <button onclick="stopScan()">⏹ Стоп</button>
@@ -30,17 +30,18 @@
     <script>
         let ws;
         let isRunning = false;
-        const notificationsDiv = getElementById('notifications');
-        const statusDiv = getElementById('status');
-        
+        const symbols = [];
+        const symbolInfos = new Map();
+        const stableOrders = new Map();
+        const priceChanges = new Map();
+        const notificationsDiv = document.getElementById('notifications');
+        const statusDiv = document.getElementById('status');
+
         // НАСТРОЙКИ
         const USDT_THRESHOLD = 500000;
+        const PRICE_CHANGE_THRESHOLD = 50000;
+        const STABILITY_TIME = 3;
         const DEPTH_LEVELS = 50;
-        const STABILITY_TIME = 3; // Секунды, которые заявка должна устояться
-        const RETRY_DELAY = 5; // Секунды до переподключения
-
-        // 1. Сохраняем данные о заявках в память (для проверки стабильности)
-        const stableOrders = new Map();
 
         function sendNotification(title, body) {
             if (Notification.permission === "granted") {
@@ -52,17 +53,12 @@
             }
         }
 
-        // 2. Победитель по сумме (Aggregate)
+        // Анализ данных
         function analyzeData(data) {
             const symbol = data.topic.split('.')[2];
             const bids = data.data.b;
             const asks = data.data.a;
 
-            // Считаем суммарные суммы заявок (Bid + Ask) на всех 50 уровней
-            const totalBuy = bids.reduce((sum, o) => sum + (parseFloat(o[0]) * parseFloat(o[1])), 0);
-            const totalSell = asks.reduce((sum, o) => sum + (parseFloat(o[0]) * parseFloat(o[1])), 0);
-
-            // Для уведомления, просто берем рюкзак самую крупную заявку
             const allOrders = [...bids.map(o => ({price: o[0], qty: o[1], side: 'Buy'})), 
                                ...asks.map(o => ({price: o[0], qty: o[1], side: 'Sell'}))];
             allOrders.sort((a, b) => (b.price * b.qty) - (a.price * a.qty));
@@ -70,7 +66,6 @@
             const totalValue = biggest.price * biggest.qty;
 
             if (totalValue >= USDT_THRESHOLD) {
-                // 3. Проверка стабильности (3 секунды)
                 const key = `${symbol}_${biggest.side}_${biggest.price}`;
                 const now = Date.now();
 
@@ -79,26 +74,57 @@
                 } else {
                     const startTime = stableOrders.get(key);
                     if (now - startTime >= STABILITY_TIME * 1000) {
-                        // Заявка стояла 3 секунды, значит она реальная
                         const formattedValue = totalValue.toLocaleString('en-US', { maximumFractionDigits: 0 });
                         sendNotification(`💰 Заявка на ${symbol}!`, `Сумма: $${formattedValue}`);
-
-                        // Добавляем на экран
                         const div = document.createElement('div');
                         div.className = 'notification';
                         div.innerHTML = `<b>${symbol}</b> (${biggest.side})<br>Сумма: $${formattedValue}<br>Цена: ${biggest.price}`;
                         notificationsDiv.prepend(div);
-
-                        // Удаляем ключ, чтобы не спамить повторно
                         stableOrders.delete(key);
+                    }
+                }
+            }
+
+            if (totalValue >= PRICE_CHANGE_THRESHOLD) {
+                const key = `${symbol}_price`;
+                const now = Date.now();
+                const currentPrice = parseFloat(biggest.price);
+
+                if (!priceChanges.has(key)) {
+                    priceChanges.set(key, { price: currentPrice, time: now });
+                } else {
+                    const entry = priceChanges.get(key);
+                    const change = Math.abs(currentPrice - entry.price);
+                    if (change >= PRICE_CHANGE_THRESHOLD) {
+                        sendNotification(`⚡️ Цена изменилась на ${symbol}`, `Порог: $${change.toLocaleString()}`);
+                        const div = document.createElement('div');
+                        div.className = 'notification';
+                        div.innerHTML = `<b>${symbol}</b> (변화)<br>Порог: $${change.toLocaleString()}`;
+                        notificationsDiv.prepend(div);
+                        priceChanges.set(key, { price: currentPrice, time: now });
                     }
                 }
             }
         }
 
-        // 4. Auto-Reconnect
+        // Auto-Reconnect
         async function autoReconnect() {
             if (!isRunning) return;
+            const response = await fetch('https://api.bybit.com/v5/market/tickers?category=linear');
+            const json = await response.json();
+            const allTickers = json.result.list;
+
+            const topCoins = allTickers
+                .filter(coin => coin.symbol.endsWith('USDT'))
+                .sort((a, b) => parseFloat(b.turnover24h) - parseFloat(a.turnover24h))
+                .slice(0, 180);
+
+            symbols.length = 0;
+            symbols.push(...topCoins.map(coin => coin.symbol));
+
+            statusDiv.innerText = "Сканирование (Активно)";
+            statusDiv.style.color = "#27ae60";
+
             ws = new WebSocket(`wss://stream.bybit.com/v5/public/linear`);
 
             ws.onopen = () => {
@@ -124,7 +150,7 @@
             };
 
             ws.onclose = () => {
-                statusDiv.innerText = "Соединение закрыто (Авто-переключение)";
+                statusDiv.innerText = "Соединение закрыто (Auto-Reconnect)";
                 statusDiv.style.color = "red";
                 if (isRunning) {
                     autoReconnect();
@@ -136,21 +162,6 @@
             isRunning = true;
             statusDiv.innerText = "Загрузка монет...";
             statusDiv.style.color = "#f7931a";
-
-            // Загрузка списка монет
-            const response = await fetch('https://api.bybit.com/v5/market/tickers?category=linear');
-            const json = await response.json();
-            const allTickers = json.result.list;
-
-            // 5. Top-180
-            const topCoins = allTickers
-                .filter(coin => coin.symbol.endsWith('USDT'))
-                .sort((a, b) => parseFloat(b.turnover24h) - parseFloat(a.turnover24h))
-                .slice(0, 180);
-
-            const symbols = topCoins.map(coin => coin.symbol);
-            statusDiv.innerText = "Найдено монет: " + symbols.length + ". Подключение...";
-
             autoReconnect();
         }
 
