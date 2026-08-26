@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -6,34 +5,24 @@
 
 <meta charset="UTF-8">
 
-<meta
-    name="viewport"
-    content="width=device-width,
-             initial-scale=1.0,
-             maximum-scale=1.0,
-             viewport-fit=cover"
->
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
 
-<meta
-    name="theme-color"
-    content="#0b0e11"
->
-
-<title>Bybit Whale Flow Scanner</title>
+<title>Bybit Whale Flow Scanner PRO</title>
 
 <style>
 
 * {
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
 }
 
 html,
 body {
     margin: 0;
     padding: 0;
-    width: 100%;
-    min-height: 100%;
     background: #0b0e11;
     color: #eaecef;
     font-family:
@@ -45,48 +34,18 @@ body {
 }
 
 body {
-    padding:
-        max(10px, env(safe-area-inset-top))
-        10px
-        max(10px, env(safe-area-inset-bottom));
+    padding: 12px;
+    -webkit-overflow-scrolling: touch;
 }
 
 button,
 select {
-    font: inherit;
-}
-
-button {
     border: none;
-    cursor: pointer;
-    touch-action: manipulation;
-}
-
-.header {
-    background: #1e2329;
-    padding: 14px;
-    border-radius: 14px;
-    margin-bottom: 12px;
-}
-
-h1 {
-    font-size: 19px;
-    margin: 0 0 12px 0;
-}
-
-.controls {
-    display: flex;
-    gap: 7px;
-    flex-wrap: wrap;
-    margin-bottom: 9px;
-}
-
-button,
-select {
-    min-height: 42px;
     border-radius: 9px;
-    padding: 9px 12px;
+    padding: 11px 14px;
     font-weight: 700;
+    font-size: 13px;
+    -webkit-appearance: none;
 }
 
 button {
@@ -100,7 +59,7 @@ button.stop {
 }
 
 button.clear {
-    background: #4b4f54;
+    background: #444;
     color: white;
 }
 
@@ -111,26 +70,39 @@ button:active {
 select {
     background: #2b3139;
     color: white;
-    border: 1px solid #3a4048;
 }
 
-.status-row {
+.header {
+    background: #1e2329;
+    padding: 14px;
+    border-radius: 13px;
+    margin-bottom: 12px;
+}
+
+h1 {
+    font-size: 19px;
+    margin: 0 0 13px 0;
+}
+
+.controls {
     display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    align-items: center;
-    margin-top: 8px;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 11px;
+    color: #848e9c;
 }
 
 .status {
-    color: #848e9c;
     font-size: 12px;
-}
-
-.health {
-    font-size: 11px;
     color: #848e9c;
-    text-align: right;
+    margin-top: 7px;
 }
 
 .stats {
@@ -143,7 +115,7 @@ select {
 .stat {
     background: #161a1e;
     border-radius: 8px;
-    padding: 8px 5px;
+    padding: 8px 4px;
     text-align: center;
     font-size: 10px;
     color: #848e9c;
@@ -153,49 +125,26 @@ select {
     display: block;
     font-size: 14px;
     font-weight: 800;
-    color: #eaecef;
     margin-top: 3px;
-}
-
-.health-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-    margin-top: 6px;
-}
-
-.health-box {
-    background: #161a1e;
-    border-radius: 8px;
-    padding: 7px;
-    text-align: center;
-    font-size: 10px;
-    color: #848e9c;
-}
-
-.health-box strong {
-    display: block;
-    font-size: 13px;
-    margin-top: 2px;
+    color: #eaecef;
 }
 
 .section-title {
     color: #848e9c;
     font-size: 13px;
-    margin: 13px 3px 7px;
+    margin: 13px 0 8px;
 }
 
 .signals {
-    height: calc(100vh - 270px);
-    min-height: 430px;
+    height: 68vh;
+    min-height: 350px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
 }
 
 .signal {
     background: #1e2329;
-    border-radius: 12px;
+    border-radius: 11px;
     padding: 12px;
     margin-bottom: 8px;
     border-left: 5px solid #555;
@@ -213,15 +162,10 @@ select {
     border-left-color: #f7931a;
 }
 
-.signal.breakdown {
-    border-left-color: #9b59b6;
-}
-
 .signal-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 8px;
 }
 
 .symbol {
@@ -229,26 +173,15 @@ select {
     font-weight: 800;
 }
 
-.rank {
-    color: #848e9c;
-    font-size: 11px;
-}
-
 .direction {
-    font-weight: 900;
-    font-size: 13px;
+    font-size: 12px;
+    font-weight: 800;
 }
 
 .score {
     font-size: 21px;
     font-weight: 900;
     margin-top: 4px;
-}
-
-.score-label {
-    font-size: 10px;
-    color: #848e9c;
-    font-weight: 500;
 }
 
 .data-grid {
@@ -271,9 +204,6 @@ select {
     color: #eaecef;
     font-size: 12px;
     margin-top: 3px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .reason {
@@ -285,46 +215,10 @@ select {
     line-height: 1.5;
 }
 
-.wall-state {
-    display: inline-block;
-    padding: 3px 6px;
-    border-radius: 5px;
-    font-size: 9px;
-    font-weight: 800;
-    margin-left: 4px;
-}
-
-.state-holding {
-    background: #1d5c3b;
-    color: #6ff0a7;
-}
-
-.state-growing {
-    background: #174c68;
-    color: #65c9ff;
-}
-
-.state-weakening {
-    background: #6a5119;
-    color: #ffd56a;
-}
-
-.state-new {
-    background: #3d3d42;
-    color: #c8c8cc;
-}
-
-.state-pulled {
-    background: #61252c;
-    color: #ff8792;
-}
-
 .empty {
     text-align: center;
     color: #848e9c;
-    padding: 65px 15px;
-    font-size: 13px;
-    line-height: 1.6;
+    padding: 55px 15px;
 }
 
 .green {
@@ -343,23 +237,14 @@ select {
     color: #3498db !important;
 }
 
-.purple {
-    color: #9b59b6 !important;
-}
-
 .gray {
-    color: #848e9c !important;
+    color: #848e9c;
 }
 
-.warn {
-    color: #f1c40f !important;
-}
-
-.small-note {
-    color: #626a73;
-    font-size: 9px;
-    margin-top: 6px;
-    line-height: 1.4;
+.warning {
+    color: #f7931a;
+    font-size: 11px;
+    margin-top: 5px;
 }
 
 @media (max-width: 600px) {
@@ -368,21 +253,8 @@ select {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .health-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
     .signals {
-        height: calc(100vh - 300px);
-    }
-
-}
-
-@media (min-width: 800px) {
-
-    body {
-        max-width: 900px;
-        margin: auto;
+        height: 64vh;
     }
 
 }
@@ -397,238 +269,207 @@ select {
 
 <div class="header">
 
-    <h1>
-        🐋 Bybit Whale Flow Scanner
-    </h1>
+<h1>
+🐋 Bybit Whale Flow Scanner PRO
+</h1>
 
 
-    <div class="controls">
+<div class="controls">
 
-        <button onclick="startScanner()">
-            ▶ Запустить
-        </button>
+<button onclick="startScanner()">
+▶ Запустить
+</button>
 
-        <button
-            class="stop"
-            onclick="stopScanner()">
+<button
+    class="stop"
+    onclick="stopScanner()">
 
-            ⏹ Стоп
+⏹ Стоп
 
-        </button>
+</button>
 
-        <button
-            class="clear"
-            onclick="clearSignals()">
+<button
+    class="clear"
+    onclick="clearSignals()">
 
-            🗑 Очистить
+🗑 Очистить
 
-        </button>
+</button>
 
-    </div>
+</div>
 
 
-    <div class="controls">
+<div class="controls">
 
-        <label>
 
-            <select id="wallAge">
+<div class="control-group">
 
-                <option value="3">
-                    Стена ≥ 3 сек
-                </option>
+<label>
+Возраст стены
+</label>
 
-                <option
-                    value="5"
-                    selected>
+<select id="wallAge">
 
-                    Стена ≥ 5 сек
+<option value="3">
+3 сек
+</option>
 
-                </option>
+<option value="5" selected>
+5 сек
+</option>
 
-                <option value="10">
-                    Стена ≥ 10 сек
-                </option>
+<option value="8">
+8 сек
+</option>
 
-            </select>
+<option value="10">
+10 сек
+</option>
 
-        </label>
+</select>
 
+</div>
 
-        <label>
 
-            <select id="minScore">
+<div class="control-group">
 
-                <option value="60">
-                    Score ≥ 60
-                </option>
+<label>
+Минимальный Score
+</label>
 
-                <option
-                    value="70"
-                    selected>
+<select id="minScore">
 
-                    Score ≥ 70
+<option value="70">
+70
+</option>
 
-                </option>
+<option value="75" selected>
+75
+</option>
 
-                <option value="80">
-                    Score ≥ 80
-                </option>
+<option value="80">
+80
+</option>
 
-            </select>
+<option value="85">
+85
+</option>
 
-        </label>
+</select>
 
-    </div>
+</div>
 
 
-    <div class="status-row">
+<div class="control-group">
 
-        <div class="status">
+<label>
+Режим
+</label>
 
-            Статус:
+<select id="scanMode">
 
-            <span id="status">
-                Остановлен
-            </span>
+<option value="balanced" selected>
+Balanced
+</option>
 
-        </div>
+<option value="strict">
+Strict
+</option>
 
+</select>
 
-        <div
-            id="health"
-            class="health">
+</div>
 
-            OFF
+</div>
 
-        </div>
 
-    </div>
+<div class="status">
 
+Статус:
 
-    <div class="stats">
+<span id="status">
+Остановлен
+</span>
 
-        <div class="stat">
+</div>
 
-            TOP
+<div
+    id="dataWarning"
+    class="warning">
+</div>
 
-            <span
-                id="coinCount"
-                class="stat-value">
 
-                0
+<div class="stats">
 
-            </span>
 
-        </div>
+<div class="stat">
 
+МОНЕТ
 
-        <div class="stat">
+<span
+    id="coinCount"
+    class="stat-value">
 
-            WS
+0
 
-            <span
-                id="wsStatus"
-                class="stat-value">
+</span>
 
-                OFF
+</div>
 
-            </span>
 
-        </div>
+<div class="stat">
 
+WS
 
-        <div class="stat">
+<span
+    id="wsStatus"
+    class="stat-value">
 
-            Кандидаты
+OFF
 
-            <span
-                id="candidateCount"
-                class="stat-value">
+</span>
 
-                0
+</div>
 
-            </span>
 
-        </div>
+<div class="stat">
 
+КАНДИДАТЫ
 
-        <div class="stat">
+<span
+    id="candidateCount"
+    class="stat-value">
 
-            Сигналы
+0
 
-            <span
-                id="signalCount"
-                class="stat-value">
+</span>
 
-                0
+</div>
 
-            </span>
 
-        </div>
+<div class="stat">
 
-    </div>
+СИГНАЛЫ
 
+<span
+    id="signalCount"
+    class="stat-value">
 
-    <div class="health-grid">
+0
 
-        <div class="health-box">
+</span>
 
-            BOOK
+</div>
 
-            <strong
-                id="bookHealth">
 
-                0/0
-
-            </strong>
-
-        </div>
-
-
-        <div class="health-box">
-
-            TRADES
-
-            <strong
-                id="tradeHealth">
-
-                0/0
-
-            </strong>
-
-        </div>
-
-
-        <div class="health-box">
-
-            DIRTY
-
-            <strong
-                id="dirtyHealth">
-
-                0
-
-            </strong>
-
-        </div>
-
-    </div>
-
-
-    <div class="small-note">
-
-        Данные: Bybit Linear USDT Perpetuals.
-        Сигналы требуют актуального стакана
-        и подтверждённого trade flow.
-
-    </div>
+</div>
 
 </div>
 
 
 <div class="section-title">
 
-    🔥 Лучшие текущие торговые ситуации
+🔥 Крупнейшие подтверждённые торговые ситуации
 
 </div>
 
@@ -637,31 +478,22 @@ select {
     id="signals"
     class="signals">
 
-    <div
-        id="empty"
-        class="empty">
+<div class="empty">
 
-        Запусти сканер.<br><br>
+Запусти сканер.
 
-        Он будет искать:
+<br><br>
 
-        <br>
+Ищем:
 
-        🟢 LONG
+<br>
+🟢 LONG
+<br>
+🔴 SHORT
+<br>
+🟠 BREAKOUT
 
-        <br>
-
-        🔴 SHORT
-
-        <br>
-
-        🟠 BREAKOUT
-
-        <br>
-
-        🟣 BREAKDOWN
-
-    </div>
+</div>
 
 </div>
 
@@ -673,90 +505,189 @@ select {
    CONFIG
 ===================================================== */
 
-const MAX_SYMBOLS = 100;
 
-const ORDERBOOK_DEPTH = 50;
+/*
+ * ВАЖНО:
+ *
+ * Для iPhone не пытаемся держать 100 монет.
+ *
+ * 40 наиболее ликвидных USDT perpetual.
+ */
 
-const MAX_SIGNALS = 10;
+const MAX_SYMBOLS = 40;
 
 
 /*
- * Производительность.
+ * Orderbook 50.
+ */
+
+const ORDERBOOK_DEPTH = 50;
+
+
+/*
+ * Максимум отображаемых сигналов.
+ */
+
+const MAX_SIGNALS = 12;
+
+
+/*
+ * Анализ не чаще 2 раз в секунду.
  */
 
 const ANALYSIS_INTERVAL = 700;
 
-const UI_INTERVAL = 1000;
+
+/*
+ * UI.
+ */
+
+const UI_INTERVAL = 1200;
+
+
+/*
+ * Обновляем TOP каждые 10 минут.
+ */
 
 const SYMBOL_REFRESH =
-    5 * 60 * 1000;
+    10 * 60 * 1000;
 
 
 /*
- * Ограничение памяти.
+ * Максимальное расстояние стены.
  */
 
-const MAX_TRADES_PER_SYMBOL = 300;
+const MAX_WALL_DISTANCE = 0.008;
 
 
 /*
- * Поток считается stale,
- * если данные давно не приходили.
- */
-
-const TRADE_STALE_MS = 15000;
-
-const BOOK_STALE_MS = 10000;
-
-
-/*
- * WebSocket.
- *
- * Подписываемся небольшими
- * пачками.
- */
-
-const SUBSCRIBE_BATCH_SIZE = 10;
-
-const SUBSCRIBE_DELAY = 250;
-
-
-/*
- * Рыночные окна.
+ * Окно aggressive flow.
  */
 
 const TRADE_WINDOW = 10000;
+
+
+/*
+ * Окно цены.
+ */
 
 const PRICE_WINDOW = 60000;
 
 
 /*
- * Стены.
+ * Минимальный relative wall ratio.
+ *
+ * Было 3x.
+ *
+ * Теперь 5x.
  */
 
-const MAX_WALL_DISTANCE = 0.008;
-
-const MIN_WALL_RATIO = 2.5;
-
-const MIN_ABSOLUTE_WALL = 20000;
-
-const WALL_STALE_MS = 30000;
+const MIN_WALL_RATIO = 5;
 
 
 /*
- * Flow.
+ * Минимальный absolute wall.
+ *
+ * Это базовый минимум.
  */
 
-const MIN_FLOW_TRADES = 8;
-
-const MIN_FLOW_VALUE = 10000;
+const GLOBAL_MIN_WALL = 100000;
 
 
 /*
- * Сигналы.
+ * Минимальный aggressive flow
+ * за 10 секунд.
  */
 
-const SIGNAL_EXPIRY = 7000;
+const MIN_TRADE_FLOW = 75000;
+
+
+/*
+ * Максимум сделок в памяти
+ * на монету.
+ */
+
+const MAX_TRADES_PER_SYMBOL = 400;
+
+
+/*
+ * Максимум уровней orderbook
+ * локально.
+ */
+
+const MAX_BOOK_LEVELS = 70;
+
+
+/*
+ * WebSocket subscribe batch.
+ *
+ * Мы сознательно делаем маленькие
+ * пачки для стабильности.
+ */
+
+const SUBSCRIBE_BATCH_SIZE = 10;
+
+
+/* =====================================================
+   ABSOLUTE THRESHOLDS
+===================================================== */
+
+
+/*
+ * Порог зависит от ликвидности
+ * актива.
+ *
+ * Это уже намного строже,
+ * чем исходный вариант.
+ */
+
+const LIQUIDITY_THRESHOLDS = {
+
+    top5: 1000000,
+
+    top10: 750000,
+
+    top20: 500000,
+
+    top30: 350000,
+
+    top40: 250000
+
+};
+
+
+/*
+ * Специальный минимум
+ * для самых крупных активов.
+ *
+ * Например:
+ *
+ * BTC / ETH / SOL
+ */
+
+const MAJOR_THRESHOLDS = {
+
+    BTCUSDT: 2500000,
+
+    ETHUSDT: 1500000,
+
+    SOLUSDT: 750000,
+
+    XRPUSDT: 500000,
+
+    BNBUSDT: 600000,
+
+    DOGEUSDT: 500000,
+
+    ADAUSDT: 400000,
+
+    SUIUSDT: 350000,
+
+    AVAXUSDT: 350000,
+
+    LINKUSDT: 350000
+
+};
 
 
 /* =====================================================
@@ -769,26 +700,30 @@ let running = false;
 
 let reconnectTimer = null;
 
-let symbolRefreshTimer = null;
-
 let analysisTimer = null;
 
 let uiTimer = null;
 
+let symbolRefreshTimer = null;
+
 let pingTimer = null;
+
+let watchdogTimer = null;
 
 
 /*
- * TOP symbols.
+ * Symbols.
  */
 
 const symbols = [];
 
 const symbolRanks = new Map();
 
+const symbolTurnovers = new Map();
+
 
 /*
- * Order books.
+ * Books.
  */
 
 const books = new Map();
@@ -802,7 +737,7 @@ const trades = new Map();
 
 
 /*
- * Wall history.
+ * Walls.
  */
 
 const wallHistory = new Map();
@@ -816,36 +751,12 @@ const signals = new Map();
 
 
 /*
- * Dirty symbols.
- *
- * Только они анализируются.
+ * Statistics.
  */
 
-const dirtySymbols = new Set();
+let lastMarketMessage = 0;
 
-
-/*
- * Stream health.
- */
-
-const streamHealth = new Map();
-
-
-/*
- * Subscription statistics.
- */
-
-const subscriptionState = {
-
-    expected: 0,
-
-    sent: 0,
-
-    success: 0,
-
-    errors: 0
-
-};
+let marketMessageCount = 0;
 
 
 /* =====================================================
@@ -853,54 +764,25 @@ const subscriptionState = {
 ===================================================== */
 
 const statusEl =
-    document.getElementById(
-        "status"
-    );
+    document.getElementById("status");
 
 const wsEl =
-    document.getElementById(
-        "wsStatus"
-    );
-
-const healthEl =
-    document.getElementById(
-        "health"
-    );
+    document.getElementById("wsStatus");
 
 const coinCountEl =
-    document.getElementById(
-        "coinCount"
-    );
+    document.getElementById("coinCount");
 
 const candidateCountEl =
-    document.getElementById(
-        "candidateCount"
-    );
+    document.getElementById("candidateCount");
 
 const signalCountEl =
-    document.getElementById(
-        "signalCount"
-    );
-
-const bookHealthEl =
-    document.getElementById(
-        "bookHealth"
-    );
-
-const tradeHealthEl =
-    document.getElementById(
-        "tradeHealth"
-    );
-
-const dirtyHealthEl =
-    document.getElementById(
-        "dirtyHealth"
-    );
+    document.getElementById("signalCount");
 
 const signalsEl =
-    document.getElementById(
-        "signals"
-    );
+    document.getElementById("signals");
+
+const dataWarningEl =
+    document.getElementById("dataWarning");
 
 
 /* =====================================================
@@ -910,19 +792,6 @@ const signalsEl =
 function now() {
 
     return Date.now();
-
-}
-
-
-function sleep(ms) {
-
-    return new Promise(
-        resolve =>
-            setTimeout(
-                resolve,
-                ms
-            )
-    );
 
 }
 
@@ -942,21 +811,13 @@ function money(value) {
 
 function priceFormat(value) {
 
-    const n =
-        Number(value);
-
+    const n = Number(value);
 
     if (n >= 1000)
         return n.toFixed(2);
 
-
     if (n >= 1)
         return n.toFixed(4);
-
-
-    if (n >= 0.01)
-        return n.toFixed(6);
-
 
     return n.toFixed(8);
 
@@ -972,47 +833,117 @@ function percent(value) {
 }
 
 
-/* =====================================================
-   THRESHOLD
-===================================================== */
-
-function getAdaptiveWallThreshold(
-    symbol,
-    book,
-    currentPrice
+function clamp(
+    value,
+    min,
+    max
 ) {
 
-    const localBid =
-        getLocalLiquidity(
-            book,
-            "Buy",
-            currentPrice
+    return Math.max(
+        min,
+        Math.min(max, value)
+    );
+
+}
+
+
+/* =====================================================
+   DYNAMIC WALL THRESHOLD
+===================================================== */
+
+function getBaseThreshold(
+    symbol
+) {
+
+    /*
+     * Специальные активы.
+     */
+
+    if (
+        MAJOR_THRESHOLDS[symbol]
+    ) {
+
+        return MAJOR_THRESHOLDS[
+            symbol
+        ];
+
+    }
+
+
+    const rank =
+        symbolRanks.get(symbol);
+
+
+    if (!rank) {
+
+        return 250000;
+
+    }
+
+
+    if (rank <= 5)
+        return LIQUIDITY_THRESHOLDS.top5;
+
+
+    if (rank <= 10)
+        return LIQUIDITY_THRESHOLDS.top10;
+
+
+    if (rank <= 20)
+        return LIQUIDITY_THRESHOLDS.top20;
+
+
+    if (rank <= 30)
+        return LIQUIDITY_THRESHOLDS.top30;
+
+
+    return LIQUIDITY_THRESHOLDS.top40;
+
+}
+
+
+/* =====================================================
+   DYNAMIC TURNOVER THRESHOLD
+===================================================== */
+
+function getDynamicThreshold(
+    symbol
+) {
+
+    const turnover =
+        symbolTurnovers.get(
+            symbol
+        ) || 0;
+
+
+    const base =
+        getBaseThreshold(
+            symbol
         );
 
 
-    const localAsk =
-        getLocalLiquidity(
-            book,
-            "Sell",
-            currentPrice
-        );
+    /*
+     * Чем выше суточный оборот,
+     * тем выше требуемая стена.
+     *
+     * turnover / 1000
+     *
+     * 0.002% от оборота.
+     */
+
+    const turnoverThreshold =
+        turnover * 0.000025;
 
 
-    const local =
-        Math.max(
-            localBid,
-            localAsk,
-            1
-        );
-
+    /*
+     * Не даём dynamic threshold
+     * стать слишком большим.
+     */
 
     return Math.max(
-
-        MIN_ABSOLUTE_WALL,
-
-        local *
-        MIN_WALL_RATIO
-
+        GLOBAL_MIN_WALL,
+        base,
+        turnoverThreshold
     );
 
 }
@@ -1022,28 +953,17 @@ function getAdaptiveWallThreshold(
    CREATE BOOK
 ===================================================== */
 
-function createBook(symbol) {
-
-    if (books.has(symbol))
-        return;
-
+function createBook(
+    symbol
+) {
 
     books.set(
         symbol,
         {
-
-            bids:
-                new Map(),
-
-            asks:
-                new Map(),
-
-            lastPrice:
-                null,
-
-            lastUpdate:
-                0
-
+            bids: new Map(),
+            asks: new Map(),
+            lastPrice: null,
+            lastUpdate: 0
         }
     );
 
@@ -1051,121 +971,7 @@ function createBook(symbol) {
 
 
 /* =====================================================
-   STREAM HEALTH
-===================================================== */
-
-function touchBook(symbol) {
-
-    let health =
-        streamHealth.get(
-            symbol
-        );
-
-
-    if (!health) {
-
-        health = {
-
-            lastBookAt: 0,
-
-            lastTradeAt: 0
-
-        };
-
-
-        streamHealth.set(
-            symbol,
-            health
-        );
-
-    }
-
-
-    health.lastBookAt =
-        now();
-
-}
-
-
-function touchTrade(symbol) {
-
-    let health =
-        streamHealth.get(
-            symbol
-        );
-
-
-    if (!health) {
-
-        health = {
-
-            lastBookAt: 0,
-
-            lastTradeAt: 0
-
-        };
-
-
-        streamHealth.set(
-            symbol,
-            health
-        );
-
-    }
-
-
-    health.lastTradeAt =
-        now();
-
-}
-
-
-function getStreamStatus(symbol) {
-
-    const health =
-        streamHealth.get(
-            symbol
-        );
-
-
-    if (!health) {
-
-        return {
-
-            book: false,
-
-            trade: false
-
-        };
-
-    }
-
-
-    const time =
-        now();
-
-
-    return {
-
-        book:
-            time -
-            health.lastBookAt
-            <
-            BOOK_STALE_MS,
-
-        trade:
-            time -
-            health.lastTradeAt
-            <
-            TRADE_STALE_MS
-
-    };
-
-}
-
-
-/* =====================================================
-   SNAPSHOT
+   APPLY SNAPSHOT
 ===================================================== */
 
 function applySnapshot(
@@ -1175,33 +981,23 @@ function applySnapshot(
 
     createBook(symbol);
 
-
     const book =
         books.get(symbol);
 
 
-    book.bids.clear();
-
-    book.asks.clear();
-
-
-    if (Array.isArray(data.b)) {
+    if (
+        Array.isArray(data.b)
+    ) {
 
         for (
-            const order
-            of data.b
+            const order of data.b
         ) {
 
             const price =
-                Number(
-                    order[0]
-                );
-
+                Number(order[0]);
 
             const qty =
-                Number(
-                    order[1]
-                );
+                Number(order[1]);
 
 
             if (
@@ -1221,23 +1017,19 @@ function applySnapshot(
     }
 
 
-    if (Array.isArray(data.a)) {
+    if (
+        Array.isArray(data.a)
+    ) {
 
         for (
-            const order
-            of data.a
+            const order of data.a
         ) {
 
             const price =
-                Number(
-                    order[0]
-                );
-
+                Number(order[0]);
 
             const qty =
-                Number(
-                    order[1]
-                );
+                Number(order[1]);
 
 
             if (
@@ -1260,16 +1052,11 @@ function applySnapshot(
     book.lastUpdate =
         now();
 
-
-    touchBook(symbol);
-
-    dirtySymbols.add(symbol);
-
 }
 
 
 /* =====================================================
-   DELTA
+   APPLY DELTA
 ===================================================== */
 
 function applyDelta(
@@ -1285,23 +1072,19 @@ function applyDelta(
         return;
 
 
-    if (Array.isArray(data.b)) {
+    if (
+        Array.isArray(data.b)
+    ) {
 
         for (
-            const order
-            of data.b
+            const order of data.b
         ) {
 
             const price =
-                Number(
-                    order[0]
-                );
-
+                Number(order[0]);
 
             const qty =
-                Number(
-                    order[1]
-                );
+                Number(order[1]);
 
 
             if (qty === 0) {
@@ -1324,23 +1107,19 @@ function applyDelta(
     }
 
 
-    if (Array.isArray(data.a)) {
+    if (
+        Array.isArray(data.a)
+    ) {
 
         for (
-            const order
-            of data.a
+            const order of data.a
         ) {
 
             const price =
-                Number(
-                    order[0]
-                );
-
+                Number(order[0]);
 
             const qty =
-                Number(
-                    order[1]
-                );
+                Number(order[1]);
 
 
             if (qty === 0) {
@@ -1363,62 +1142,115 @@ function applyDelta(
     }
 
 
+    /*
+     * Защита памяти.
+     */
+
+    if (
+        book.bids.size >
+        MAX_BOOK_LEVELS
+    ) {
+
+        trimBook(
+            book.bids,
+            true
+        );
+
+    }
+
+
+    if (
+        book.asks.size >
+        MAX_BOOK_LEVELS
+    ) {
+
+        trimBook(
+            book.asks,
+            false
+        );
+
+    }
+
+
     book.lastUpdate =
         now();
-
-
-    touchBook(symbol);
-
-    dirtySymbols.add(symbol);
 
 }
 
 
 /* =====================================================
-   TRADES
+   TRIM BOOK
 ===================================================== */
 
-function processTrade(data) {
+function trimBook(
+    map,
+    bids
+) {
 
-    if (!Array.isArray(data))
+    const entries =
+        [...map.entries()]
+            .sort(
+                (a, b) =>
+                    bids
+                        ? b[0] - a[0]
+                        : a[0] - b[0]
+            );
+
+
+    map.clear();
+
+
+    entries
+        .slice(
+            0,
+            MAX_BOOK_LEVELS
+        )
+        .forEach(
+            ([price, qty]) => {
+
+                map.set(
+                    price,
+                    qty
+                );
+
+            }
+        );
+
+}
+
+
+/* =====================================================
+   PROCESS TRADES
+===================================================== */
+
+function processTrade(
+    data
+) {
+
+    if (
+        !Array.isArray(data)
+    )
         return;
 
 
-    const cutoff =
-        now() -
-        PRICE_WINDOW;
-
-
     for (
-        const trade
-        of data
+        const trade of data
     ) {
 
         const symbol =
             trade.s;
 
-
         const side =
             trade.S;
 
-
         const price =
-            Number(
-                trade.p
-            );
-
+            Number(trade.p);
 
         const qty =
-            Number(
-                trade.v
-            );
-
+            Number(trade.v);
 
         const timestamp =
-            Number(
-                trade.T
-            )
-            ||
+            Number(trade.T) ||
             now();
 
 
@@ -1428,6 +1260,10 @@ function processTrade(data) {
             !qty
         )
             continue;
+
+
+        const value =
+            price * qty;
 
 
         if (
@@ -1443,55 +1279,22 @@ function processTrade(data) {
 
 
         const list =
-            trades.get(
-                symbol
-            );
+            trades.get(symbol);
 
 
         list.push({
 
-            time:
-                timestamp,
+            time: timestamp,
 
-            side:
-                side,
+            side,
 
-            price:
-                price,
+            price,
 
-            value:
-                price * qty
+            qty,
+
+            value
 
         });
-
-
-        /*
-         * Ограничение памяти.
-         */
-
-        while (
-            list.length >
-            MAX_TRADES_PER_SYMBOL
-        ) {
-
-            list.shift();
-
-        }
-
-
-        /*
-         * Удаляем старые.
-         */
-
-        while (
-            list.length &&
-            list[0].time <
-            cutoff
-        ) {
-
-            list.shift();
-
-        }
 
 
         const book =
@@ -1506,9 +1309,44 @@ function processTrade(data) {
         }
 
 
-        touchTrade(symbol);
+        /*
+         * Удаляем старые.
+         */
 
-        dirtySymbols.add(symbol);
+        const cutoff =
+            now() -
+            PRICE_WINDOW;
+
+
+        while (
+            list.length &&
+            (
+                list[0].time <
+                cutoff
+            )
+        ) {
+
+            list.shift();
+
+        }
+
+
+        /*
+         * Ограничение памяти.
+         */
+
+        if (
+            list.length >
+            MAX_TRADES_PER_SYMBOL
+        ) {
+
+            list.splice(
+                0,
+                list.length -
+                MAX_TRADES_PER_SYMBOL
+            );
+
+        }
 
     }
 
@@ -1519,12 +1357,12 @@ function processTrade(data) {
    TRADE FLOW
 ===================================================== */
 
-function getTradeFlow(symbol) {
+function getTradeFlow(
+    symbol
+) {
 
     const list =
-        trades.get(symbol)
-        ||
-        [];
+        trades.get(symbol) || [];
 
 
     const cutoff =
@@ -1550,33 +1388,28 @@ function getTradeFlow(symbol) {
         i--
     ) {
 
-        const trade =
+        const t =
             list[i];
 
 
         if (
-            trade.time <
+            t.time <
             cutoff
         )
             break;
 
 
         if (
-            trade.side ===
-            "Buy"
+            t.side === "Buy"
         ) {
 
-            buy +=
-                trade.value;
+            buy += t.value;
 
             buyCount++;
 
-        }
+        } else {
 
-        else {
-
-            sell +=
-                trade.value;
+            sell += t.value;
 
             sellCount++;
 
@@ -1586,40 +1419,15 @@ function getTradeFlow(symbol) {
 
 
     const total =
-        buy +
-        sell;
+        buy + sell;
 
 
-    const count =
-        buyCount +
-        sellCount;
-
-
-    let imbalance = 0;
-
-    let valid = false;
-
-
-    if (
-        count >=
-        MIN_FLOW_TRADES
-        &&
-        total >=
-        MIN_FLOW_VALUE
-    ) {
-
-        imbalance =
-            (
-                buy -
-                sell
-            )
-            /
-            total;
-
-
-        valid = true;
-
-    }
+    const imbalance =
+        total > 0
+            ? (
+                buy - sell
+            ) / total
+            : 0;
 
 
     return {
@@ -1630,11 +1438,11 @@ function getTradeFlow(symbol) {
 
         total,
 
-        count,
-
         imbalance,
 
-        valid
+        buyCount,
+
+        sellCount
 
     };
 
@@ -1645,25 +1453,22 @@ function getTradeFlow(symbol) {
    PRICE CHANGE
 ===================================================== */
 
-function getPriceChange(symbol) {
+function getPriceChange(
+    symbol
+) {
 
     const list =
-        trades.get(symbol)
-        ||
-        [];
+        trades.get(symbol) || [];
 
 
     if (
-        list.length <
-        2
+        list.length < 2
     )
         return 0;
 
 
     const latest =
-        list[
-            list.length - 1
-        ];
+        list[list.length - 1];
 
 
     const cutoff =
@@ -1707,9 +1512,7 @@ function getPriceChange(symbol) {
     return (
         latest.price -
         old.price
-    )
-    /
-    old.price;
+    ) / old.price;
 
 }
 
@@ -1752,19 +1555,16 @@ function getLocalLiquidity(
             Math.abs(
                 price -
                 currentPrice
-            )
-            /
+            ) /
             currentPrice;
 
 
         if (
-            distance <=
-            0.003
+            distance <= 0.003
         ) {
 
             const value =
-                price *
-                qty;
+                price * qty;
 
 
             if (
@@ -1783,7 +1583,7 @@ function getLocalLiquidity(
 
 
     if (
-        values.length === 0
+        values.length < 3
     )
         return 1;
 
@@ -1794,14 +1594,16 @@ function getLocalLiquidity(
     );
 
 
-    const middle =
-        Math.floor(
-            values.length / 2
-        );
-
+    /*
+     * Вместо одной случайной
+     * медианы используем
+     * median.
+     */
 
     return values[
-        middle
+        Math.floor(
+            values.length / 2
+        )
     ];
 
 }
@@ -1811,7 +1613,9 @@ function getLocalLiquidity(
    FIND WALLS
 ===================================================== */
 
-function findWalls(symbol) {
+function findWalls(
+    symbol
+) {
 
     const book =
         books.get(symbol);
@@ -1821,175 +1625,227 @@ function findWalls(symbol) {
         return [];
 
 
-    const stream =
-        getStreamStatus(symbol);
-
-
-    if (!stream.book)
-        return [];
-
-
     let currentPrice =
         book.lastPrice;
 
 
+    /*
+     * Fallback mid price.
+     */
+
     if (!currentPrice) {
 
         const bids =
-            [
-                ...book.bids.keys()
-            ]
-            .sort(
-                (a, b) =>
-                    b - a
-            );
-
+            [...book.bids.keys()]
+                .sort(
+                    (a, b) =>
+                        b - a
+                );
 
         const asks =
-            [
-                ...book.asks.keys()
-            ]
-            .sort(
-                (a, b) =>
-                    a - b
-            );
+            [...book.asks.keys()]
+                .sort(
+                    (a, b) =>
+                        a - b
+                );
 
 
         if (
-            !bids.length ||
-            !asks.length
-        )
-            return [];
-
-
-        currentPrice =
-            (
-                bids[0] +
-                asks[0]
-            )
-            /
-            2;
-
-    }
-
-
-    const threshold =
-        getAdaptiveWallThreshold(
-            symbol,
-            book,
-            currentPrice
-        );
-
-
-    const result = [];
-
-
-    function scan(
-        source,
-        side
-    ) {
-
-        for (
-            const [
-                price,
-                qty
-            ]
-            of source
+            bids.length &&
+            asks.length
         ) {
 
-            const distance =
-                side === "Buy"
-
-                    ? (
-                        currentPrice -
-                        price
-                    )
-                    /
-                    currentPrice
-
-                    : (
-                        price -
-                        currentPrice
-                    )
-                    /
-                    currentPrice;
-
-
-            if (
-                distance < 0
-                ||
-                distance >
-                MAX_WALL_DISTANCE
-            )
-                continue;
-
-
-            const value =
-                price *
-                qty;
-
-
-            const local =
-                getLocalLiquidity(
-                    book,
-                    side,
-                    currentPrice
-                );
-
-
-            const ratio =
-                value /
-                Math.max(
-                    local,
-                    1
-                );
-
-
-            if (
-                value >=
-                threshold
-                &&
-                ratio >=
-                MIN_WALL_RATIO
-            ) {
-
-                result.push({
-
-                    symbol,
-
-                    side,
-
-                    price,
-
-                    qty,
-
-                    value,
-
-                    distance,
-
-                    ratio,
-
-                    currentPrice
-
-                });
-
-            }
+            currentPrice =
+                (
+                    bids[0] +
+                    asks[0]
+                ) / 2;
 
         }
 
     }
 
 
-    scan(
-        book.bids,
-        "Buy"
-    );
+    if (!currentPrice)
+        return [];
 
 
-    scan(
-        book.asks,
-        "Sell"
-    );
+    const result = [];
+
+    const threshold =
+        getDynamicThreshold(
+            symbol
+        );
+
+
+    /*
+     * BUY WALL
+     */
+
+    for (
+        const [
+            price,
+            qty
+        ]
+        of book.bids
+    ) {
+
+        const distance =
+            (
+                currentPrice -
+                price
+            ) /
+            currentPrice;
+
+
+        if (
+            distance < 0 ||
+            distance >
+            MAX_WALL_DISTANCE
+        )
+            continue;
+
+
+        const value =
+            price * qty;
+
+
+        if (
+            value <
+            threshold
+        )
+            continue;
+
+
+        const local =
+            getLocalLiquidity(
+                book,
+                "Buy",
+                currentPrice
+            );
+
+
+        const ratio =
+            value /
+            Math.max(
+                local,
+                1
+            );
+
+
+        if (
+            ratio <
+            MIN_WALL_RATIO
+        )
+            continue;
+
+
+        result.push({
+
+            symbol,
+
+            side: "Buy",
+
+            price,
+
+            qty,
+
+            value,
+
+            distance,
+
+            ratio,
+
+            currentPrice
+
+        });
+
+    }
+
+
+    /*
+     * SELL WALL
+     */
+
+    for (
+        const [
+            price,
+            qty
+        ]
+        of book.asks
+    ) {
+
+        const distance =
+            (
+                price -
+                currentPrice
+            ) /
+            currentPrice;
+
+
+        if (
+            distance < 0 ||
+            distance >
+            MAX_WALL_DISTANCE
+        )
+            continue;
+
+
+        const value =
+            price * qty;
+
+
+        if (
+            value <
+            threshold
+        )
+            continue;
+
+
+        const local =
+            getLocalLiquidity(
+                book,
+                "Sell",
+                currentPrice
+            );
+
+
+        const ratio =
+            value /
+            Math.max(
+                local,
+                1
+            );
+
+
+        if (
+            ratio <
+            MIN_WALL_RATIO
+        )
+            continue;
+
+
+        result.push({
+
+            symbol,
+
+            side: "Sell",
+
+            price,
+
+            qty,
+
+            value,
+
+            distance,
+
+            ratio,
+
+            currentPrice
+
+        });
+
+    }
 
 
     result.sort(
@@ -2001,68 +1857,7 @@ function findWalls(symbol) {
 
     return result.slice(
         0,
-        8
-    );
-
-}
-
-
-/* =====================================================
-   WALL KEY
-===================================================== */
-
-function getWallKey(wall) {
-
-    let precision;
-
-
-    if (
-        wall.price >=
-        1000
-    ) {
-
-        precision = 1;
-
-    }
-
-    else if (
-        wall.price >=
-        1
-    ) {
-
-        precision = 0.001;
-
-    }
-
-    else if (
-        wall.price >=
-        0.01
-    ) {
-
-        precision = 0.00001;
-
-    }
-
-    else {
-
-        precision = 0.0000001;
-
-    }
-
-
-    const bucket =
-        Math.round(
-            wall.price /
-            precision
-        )
-        *
-        precision;
-
-
-    return (
-        `${wall.symbol}_` +
-        `${wall.side}_` +
-        `${bucket}`
+        5
     );
 
 }
@@ -2072,14 +1867,34 @@ function getWallKey(wall) {
    WALL HISTORY
 ===================================================== */
 
-function updateWallHistory(wall) {
+function updateWallHistory(
+    wall
+) {
+
+    /*
+     * Округляем цену, чтобы
+     * небольшие изменения уровня
+     * не создавали новую стену.
+     */
+
+    const precision =
+        wall.price >= 100
+            ? 1
+            : wall.price >= 1
+                ? 3
+                : 6;
+
+
+    const normalizedPrice =
+        Number(
+            wall.price.toFixed(
+                precision
+            )
+        );
+
 
     const key =
-        getWallKey(wall);
-
-
-    const time =
-        now();
+        `${wall.symbol}_${wall.side}_${normalizedPrice}`;
 
 
     if (
@@ -2089,141 +1904,32 @@ function updateWallHistory(wall) {
         wallHistory.set(
             key,
             {
-
-                firstSeen:
-                    time,
-
-                lastSeen:
-                    time,
-
-                firstValue:
-                    wall.value,
-
-                previousValue:
-                    wall.value,
-
-                lastValue:
-                    wall.value,
-
-                maxValue:
-                    wall.value,
-
-                state:
-                    "NEW"
-
+                firstSeen: now(),
+                lastSeen: now(),
+                lastValue: wall.value,
+                key
             }
         );
 
-    }
+    } else {
+
+        const item =
+            wallHistory.get(key);
 
 
-    const item =
-        wallHistory.get(key);
+        item.lastSeen =
+            now();
 
 
-    item.previousValue =
-        item.lastValue;
-
-
-    item.lastValue =
-        wall.value;
-
-
-    item.lastSeen =
-        time;
-
-
-    item.maxValue =
-        Math.max(
-            item.maxValue,
-            wall.value
-        );
-
-
-    const change =
-        (
-            item.lastValue -
-            item.previousValue
-        )
-        /
-        Math.max(
-            item.previousValue,
-            1
-        );
-
-
-    if (
-        change >
-        0.08
-    ) {
-
-        item.state =
-            "GROWING";
-
-    }
-
-    else if (
-        change <
-        -0.15
-    ) {
-
-        item.state =
-            "WEAKENING";
-
-    }
-
-    else {
-
-        item.state =
-            "HOLDING";
+        item.lastValue =
+            wall.value;
 
     }
 
 
-    return {
-
-        key,
-
-        history:
-            item
-
-    };
-
-}
-
-
-/* =====================================================
-   WALL CLEANUP
-===================================================== */
-
-function cleanupWallHistory() {
-
-    const time =
-        now();
-
-
-    for (
-        const [
-            key,
-            item
-        ]
-        of wallHistory
-    ) {
-
-        if (
-            time -
-            item.lastSeen
-            >
-            WALL_STALE_MS
-        ) {
-
-            wallHistory.delete(
-                key
-            );
-
-        }
-
-    }
+    return wallHistory.get(
+        key
+    );
 
 }
 
@@ -2234,124 +1940,120 @@ function cleanupWallHistory() {
 
 function calculateScore(
     wall,
-    history,
     flow,
-    priceChange
+    priceChange,
+    age
 ) {
 
     let score = 0;
 
 
     /*
-     * Размер.
+     * 1.
+     * Absolute size.
+     *
+     * 25 points.
      */
+
+    const threshold =
+        getDynamicThreshold(
+            wall.symbol
+        );
+
+
+    const sizeRatio =
+        wall.value /
+        Math.max(
+            threshold,
+            1
+        );
+
 
     const sizeScore =
         Math.min(
-            20,
+            25,
             Math.log10(
                 Math.max(
-                    wall.value /
-                    MIN_ABSOLUTE_WALL,
+                    sizeRatio,
                     1
                 )
-            )
-            *
-            12
+            ) * 20
         );
 
 
-    score +=
-        Math.max(
-            0,
-            sizeScore
-        );
+    score += sizeScore;
 
 
     /*
-     * Relative liquidity.
+     * 2.
+     * Relative wall.
+     *
+     * 20 points.
      */
 
-    score +=
+    const ratioScore =
         Math.min(
             20,
-            wall.ratio *
-            4
+            Math.max(
+                0,
+                (
+                    wall.ratio -
+                    4
+                ) * 3
+            )
         );
 
 
+    score += ratioScore;
+
+
     /*
-     * Возраст.
+     * 3.
+     * Age.
+     *
+     * 15 points.
      */
 
-    const age =
-        now() -
-        history.firstSeen;
+    const ageScore =
+        Math.min(
+            15,
+            age / 1000
+        );
+
+
+    score += ageScore;
+
+
+    /*
+     * 4.
+     * Flow.
+     *
+     * 25 points.
+     */
+
+    const alignedFlow =
+        wall.side === "Buy"
+
+            ? Math.max(
+                0,
+                flow.imbalance
+            )
+
+            : Math.max(
+                0,
+                -flow.imbalance
+            );
 
 
     score +=
-        Math.min(
-            15,
-            age /
-            1000
-        );
+        alignedFlow * 25;
 
 
     /*
-     * Стабильность.
-     */
-
-    if (
-        history.state ===
-        "HOLDING"
-    ) {
-
-        score += 10;
-
-    }
-
-
-    if (
-        history.state ===
-        "GROWING"
-    ) {
-
-        score += 15;
-
-    }
-
-
-    /*
-     * Flow.
-     */
-
-    if (
-        flow.valid
-    ) {
-
-        const aligned =
-            wall.side === "Buy"
-
-                ? Math.max(
-                    0,
-                    flow.imbalance
-                )
-
-                : Math.max(
-                    0,
-                    -flow.imbalance
-                );
-
-
-        score +=
-            aligned *
-            25;
-
-    }
-
-
-    /*
-     * Price action.
+     * 5.
+     * Price.
+     *
+     * 15 points.
      */
 
     const alignedPrice =
@@ -2371,8 +2073,7 @@ function calculateScore(
     score +=
         Math.min(
             15,
-            alignedPrice *
-            1500
+            alignedPrice * 1000
         );
 
 
@@ -2390,55 +2091,29 @@ function calculateScore(
 
 function determineSetup(
     wall,
-    history,
     flow,
     priceChange
 ) {
-
-    if (
-        !flow.valid
-    )
-        return null;
-
-
-    const approachingWall =
-        wall.distance <
-        0.003;
-
 
     /*
      * BUY WALL
      */
 
     if (
-        wall.side ===
-        "Buy"
+        wall.side === "Buy"
     ) {
 
         /*
-         * LONG.
+         * Поддержка.
          */
 
         if (
-
-            (
-                history.state ===
-                "HOLDING"
-                ||
-                history.state ===
-                "GROWING"
-            )
-
-            &&
-
-            flow.imbalance >
-            0.15
-
-            &&
-
-            priceChange >
-            0
-
+            flow.total >=
+                MIN_TRADE_FLOW &&
+            flow.imbalance >=
+                0.15 &&
+            priceChange >=
+                -0.0005
         ) {
 
             return "LONG";
@@ -2447,31 +2122,18 @@ function determineSetup(
 
 
         /*
-         * BREAKDOWN.
+         * Breakdown.
          */
 
         if (
-
-            history.state ===
-            "WEAKENING"
-
-            &&
-
-            approachingWall
-
-            &&
-
-            flow.imbalance <
-            -0.20
-
-            &&
-
-            priceChange <=
-            0
-
+            flow.total >=
+                MIN_TRADE_FLOW &&
+            flow.imbalance <=
+                -0.25 &&
+            priceChange < 0
         ) {
 
-            return "BREAKDOWN";
+            return "BREAKOUT";
 
         }
 
@@ -2483,34 +2145,20 @@ function determineSetup(
      */
 
     if (
-        wall.side ===
-        "Sell"
+        wall.side === "Sell"
     ) {
 
         /*
-         * SHORT.
+         * Resistance.
          */
 
         if (
-
-            (
-                history.state ===
-                "HOLDING"
-                ||
-                history.state ===
-                "GROWING"
-            )
-
-            &&
-
-            flow.imbalance <
-            -0.15
-
-            &&
-
-            priceChange <
-            0
-
+            flow.total >=
+                MIN_TRADE_FLOW &&
+            flow.imbalance <=
+                -0.15 &&
+            priceChange <=
+                0.0005
         ) {
 
             return "SHORT";
@@ -2519,28 +2167,15 @@ function determineSetup(
 
 
         /*
-         * BREAKOUT LONG.
+         * Breakout вверх.
          */
 
         if (
-
-            history.state ===
-            "WEAKENING"
-
-            &&
-
-            approachingWall
-
-            &&
-
-            flow.imbalance >
-            0.20
-
-            &&
-
-            priceChange >=
-            0
-
+            flow.total >=
+                MIN_TRADE_FLOW &&
+            flow.imbalance >=
+                0.25 &&
+            priceChange > 0
         ) {
 
             return "BREAKOUT";
@@ -2559,18 +2194,42 @@ function determineSetup(
    ANALYZE SYMBOL
 ===================================================== */
 
-function analyzeSymbol(symbol) {
+function analyzeSymbol(
+    symbol
+) {
 
-    const stream =
-        getStreamStatus(symbol);
+    const book =
+        books.get(symbol);
 
 
-    if (!stream.book)
+    if (!book)
         return;
 
 
-    const wallsFound =
+    /*
+     * Не анализируем
+     * полностью мёртвую книгу.
+     */
+
+    if (
+        now() -
+        book.lastUpdate >
+        10000
+    ) {
+
+        return;
+
+    }
+
+
+    const walls =
         findWalls(symbol);
+
+
+    if (
+        walls.length === 0
+    )
+        return;
 
 
     const flow =
@@ -2581,52 +2240,38 @@ function analyzeSymbol(symbol) {
         getPriceChange(symbol);
 
 
-    /*
-     * Без trade flow
-     * полноценный сигнал
-     * не строим.
-     */
+    const requiredAge =
+        Number(
+            document
+                .getElementById(
+                    "wallAge"
+                )
+                .value
+        ) * 1000;
 
-    if (
-        !stream.trade
-    )
-        return;
+
+    const strict =
+        document
+            .getElementById(
+                "scanMode"
+            )
+            .value ===
+        "strict";
 
 
     for (
-        const wall
-        of wallsFound
+        const wall of walls
     ) {
 
-        const result =
+        const history =
             updateWallHistory(
                 wall
             );
 
 
-        const key =
-            result.key;
-
-
-        const history =
-            result.history;
-
-
         const age =
             now() -
             history.firstSeen;
-
-
-        const requiredAge =
-            Number(
-                document
-                    .getElementById(
-                        "wallAge"
-                    )
-                    .value
-            )
-            *
-            1000;
 
 
         if (
@@ -2636,10 +2281,27 @@ function analyzeSymbol(symbol) {
             continue;
 
 
+        /*
+         * Strict режим.
+         */
+
+        const minimumFlow =
+            strict
+                ? MIN_TRADE_FLOW *
+                    1.5
+                : MIN_TRADE_FLOW;
+
+
+        if (
+            flow.total <
+            minimumFlow
+        )
+            continue;
+
+
         const setup =
             determineSetup(
                 wall,
-                history,
                 flow,
                 priceChange
             );
@@ -2652,9 +2314,9 @@ function analyzeSymbol(symbol) {
         const score =
             calculateScore(
                 wall,
-                history,
                 flow,
-                priceChange
+                priceChange,
+                age
             );
 
 
@@ -2673,6 +2335,10 @@ function analyzeSymbol(symbol) {
             minScore
         )
             continue;
+
+
+        const key =
+            `${wall.symbol}_${wall.side}_${wall.price}`;
 
 
         signals.set(
@@ -2694,13 +2360,16 @@ function analyzeSymbol(symbol) {
 
                 wall,
 
-                history,
-
                 flow,
 
                 priceChange,
 
                 age,
+
+                threshold:
+                    getDynamicThreshold(
+                        symbol
+                    ),
 
                 updated:
                     now()
@@ -2723,18 +2392,14 @@ function analyzeAll() {
         return;
 
 
-    const list =
-        [
-            ...dirtySymbols
-        ];
-
-
-    dirtySymbols.clear();
-
+    /*
+     * Вместо тяжёлой работы
+     * каждый тик анализируем
+     * только активные книги.
+     */
 
     for (
-        const symbol
-        of list
+        const symbol of symbols
     ) {
 
         analyzeSymbol(
@@ -2744,9 +2409,13 @@ function analyzeAll() {
     }
 
 
+    /*
+     * Сигнал живёт 6 секунд.
+     */
+
     const expiry =
         now() -
-        SIGNAL_EXPIRY;
+        6000;
 
 
     for (
@@ -2771,61 +2440,33 @@ function analyzeAll() {
     }
 
 
-    cleanupWallHistory();
+    /*
+     * Чистим старые стены.
+     */
 
-}
-
-
-/* =====================================================
-   STREAM HEALTH UI
-===================================================== */
-
-function updateHealthUI() {
-
-    let bookActive = 0;
-
-    let tradeActive = 0;
+    const historyExpiry =
+        now() -
+        30000;
 
 
     for (
-        const symbol
-        of symbols
+        const [
+            key,
+            item
+        ]
+        of wallHistory
     ) {
 
-        const state =
-            getStreamStatus(
-                symbol
+        if (
+            item.lastSeen <
+            historyExpiry
+        ) {
+
+            wallHistory.delete(
+                key
             );
 
-
-        if (state.book)
-            bookActive++;
-
-
-        if (state.trade)
-            tradeActive++;
-
-    }
-
-
-    bookHealthEl.innerText =
-        `${bookActive}/${symbols.length}`;
-
-
-    tradeHealthEl.innerText =
-        `${tradeActive}/${symbols.length}`;
-
-
-    dirtyHealthEl.innerText =
-        dirtySymbols.size;
-
-
-    if (
-        running
-    ) {
-
-        healthEl.innerText =
-            `BOOK ${bookActive} · TRADE ${tradeActive}`;
+        }
 
     }
 
@@ -2836,114 +2477,19 @@ function updateHealthUI() {
    RENDER
 ===================================================== */
 
-function getDirectionClass(
-    setup
-) {
-
-    if (
-        setup ===
-        "LONG"
-    )
-        return "long";
-
-
-    if (
-        setup ===
-        "SHORT"
-    )
-        return "short";
-
-
-    if (
-        setup ===
-        "BREAKOUT"
-    )
-        return "breakout";
-
-
-    return "breakdown";
-
-}
-
-
-function getDirectionIcon(
-    setup
-) {
-
-    if (
-        setup ===
-        "LONG"
-    )
-        return "🟢";
-
-
-    if (
-        setup ===
-        "SHORT"
-    )
-        return "🔴";
-
-
-    if (
-        setup ===
-        "BREAKOUT"
-    )
-        return "🟠";
-
-
-    return "🟣";
-
-}
-
-
-function getStateClass(
-    state
-) {
-
-    if (
-        state ===
-        "HOLDING"
-    )
-        return "state-holding";
-
-
-    if (
-        state ===
-        "GROWING"
-    )
-        return "state-growing";
-
-
-    if (
-        state ===
-        "WEAKENING"
-    )
-        return "state-weakening";
-
-
-    return "state-new";
-
-}
-
-
 function renderSignals() {
 
-    updateHealthUI();
-
-
     const sorted =
-        [
-            ...signals.values()
-        ]
-        .sort(
-            (a, b) =>
-                b.score -
-                a.score
-        )
-        .slice(
-            0,
-            MAX_SIGNALS
-        );
+        [...signals.values()]
+            .sort(
+                (a, b) =>
+                    b.score -
+                    a.score
+            )
+            .slice(
+                0,
+                MAX_SIGNALS
+            );
 
 
     candidateCountEl.innerText =
@@ -2955,8 +2501,7 @@ function renderSignals() {
 
 
     if (
-        sorted.length ===
-        0
+        sorted.length === 0
     ) {
 
         signalsEl.innerHTML = `
@@ -2967,23 +2512,16 @@ function renderSignals() {
 
                 <br><br>
 
-                Нужны одновременно:
+                Сейчас нет подтверждённой
+                whale-ситуации.
 
-                <br>
+                <br><br>
 
-                🐋 Крупная лимитная стена
+                Минимум стены:
 
-                <br>
-
-                ⚡ Достоверный aggressive flow
-
-                <br>
-
-                📈 Движение цены
-
-                <br>
-
-                🛡 Живая WebSocket-связь
+                ${money(
+                    getGlobalDisplayThreshold()
+                )}
 
             </div>
 
@@ -2998,24 +2536,42 @@ function renderSignals() {
 
 
     for (
-        const signal
-        of sorted
+        const s of sorted
     ) {
 
-        const s =
-            signal;
+        let directionIcon =
+            "🟢";
+
+        let directionClass =
+            "long";
 
 
-        const directionClass =
-            getDirectionClass(
-                s.setup
-            );
+        if (
+            s.setup ===
+            "SHORT"
+        ) {
+
+            directionIcon =
+                "🔴";
+
+            directionClass =
+                "short";
+
+        }
 
 
-        const directionIcon =
-            getDirectionIcon(
-                s.setup
-            );
+        if (
+            s.setup ===
+            "BREAKOUT"
+        ) {
+
+            directionIcon =
+                "🟠";
+
+            directionClass =
+                "breakout";
+
+        }
 
 
         const wallSide =
@@ -3045,7 +2601,7 @@ function renderSignals() {
                 : s.flow.buy;
 
 
-        let reason;
+        let reason = "";
 
 
         if (
@@ -3054,9 +2610,10 @@ function renderSignals() {
         ) {
 
             reason =
-                "BUY wall + агрессивные покупки + цена растёт";
+                "BUY wall + подтверждённые aggressive BUY";
 
         }
+
 
         else if (
             s.setup ===
@@ -3064,265 +2621,255 @@ function renderSignals() {
         ) {
 
             reason =
-                "SELL wall + агрессивные продажи + цена падает";
+                "SELL wall + подтверждённые aggressive SELL";
 
         }
 
-        else if (
-            s.setup ===
-            "BREAKOUT"
-        ) {
-
-            reason =
-                "SELL wall ослабевает + покупатели поглощают ликвидность";
-
-        }
 
         else {
 
             reason =
-                "BUY wall ослабевает + продавцы поглощают ликвидность";
+                "Стена атакована противоположным aggressive flow";
 
         }
 
 
         html += `
 
-            <div
-                class="signal ${directionClass}">
+        <div
+            class="signal ${directionClass}">
 
 
-                <div
-                    class="signal-top">
+            <div class="signal-top">
 
+                <div class="symbol">
 
-                    <div
-                        class="symbol">
+                    ${directionIcon}
 
-                        ${directionIcon}
+                    ${s.symbol}
 
-                        ${s.symbol}
+                    <span class="gray">
 
-                        <span
-                            class="rank">
-
-                            #${s.rank || "?"}
-
-                        </span>
-
-                    </div>
-
-
-                    <div
-                        class="direction">
-
-                        ${s.setup}
-
-                    </div>
-
-                </div>
-
-
-                <div
-                    class="score">
-
-                    ${s.score}
-
-                    <span
-                        class="score-label">
-
-                        /100 Score
+                        #${s.rank}
 
                     </span>
 
                 </div>
 
 
-                <div
-                    class="data-grid">
+                <div class="direction">
 
-
-                    <div
-                        class="data-box">
-
-                        Ликвидность
-
-                        <strong>
-
-                            ${wallSide}
-
-                            · $${money(
-                                s.wall.value
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div
-                        class="data-box">
-
-                        Цена стены
-
-                        <strong>
-
-                            ${priceFormat(
-                                s.wall.price
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div
-                        class="data-box">
-
-                        Wall / Local
-
-                        <strong>
-
-                            ${s.wall.ratio.toFixed(
-                                1
-                            )}x
-
-                        </strong>
-
-                    </div>
-
-
-                    <div
-                        class="data-box">
-
-                        Возраст
-
-                        <strong>
-
-                            ${(s.age / 1000)
-                                .toFixed(1)} сек
-
-                            <span
-                                class="wall-state
-                                ${getStateClass(
-                                    s.history.state
-                                )}">
-
-                                ${s.history.state}
-
-                            </span>
-
-                        </strong>
-
-                    </div>
-
-
-                    <div
-                        class="data-box">
-
-                        Aggressive BUY
-
-                        <strong
-                            class="green">
-
-                            $${money(
-                                s.flow.buy
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div
-                        class="data-box">
-
-                        Aggressive SELL
-
-                        <strong
-                            class="red">
-
-                            $${money(
-                                s.flow.sell
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div
-                        class="data-box">
-
-                        Imbalance
-
-                        <strong>
-
-                            ${percent(
-                                s.flow.imbalance
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div
-                        class="data-box">
-
-                        Цена / 1 мин
-
-                        <strong>
-
-                            ${percent(
-                                s.priceChange
-                            )}
-
-                        </strong>
-
-                    </div>
-
+                    ${s.setup}
 
                 </div>
-
-
-                <div
-                    class="reason">
-
-                    💡 ${reason}
-
-                    <br>
-
-                    📍 До стены:
-
-                    ${percent(
-                        s.wall.distance
-                    )}
-
-                    <br>
-
-                    ⚡ Flow:
-
-                    $${money(
-                        alignedFlow
-                    )}
-
-                    vs
-
-                    $${money(
-                        oppositeFlow
-                    )}
-
-                    <br>
-
-                    🧱 Wall state:
-
-                    ${s.history.state}
-
-                </div>
-
 
             </div>
+
+
+            <div class="score">
+
+                Score:
+                ${s.score}/100
+
+            </div>
+
+
+            <div class="data-grid">
+
+
+                <div class="data-box">
+
+                    Whale Wall
+
+                    <strong>
+
+                        ${wallSide}
+
+                        $${money(
+                            s.wall.value
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Минимум
+
+                    <strong>
+
+                        $${money(
+                            s.threshold
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Цена стены
+
+                    <strong>
+
+                        ${priceFormat(
+                            s.wall.price
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Wall Ratio
+
+                    <strong>
+
+                        ${s.wall.ratio.toFixed(
+                            1
+                        )}x
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Возраст стены
+
+                    <strong>
+
+                        ${(s.age / 1000)
+                            .toFixed(1)} сек
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    До стены
+
+                    <strong>
+
+                        ${percent(
+                            s.wall.distance
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Aggressive BUY
+
+                    <strong
+                        class="green">
+
+                        $${money(
+                            s.flow.buy
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Aggressive SELL
+
+                    <strong
+                        class="red">
+
+                        $${money(
+                            s.flow.sell
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Imbalance
+
+                    <strong>
+
+                        ${percent(
+                            s.flow.imbalance
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Цена / 1 мин
+
+                    <strong>
+
+                        ${percent(
+                            s.priceChange
+                        )}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="reason">
+
+                💡 ${reason}
+
+                <br>
+
+                ⚡ Aligned flow:
+
+                $${money(
+                    alignedFlow
+                )}
+
+                vs
+
+                $${money(
+                    oppositeFlow
+                )}
+
+                <br>
+
+                💰 Wall:
+
+                $${money(
+                    s.wall.value
+                )}
+
+                |
+
+                минимум:
+
+                $${money(
+                    s.threshold
+                )}
+
+            </div>
+
+
+        </div>
 
         `;
 
@@ -3336,52 +2883,60 @@ function renderSignals() {
 
 
 /* =====================================================
-   WEBSOCKET SUBSCRIPTIONS
+   DISPLAY THRESHOLD
 ===================================================== */
 
-async function subscribeInBatches(
-    args
-) {
+function getGlobalDisplayThreshold() {
 
-    subscriptionState.expected =
-        args.length;
+    return 250000;
 
-
-    subscriptionState.sent =
-        0;
+}
 
 
-    subscriptionState.success =
-        0;
+/* =====================================================
+   SUBSCRIBE IN BATCHES
+===================================================== */
+
+function subscribeInBatches() {
+
+    if (
+        !ws ||
+        ws.readyState !==
+        WebSocket.OPEN
+    )
+        return;
 
 
-    subscriptionState.errors =
-        0;
+    const args = [];
 
+
+    for (
+        const symbol of symbols
+    ) {
+
+        args.push(
+            `orderbook.${ORDERBOOK_DEPTH}.${symbol}`
+        );
+
+        args.push(
+            `publicTrade.${symbol}`
+        );
+
+    }
+
+
+    /*
+     * Делим на небольшие
+     * сообщения.
+     */
 
     for (
         let i = 0;
 
         i < args.length;
 
-        i +=
-        SUBSCRIBE_BATCH_SIZE
+        i += SUBSCRIBE_BATCH_SIZE
     ) {
-
-        if (
-            !running
-        )
-            return;
-
-
-        if (
-            !ws
-            ||
-            ws.readyState !==
-            WebSocket.OPEN
-        )
-            return;
-
 
         const batch =
             args.slice(
@@ -3391,40 +2946,31 @@ async function subscribeInBatches(
             );
 
 
-        try {
+        setTimeout(
+            () => {
 
-            ws.send(
-                JSON.stringify({
+                if (
+                    ws &&
+                    ws.readyState ===
+                    WebSocket.OPEN
+                ) {
 
-                    op:
-                        "subscribe",
+                    ws.send(
+                        JSON.stringify({
 
-                    args:
-                        batch
+                            op:
+                                "subscribe",
 
-                })
-            );
+                            args:
+                                batch
 
+                        })
+                    );
 
-            subscriptionState.sent +=
-                batch.length;
+                }
 
-        }
-
-        catch (error) {
-
-            console.error(
-                "Subscribe batch error:",
-                error
-            );
-
-            subscriptionState.errors++;
-
-        }
-
-
-        await sleep(
-            SUBSCRIBE_DELAY
+            },
+            i * 35
         );
 
     }
@@ -3445,18 +2991,14 @@ function connectWebSocket() {
     if (ws) {
 
         try {
-
             ws.close();
-
-        }
-
-        catch (e) {}
+        } catch (e) {}
 
     }
 
 
     statusEl.innerText =
-        "Подключение...";
+        "Подключение WebSocket...";
 
     statusEl.style.color =
         "#f7931a";
@@ -3468,187 +3010,135 @@ function connectWebSocket() {
         );
 
 
-    ws.onopen =
-        async () => {
+    ws.onopen = () => {
 
-            wsEl.innerText =
-                "ON";
+        wsEl.innerText =
+            "ON";
 
-            wsEl.className =
-                "stat-value green";
-
-
-            statusEl.innerText =
-                "Подписка на потоки...";
-
-            statusEl.style.color =
-                "#f7931a";
+        wsEl.className =
+            "stat-value green";
 
 
-            const args = [];
+        statusEl.innerText =
+            "WebSocket подключён";
+
+        statusEl.style.color =
+            "#27ae60";
 
 
-            for (
-                const symbol
-                of symbols
-            ) {
+        lastMarketMessage =
+            now();
 
-                args.push(
-                    `orderbook.${ORDERBOOK_DEPTH}.${symbol}`
-                );
+        marketMessageCount = 0;
 
 
-                args.push(
-                    `publicTrade.${symbol}`
-                );
+        subscribeInBatches();
 
-            }
-
-
-            await subscribeInBatches(
-                args
-            );
-
-
-            if (
-                !running
-            )
-                return;
-
-
-            statusEl.innerText =
-                `Сканирование ${symbols.length} монет`;
-
-            statusEl.style.color =
-                "#27ae60";
-
-        };
+    };
 
 
     ws.onmessage =
         event => {
 
-            try {
+        try {
 
-                const data =
-                    JSON.parse(
-                        event.data
+            const data =
+                JSON.parse(
+                    event.data
+                );
+
+
+            /*
+             * Subscribe response.
+             */
+
+            if (
+                data.op ===
+                "subscribe"
+            ) {
+
+                if (
+                    data.success ===
+                    false
+                ) {
+
+                    console.error(
+                        "Subscribe error:",
+                        data
                     );
 
+                }
 
-                /*
-                 * Subscription response.
-                 */
+                return;
+
+            }
+
+
+            /*
+             * Pong.
+             */
+
+            if (
+                data.op ===
+                "pong"
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                !data.topic
+            )
+                return;
+
+
+            lastMarketMessage =
+                now();
+
+            marketMessageCount++;
+
+
+            /*
+             * ORDERBOOK.
+             */
+
+            if (
+                data.topic
+                    .startsWith(
+                        "orderbook."
+                    )
+            ) {
+
+                const parts =
+                    data.topic.split(".");
+
+
+                const symbol =
+                    parts[2];
+
 
                 if (
-                    data.op ===
-                    "subscribe"
+                    data.type ===
+                    "snapshot"
                 ) {
 
-                    if (
-                        data.success
-                    ) {
-
-                        subscriptionState.success++;
-
-                    }
-
-                    else {
-
-                        subscriptionState.errors++;
-
-                        console.warn(
-                            "Subscription error:",
-                            data
-                        );
-
-                    }
-
-                    return;
+                    applySnapshot(
+                        symbol,
+                        data.data
+                    );
 
                 }
 
-
-                /*
-                 * Pong.
-                 */
-
-                if (
-                    data.op ===
-                    "pong"
-                )
-                    return;
-
-
-                /*
-                 * Topic отсутствует.
-                 */
-
-                if (
-                    !data.topic
-                )
-                    return;
-
-
-                /*
-                 * Orderbook.
-                 */
-
-                if (
-                    data.topic
-                        .startsWith(
-                            "orderbook."
-                        )
-                ) {
-
-                    const parts =
-                        data.topic
-                            .split(".");
-
-
-                    const symbol =
-                        parts[2];
-
-
-                    if (
-                        data.type ===
-                        "snapshot"
-                    ) {
-
-                        applySnapshot(
-                            symbol,
-                            data.data
-                        );
-
-                    }
-
-                    else if (
-                        data.type ===
-                        "delta"
-                    ) {
-
-                        applyDelta(
-                            symbol,
-                            data.data
-                        );
-
-                    }
-
-                }
-
-
-                /*
-                 * Public trades.
-                 */
 
                 else if (
-                    data.topic
-                        .startsWith(
-                            "publicTrade."
-                        )
+                    data.type ===
+                    "delta"
                 ) {
 
-                    processTrade(
+                    applyDelta(
+                        symbol,
                         data.data
                     );
 
@@ -3656,73 +3146,117 @@ function connectWebSocket() {
 
             }
 
-            catch (error) {
 
-                console.error(
-                    "WS message error:",
-                    error
+            /*
+             * PUBLIC TRADE.
+             */
+
+            else if (
+                data.topic
+                    .startsWith(
+                        "publicTrade."
+                    )
+            ) {
+
+                processTrade(
+                    data.data
                 );
 
             }
 
-        };
+        }
+
+        catch (error) {
+
+            console.error(
+                "WS parse error:",
+                error
+            );
+
+        }
+
+    };
 
 
     ws.onerror =
         error => {
 
-            console.error(
-                "WebSocket error:",
-                error
-            );
+        console.error(
+            "WebSocket error",
+            error
+        );
 
 
-            wsEl.innerText =
-                "ERROR";
+        wsEl.innerText =
+            "ERROR";
 
-            wsEl.className =
-                "stat-value red";
+        wsEl.className =
+            "stat-value red";
 
-
-            statusEl.innerText =
-                "Ошибка WebSocket";
-
-            statusEl.style.color =
-                "#e74c3c";
-
-        };
+    };
 
 
     ws.onclose =
         () => {
 
-            wsEl.innerText =
-                "OFF";
+        wsEl.innerText =
+            "OFF";
 
-            wsEl.className =
-                "stat-value red";
+        wsEl.className =
+            "stat-value red";
 
 
-            if (
-                running
-            ) {
+        if (
+            running
+        ) {
 
-                statusEl.innerText =
-                    "Переподключение...";
+            statusEl.innerText =
+                "WS разорван — переподключение";
 
-                statusEl.style.color =
-                    "#f7931a";
+            statusEl.style.color =
+                "#f7931a";
 
+
+            scheduleReconnect();
+
+        }
+
+    };
+
+}
+
+
+/* =====================================================
+   RECONNECT
+===================================================== */
+
+function scheduleReconnect() {
+
+    if (
+        reconnectTimer
+    )
+        return;
+
+
+    reconnectTimer =
+        setTimeout(
+            () => {
 
                 reconnectTimer =
-                    setTimeout(
-                        connectWebSocket,
-                        3000
-                    );
+                    null;
 
-            }
 
-        };
+                if (
+                    running
+                ) {
+
+                    connectWebSocket();
+
+                }
+
+            },
+            3000
+        );
 
 }
 
@@ -3735,13 +3269,10 @@ function startPing() {
 
     if (
         pingTimer
-    ) {
-
+    )
         clearInterval(
             pingTimer
         );
-
-    }
 
 
     pingTimer =
@@ -3749,38 +3280,87 @@ function startPing() {
             () => {
 
                 if (
-                    ws
-                    &&
+                    ws &&
                     ws.readyState ===
                     WebSocket.OPEN
                 ) {
 
-                    try {
-
-                        ws.send(
-                            JSON.stringify({
-
-                                op:
-                                    "ping"
-
-                            })
-                        );
-
-                    }
-
-                    catch (error) {
-
-                        console.error(
-                            "Ping error:",
-                            error
-                        );
-
-                    }
+                    ws.send(
+                        JSON.stringify({
+                            op: "ping"
+                        })
+                    );
 
                 }
 
             },
             20000
+        );
+
+}
+
+
+/* =====================================================
+   WATCHDOG
+===================================================== */
+
+function startWatchdog() {
+
+    if (
+        watchdogTimer
+    )
+        clearInterval(
+            watchdogTimer
+        );
+
+
+    watchdogTimer =
+        setInterval(
+            () => {
+
+                if (!running)
+                    return;
+
+
+                const silence =
+                    now() -
+                    lastMarketMessage;
+
+
+                /*
+                 * Если 12 секунд нет
+                 * market data — считаем
+                 * соединение подозрительным.
+                 */
+
+                if (
+                    silence >
+                    12000
+                ) {
+
+                    dataWarningEl.innerText =
+                        "⚠️ Нет market data > 12 сек. Переподключение...";
+
+
+                    if (
+                        ws
+                    ) {
+
+                        try {
+                            ws.close();
+                        } catch (e) {}
+
+                    }
+
+                } else {
+
+                    dataWarningEl.innerText =
+                        "";
+
+                }
+
+            },
+            5000
         );
 
 }
@@ -3795,7 +3375,7 @@ async function loadSymbols() {
     try {
 
         statusEl.innerText =
-            "Загрузка TOP-100...";
+            "Загрузка ликвидных монет...";
 
         statusEl.style.color =
             "#f7931a";
@@ -3803,14 +3383,10 @@ async function loadSymbols() {
 
         const response =
             await fetch(
-
                 "https://api.bybit.com/v5/market/tickers?category=linear",
-
                 {
-                    cache:
-                        "no-store"
+                    cache: "no-store"
                 }
-
             );
 
 
@@ -3819,7 +3395,8 @@ async function loadSymbols() {
         ) {
 
             throw new Error(
-                `HTTP ${response.status}`
+                "HTTP " +
+                response.status
             );
 
         }
@@ -3830,8 +3407,7 @@ async function loadSymbols() {
 
 
         if (
-            !json.result
-            ||
+            !json.result ||
             !Array.isArray(
                 json.result.list
             )
@@ -3849,14 +3425,11 @@ async function loadSymbols() {
 
                 .filter(
                     item =>
-
-                        item.symbol
-                        &&
+                        item.symbol &&
                         item.symbol
                             .endsWith(
                                 "USDT"
-                            )
-                        &&
+                            ) &&
                         Number(
                             item.turnover24h
                         ) > 0
@@ -3864,11 +3437,9 @@ async function loadSymbols() {
 
                 .sort(
                     (a, b) =>
-
                         Number(
                             b.turnover24h
-                        )
-                        -
+                        ) -
                         Number(
                             a.turnover24h
                         )
@@ -3880,18 +3451,15 @@ async function loadSymbols() {
                 );
 
 
-        symbols.length =
-            0;
-
+        symbols.length = 0;
 
         symbolRanks.clear();
 
+        symbolTurnovers.clear();
+
 
         list.forEach(
-            (
-                item,
-                index
-            ) => {
+            (item, index) => {
 
                 symbols.push(
                     item.symbol
@@ -3903,12 +3471,27 @@ async function loadSymbols() {
                     index + 1
                 );
 
+
+                symbolTurnovers.set(
+                    item.symbol,
+                    Number(
+                        item.turnover24h
+                    )
+                );
+
             }
         );
 
 
         coinCountEl.innerText =
             symbols.length;
+
+
+        statusEl.innerText =
+            `TOP ${symbols.length} загружен`;
+
+        statusEl.style.color =
+            "#27ae60";
 
 
         return true;
@@ -3918,7 +3501,7 @@ async function loadSymbols() {
     catch (error) {
 
         console.error(
-            "TOP loading error:",
+            "TOP error:",
             error
         );
 
@@ -3951,10 +3534,6 @@ function resetMarketState() {
 
     signals.clear();
 
-    streamHealth.clear();
-
-    dirtySymbols.clear();
-
 }
 
 
@@ -3970,8 +3549,10 @@ async function startScanner() {
         return;
 
 
-    running =
-        true;
+    running = true;
+
+
+    resetMarketState();
 
 
     const success =
@@ -3982,18 +3563,18 @@ async function startScanner() {
         !success
     ) {
 
-        running =
-            false;
+        running = false;
 
         return;
 
     }
 
 
-    resetMarketState();
-
-
     connectWebSocket();
+
+    startPing();
+
+    startWatchdog();
 
 
     analysisTimer =
@@ -4014,19 +3595,11 @@ async function startScanner() {
         setInterval(
             async () => {
 
-                if (
-                    !running
-                )
+                if (!running)
                     return;
 
 
                 await loadSymbols();
-
-
-                if (
-                    !running
-                )
-                    return;
 
 
                 resetMarketState();
@@ -4050,8 +3623,7 @@ async function startScanner() {
 
 function stopScanner() {
 
-    running =
-        false;
+    running = false;
 
 
     if (
@@ -4110,18 +3682,45 @@ function stopScanner() {
     }
 
 
-    if (ws) {
+    if (
+        pingTimer
+    ) {
+
+        clearInterval(
+            pingTimer
+        );
+
+        pingTimer =
+            null;
+
+    }
+
+
+    if (
+        watchdogTimer
+    ) {
+
+        clearInterval(
+            watchdogTimer
+        );
+
+        watchdogTimer =
+            null;
+
+    }
+
+
+    if (
+        ws
+    ) {
 
         try {
-
             ws.close();
-
         }
 
         catch (e) {}
 
-        ws =
-            null;
+        ws = null;
 
     }
 
@@ -4133,10 +3732,6 @@ function stopScanner() {
         "stat-value";
 
 
-    healthEl.innerText =
-        "OFF";
-
-
     statusEl.innerText =
         "Остановлен";
 
@@ -4144,7 +3739,8 @@ function stopScanner() {
         "#848e9c";
 
 
-    dirtySymbols.clear();
+    dataWarningEl.innerText =
+        "";
 
 }
 
@@ -4163,37 +3759,48 @@ function clearSignals() {
 
 
 /* =====================================================
-   PAGE VISIBILITY
+   VISIBILITY
 ===================================================== */
+
+
+/*
+ * iOS может замораживать
+ * background tab.
+ *
+ * Когда вкладка возвращается —
+ * проверяем поток.
+ */
 
 document.addEventListener(
     "visibilitychange",
     () => {
 
         if (
-            !running
-        )
-            return;
-
-
-        if (
             document.visibilityState ===
             "visible"
         ) {
 
-            /*
-             * После возврата
-             * проверяем WebSocket.
-             */
-
             if (
-                !ws
-                ||
-                ws.readyState !==
-                WebSocket.OPEN
+                running
             ) {
 
-                connectWebSocket();
+                const silence =
+                    now() -
+                    lastMarketMessage;
+
+
+                if (
+                    silence >
+                    10000
+                ) {
+
+                    statusEl.innerText =
+                        "Восстановление WebSocket...";
+
+
+                    connectWebSocket();
+
+                }
 
             }
 
@@ -4204,45 +3811,36 @@ document.addEventListener(
 
 
 /* =====================================================
-   INITIALIZATION
+   INIT
 ===================================================== */
 
-startPing();
-
-
 console.log(
-    "🐋 Bybit Whale Flow Scanner"
+    "🐋 Bybit Whale Flow Scanner PRO"
 );
 
 console.log(
-    "Version: Mobile V2"
-);
-
-console.log(
-    "TOP:",
+    "MAX_SYMBOLS:",
     MAX_SYMBOLS
 );
 
 console.log(
-    "OrderBook:",
+    "ORDERBOOK:",
     ORDERBOOK_DEPTH
 );
 
 console.log(
-    "Subscribe batch:",
-    SUBSCRIBE_BATCH_SIZE
+    "MIN WALL RATIO:",
+    MIN_WALL_RATIO
 );
 
 console.log(
-    "Adaptive wall threshold: ON"
+    "MIN TRADE FLOW:",
+    MIN_TRADE_FLOW
 );
 
 console.log(
-    "Trade validation: ON"
-);
-
-console.log(
-    "Dirty symbol analysis: ON"
+    "SOL MIN WALL:",
+    MAJOR_THRESHOLDS.SOLUSDT
 );
 
 </script>
@@ -4250,4 +3848,3 @@ console.log(
 </body>
 
 </html>
-```
