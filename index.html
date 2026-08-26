@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
 
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
 
-<title>Bybit Whale Flow Scanner</title>
+<title>Bybit Level Scanner PRO</title>
 
 <style>
 
@@ -16,365 +18,339 @@
     box-sizing: border-box;
 }
 
+html,
 body {
-
     margin: 0;
+    padding: 0;
+}
 
-    padding: 15px;
-
+body {
     background: #0b0e11;
-
     color: #eaecef;
-
     font-family:
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
         Roboto,
         sans-serif;
-}
 
+    padding: 12px;
+}
 
 /* =========================
    HEADER
 ========================= */
 
 .header {
-
     background: #1e2329;
-
-    padding: 15px;
-
+    padding: 14px;
     border-radius: 12px;
-
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 h1 {
-
-    font-size: 20px;
-
-    margin: 0 0 15px 0;
+    margin: 0 0 12px;
+    font-size: 19px;
 }
 
+.subtitle {
+    color: #848e9c;
+    font-size: 12px;
+    margin-bottom: 12px;
+}
 
 /* =========================
-   BUTTONS
+   CONTROLS
 ========================= */
 
 .controls {
-
     display: flex;
-
-    gap: 8px;
-
+    gap: 7px;
     flex-wrap: wrap;
-
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 button,
 select {
-
     border: none;
-
     border-radius: 8px;
-
-    padding: 10px 14px;
-
+    padding: 9px 12px;
     font-weight: bold;
-
-    cursor: pointer;
+    font-size: 12px;
 }
 
 button {
-
     background: #f7931a;
-
-    color: #1e2329;
+    color: #111;
 }
 
 button.stop {
-
     background: #e74c3c;
-
     color: white;
 }
 
 button.clear {
-
     background: #555;
-
     color: white;
 }
 
 select {
-
     background: #2b3139;
-
     color: white;
 }
-
 
 /* =========================
    STATUS
 ========================= */
 
 .status {
-
     color: #848e9c;
-
-    font-size: 13px;
-
-    margin-top: 8px;
+    font-size: 12px;
+    margin-top: 5px;
 }
-
 
 /* =========================
    STATS
 ========================= */
 
 .stats {
-
     display: grid;
-
-    grid-template-columns:
-        repeat(4, 1fr);
-
-    gap: 8px;
-
-    margin-top: 12px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-top: 10px;
 }
 
 .stat {
-
     background: #161a1e;
-
     border-radius: 8px;
-
-    padding: 9px;
-
+    padding: 8px 4px;
     text-align: center;
-
-    font-size: 11px;
+    color: #848e9c;
+    font-size: 10px;
 }
 
 .stat-value {
-
     display: block;
-
-    font-size: 15px;
-
+    color: #eaecef;
+    font-size: 14px;
     font-weight: bold;
-
-    margin-top: 4px;
+    margin-top: 3px;
 }
 
+/* =========================
+   FILTER BAR
+========================= */
+
+.filter-bar {
+    background: #161a1e;
+    border-radius: 10px;
+    padding: 9px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+}
+
+.filter-btn {
+    background: #2b3139;
+    color: #aaa;
+    white-space: nowrap;
+}
+
+.filter-btn.active {
+    background: #f7931a;
+    color: #111;
+}
 
 /* =========================
-   SIGNAL LIST
+   SECTION
 ========================= */
 
 .section-title {
-
     color: #848e9c;
-
-    font-size: 14px;
-
-    margin: 15px 0 8px;
+    font-size: 13px;
+    margin: 13px 2px 8px;
 }
 
-
 .signals {
-
     height: 70vh;
-
-    min-height: 400px;
-
+    min-height: 450px;
     overflow-y: auto;
 }
 
-
 /* =========================
-   SIGNAL CARD
+   SIGNAL
 ========================= */
 
 .signal {
-
     background: #1e2329;
-
     border-radius: 11px;
-
-    padding: 13px;
-
+    padding: 12px;
     margin-bottom: 9px;
-
     border-left: 5px solid #555;
 }
 
 .signal.long {
-
     border-left-color: #27ae60;
 }
 
 .signal.short {
-
     border-left-color: #e74c3c;
 }
 
-.signal.breakout {
-
+.signal.watch {
     border-left-color: #f7931a;
 }
 
-
 /* =========================
-   CARD TOP
+   TOP
 ========================= */
 
 .signal-top {
-
     display: flex;
-
-    justify-content:
-        space-between;
-
+    justify-content: space-between;
     align-items: center;
 }
 
 .symbol {
-
-    font-size: 17px;
-
+    font-size: 16px;
     font-weight: bold;
+}
+
+.rank {
+    color: #848e9c;
+    font-size: 11px;
+    margin-left: 4px;
 }
 
 .direction {
-
+    font-size: 12px;
     font-weight: bold;
-
-    font-size: 13px;
 }
 
-
-/* =========================
-   SCORE
-========================= */
-
 .score {
-
     font-size: 21px;
-
     font-weight: bold;
-
     margin-top: 5px;
 }
 
-
 /* =========================
-   DATA GRID
+   LEVEL
 ========================= */
 
-.data-grid {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap: 7px;
-
-    margin-top: 10px;
+.level-box {
+    margin-top: 9px;
+    background: #161a1e;
+    border-radius: 8px;
+    padding: 9px;
 }
 
-.data-box {
+.level-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-    background: #161a1e;
-
-    padding: 8px;
-
-    border-radius: 7px;
-
+.level-title {
     font-size: 11px;
-
     color: #848e9c;
 }
 
-.data-box strong {
-
-    display: block;
-
-    color: #eaecef;
-
-    font-size: 13px;
-
-    margin-top: 3px;
+.level-price {
+    font-size: 17px;
+    font-weight: bold;
 }
 
+/* =========================
+   GRID
+========================= */
+
+.data-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.data-box {
+    background: #161a1e;
+    border-radius: 7px;
+    padding: 7px;
+    color: #848e9c;
+    font-size: 10px;
+}
+
+.data-box strong {
+    display: block;
+    color: #eaecef;
+    font-size: 12px;
+    margin-top: 3px;
+}
 
 /* =========================
    REASON
 ========================= */
 
 .reason {
-
-    margin-top: 9px;
-
+    margin-top: 8px;
     padding: 8px;
-
-    border-radius: 7px;
-
     background: #161a1e;
-
-    font-size: 12px;
-
+    border-radius: 7px;
+    font-size: 11px;
     line-height: 1.5;
 }
 
-
 /* =========================
-   EMPTY
+   PROGRESS
 ========================= */
 
-.empty {
-
-    text-align: center;
-
-    color: #848e9c;
-
-    padding: 60px 15px;
+.progress {
+    height: 5px;
+    background: #2b3139;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 7px;
 }
 
+.progress-inner {
+    height: 100%;
+    background: #f7931a;
+}
 
 /* =========================
    COLORS
 ========================= */
 
 .green {
-
-    color: #27ae60;
+    color: #27ae60 !important;
 }
 
 .red {
-
-    color: #e74c3c;
+    color: #e74c3c !important;
 }
 
 .orange {
-
-    color: #f7931a;
+    color: #f7931a !important;
 }
 
 .blue {
-
-    color: #3498db;
+    color: #3498db !important;
 }
 
 .gray {
-
-    color: #848e9c;
+    color: #848e9c !important;
 }
 
+/* =========================
+   EMPTY
+========================= */
+
+.empty {
+    text-align: center;
+    color: #848e9c;
+    padding: 55px 15px;
+    line-height: 1.6;
+}
 
 /* =========================
    MOBILE
@@ -382,15 +358,16 @@ select {
 
 @media (max-width: 600px) {
 
-    .stats {
+    body {
+        padding: 8px;
+    }
 
-        grid-template-columns:
-            repeat(2, 1fr);
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .signals {
-
-        height: 65vh;
+        height: 68vh;
     }
 
 }
@@ -399,27 +376,23 @@ select {
 
 </head>
 
-
 <body>
-
-
-<!-- =====================================================
-     HEADER
-===================================================== -->
 
 <div class="header">
 
     <h1>
-        🐋 Bybit Whale Flow Scanner
+        🎯 Bybit Level Scanner PRO
     </h1>
 
+    <div class="subtitle">
+        Уровни • Лимитная ликвидность • Поглощение • Реакция
+    </div>
 
     <div class="controls">
 
         <button onclick="startScanner()">
             ▶ Запустить
         </button>
-
 
         <button
             class="stop"
@@ -428,7 +401,6 @@ select {
             ⏹ Стоп
 
         </button>
-
 
         <button
             class="clear"
@@ -440,50 +412,72 @@ select {
 
     </div>
 
-
     <div class="controls">
 
         <label>
+            Min Score
 
-            Подтверждение стены:
+            <select id="minScore">
 
-            <select id="wallAge">
-
-                <option value="3">
-                    3 сек
+                <option value="55">
+                    55
                 </option>
 
-                <option value="5"
+                <option value="60"
                         selected>
-                    5 сек
+                    60
                 </option>
 
-                <option value="10">
-                    10 сек
+                <option value="65">
+                    65
+                </option>
+
+                <option value="70">
+                    70
                 </option>
 
             </select>
 
         </label>
 
+        <label>
+            Сила уровня
+
+            <select id="minLevelScore">
+
+                <option value="45">
+                    45
+                </option>
+
+                <option value="50"
+                        selected>
+                    50
+                </option>
+
+                <option value="55">
+                    55
+                </option>
+
+            </select>
+
+        </label>
 
         <label>
+            Тест уровня
 
-            Минимальный Score:
+            <select id="testDistance">
 
-            <select id="minScore">
-
-                <option value="60">
-                    60
+                <option value="0.001">
+                    0.10%
                 </option>
 
-                <option value="70"
+                <option value="0.0015"
                         selected>
-                    70
+                    0.15%
                 </option>
 
-                <option value="80">
-                    80
+                <option value="0.002">
+                    0.20%
                 </option>
 
             </select>
@@ -492,78 +486,51 @@ select {
 
     </div>
 
-
     <div class="status">
 
         Статус:
-
         <span id="status">
             Остановлен
         </span>
 
     </div>
 
-
     <div class="stats">
 
-
         <div class="stat">
-
             TOP
-
             <span
                 id="coinCount"
                 class="stat-value">
-
                 0
-
             </span>
-
         </div>
 
-
         <div class="stat">
-
             WS
-
             <span
                 id="wsStatus"
                 class="stat-value">
-
                 OFF
-
             </span>
-
         </div>
 
-
         <div class="stat">
-
-            Кандидатов
-
+            Уровней
             <span
-                id="candidateCount"
+                id="levelCount"
                 class="stat-value">
-
                 0
-
             </span>
-
         </div>
 
-
         <div class="stat">
-
             Сигналов
-
             <span
                 id="signalCount"
                 class="stat-value">
-
                 0
-
             </span>
-
         </div>
 
     </div>
@@ -571,13 +538,50 @@ select {
 </div>
 
 
-<!-- =====================================================
-     SIGNALS
-===================================================== -->
+<div class="filter-bar">
+
+    <button
+        class="filter-btn active"
+        id="filterAll"
+        onclick="setFilter('ALL')">
+
+        Все
+
+    </button>
+
+    <button
+        class="filter-btn"
+        id="filterLong"
+        onclick="setFilter('LONG')">
+
+        🟢 LONG
+
+    </button>
+
+    <button
+        class="filter-btn"
+        id="filterShort"
+        onclick="setFilter('SHORT')">
+
+        🔴 SHORT
+
+    </button>
+
+    <button
+        class="filter-btn"
+        id="filterWatch"
+        onclick="setFilter('WATCH')">
+
+        👀 WATCH
+
+    </button>
+
+</div>
+
 
 <div class="section-title">
 
-    🔥 Лучшие текущие торговые ситуации
+    🔎 Текущие торговые ситуации
 
 </div>
 
@@ -586,25 +590,14 @@ select {
     id="signals"
     class="signals">
 
-    <div
-        id="empty"
-        class="empty">
+    <div class="empty">
 
-        Запусти сканер.<br><br>
+        Запусти сканер.
 
-        Он будет искать:
+        <br><br>
 
-        <br>
-
-        🟢 LONG
-
-        <br>
-
-        🔴 SHORT
-
-        <br>
-
-        🟠 BREAKOUT
+        Он будет искать не просто большие стены,
+        а уровни с подтверждённой реакцией цены.
 
     </div>
 
@@ -617,44 +610,35 @@ select {
    CONFIG
 ===================================================== */
 
-
-/*
- * Сколько монет сканируем
- */
-
 const MAX_SYMBOLS = 100;
-
-
-/*
- * Глубина стакана
- */
 
 const ORDERBOOK_DEPTH = 50;
 
+const MAX_LEVELS_PER_SYMBOL = 8;
 
-/*
- * TOP-10
- */
-
-const MAX_SIGNALS = 10;
+const MAX_SIGNALS = 20;
 
 
 /*
- * Как часто анализируем рынок
+ * Частота анализа.
+ *
+ * 500 мс достаточно для браузерного
+ * realtime-сканера.
  */
 
 const ANALYSIS_INTERVAL = 500;
 
 
 /*
- * Как часто обновляем экран
+ * UI обновляем реже,
+ * чтобы не перегружать Safari.
  */
 
 const UI_INTERVAL = 1000;
 
 
 /*
- * Обновление TOP
+ * Обновление TOP.
  */
 
 const SYMBOL_REFRESH =
@@ -662,54 +646,73 @@ const SYMBOL_REFRESH =
 
 
 /*
+ * История сделок.
+ */
+
+const TRADE_HISTORY =
+    60 * 1000;
+
+
+/*
+ * Поток для оценки реакции.
+ */
+
+const FLOW_WINDOW =
+    8000;
+
+
+/*
+ * История уровня.
+ */
+
+const LEVEL_HISTORY =
+    120 * 1000;
+
+
+/*
+ * Максимальная дистанция
+ * поиска уровня от цены.
+ */
+
+const MAX_LEVEL_DISTANCE =
+    0.012;
+
+
+/*
+ * Зона объединения близких
+ * ценовых уровней.
+ */
+
+const LEVEL_CLUSTER_DISTANCE =
+    0.0007;
+
+
+/*
  * Минимальная относительная
- * сила стены.
+ * ликвидность.
  */
 
-const MIN_WALL_RATIO = 3;
+const MIN_RELATIVE_LIQUIDITY =
+    2.0;
 
 
 /*
- * Минимальный размер стены
- * по группам.
+ * Сколько секунд нужно,
+ * чтобы считать уровень
+ * стабильным.
  */
 
-const BASE_THRESHOLDS = {
-
-    top5: 500000,
-
-    top20: 300000,
-
-    top50: 150000,
-
-    top100: 50000
-
-};
+const MIN_LEVEL_AGE =
+    3000;
 
 
 /*
- * Максимальное расстояние стены
- * от текущей цены.
- *
- * 0.8% достаточно для
- * внутридневного поиска.
+ * Минимальное движение,
+ * которое считаем реакцией.
  */
 
-const MAX_WALL_DISTANCE = 0.008;
-
-
-/*
- * Окно агрессивных сделок.
- */
-
-const TRADE_WINDOW = 10000;
-
-
-/*
- * Окно движения цены.
- */
-
-const PRICE_WINDOW = 60000;
+const MIN_REACTION =
+    0.00025;
 
 
 /* =====================================================
@@ -728,9 +731,13 @@ let analysisTimer = null;
 
 let uiTimer = null;
 
+let pingTimer = null;
+
+let currentFilter = "ALL";
+
 
 /*
- * TOP-100
+ * TOP-100.
  */
 
 const symbols = [];
@@ -739,45 +746,48 @@ const symbolRanks = new Map();
 
 
 /*
- * Order books
+ * Стаканы.
  */
 
 const books = new Map();
 
 
 /*
- * Поток сделок
+ * Поток сделок.
  */
 
 const trades = new Map();
 
 
 /*
- * Текущие стены
+ * Уровни.
  */
 
-const walls = new Map();
+const levels = new Map();
 
 
 /*
- * Сигналы
+ * Торговые сигналы.
  */
 
 const signals = new Map();
 
 
 /*
- * Для стабильности стены
+ * История уровней.
  */
 
-const wallHistory = new Map();
+const levelHistory = new Map();
 
 
 /*
- * Счётчик
+ * Состояние сценариев.
+ *
+ * Не позволяет моментально
+ * переворачивать LONG/SHORT.
  */
 
-let signalCounter = 0;
+const scenarios = new Map();
 
 
 /* =====================================================
@@ -785,34 +795,22 @@ let signalCounter = 0;
 ===================================================== */
 
 const statusEl =
-    document.getElementById(
-        "status"
-    );
+    document.getElementById("status");
 
 const wsEl =
-    document.getElementById(
-        "wsStatus"
-    );
+    document.getElementById("wsStatus");
 
 const coinCountEl =
-    document.getElementById(
-        "coinCount"
-    );
+    document.getElementById("coinCount");
 
-const candidateCountEl =
-    document.getElementById(
-        "candidateCount"
-    );
+const levelCountEl =
+    document.getElementById("levelCount");
 
 const signalCountEl =
-    document.getElementById(
-        "signalCount"
-    );
+    document.getElementById("signalCount");
 
 const signalsEl =
-    document.getElementById(
-        "signals"
-    );
+    document.getElementById("signals");
 
 
 /* =====================================================
@@ -841,14 +839,19 @@ function money(value) {
 
 function priceFormat(value) {
 
-    const n =
-        Number(value);
+    const n = Number(value);
+
+    if (!isFinite(n))
+        return "-";
 
     if (n >= 1000)
         return n.toFixed(2);
 
     if (n >= 1)
         return n.toFixed(4);
+
+    if (n >= 0.01)
+        return n.toFixed(6);
 
     return n.toFixed(8);
 
@@ -858,63 +861,45 @@ function priceFormat(value) {
 function percent(value) {
 
     return (
-        value * 100
+        Number(value) * 100
     ).toFixed(2) + "%";
 
 }
 
 
-/* =====================================================
-   THRESHOLD
-===================================================== */
-
-function getBaseThreshold(
-    symbol
+function clamp(
+    value,
+    min,
+    max
 ) {
 
-    const rank =
-        symbolRanks.get(
-            symbol
-        );
-
-
-    if (!rank)
-        return 50000;
-
-
-    if (rank <= 5)
-        return BASE_THRESHOLDS.top5;
-
-
-    if (rank <= 20)
-        return BASE_THRESHOLDS.top20;
-
-
-    if (rank <= 50)
-        return BASE_THRESHOLDS.top50;
-
-
-    return BASE_THRESHOLDS.top100;
+    return Math.max(
+        min,
+        Math.min(max, value)
+    );
 
 }
 
 
 /* =====================================================
-   CREATE BOOK
+   BOOK
 ===================================================== */
 
-function createBook(
-    symbol
-) {
+function createBook(symbol) {
 
-    books.set(
-        symbol,
-        {
-            bids: new Map(),
-            asks: new Map(),
-            lastPrice: null
-        }
-    );
+    if (!books.has(symbol)) {
+
+        books.set(
+            symbol,
+            {
+                bids: new Map(),
+                asks: new Map(),
+                lastPrice: null,
+                updated: 0
+            }
+        );
+
+    }
 
 }
 
@@ -928,33 +913,24 @@ function applySnapshot(
     data
 ) {
 
-    createBook(
-        symbol
-    );
-
+    createBook(symbol);
 
     const book =
-        books.get(
-            symbol
-        );
+        books.get(symbol);
 
+    book.bids.clear();
+
+    book.asks.clear();
 
     if (Array.isArray(data.b)) {
 
-        for (
-            const order of data.b
-        ) {
+        for (const row of data.b) {
 
             const price =
-                parseFloat(
-                    order[0]
-                );
+                parseFloat(row[0]);
 
             const qty =
-                parseFloat(
-                    order[1]
-                );
-
+                parseFloat(row[1]);
 
             if (
                 price > 0 &&
@@ -972,23 +948,15 @@ function applySnapshot(
 
     }
 
-
     if (Array.isArray(data.a)) {
 
-        for (
-            const order of data.a
-        ) {
+        for (const row of data.a) {
 
             const price =
-                parseFloat(
-                    order[0]
-                );
+                parseFloat(row[0]);
 
             const qty =
-                parseFloat(
-                    order[1]
-                );
-
+                parseFloat(row[1]);
 
             if (
                 price > 0 &&
@@ -1005,6 +973,8 @@ function applySnapshot(
         }
 
     }
+
+    book.updated = now();
 
 }
 
@@ -1019,37 +989,27 @@ function applyDelta(
 ) {
 
     const book =
-        books.get(
-            symbol
-        );
-
+        books.get(symbol);
 
     if (!book)
         return;
 
-
     if (Array.isArray(data.b)) {
 
-        for (
-            const order of data.b
-        ) {
+        for (const row of data.b) {
 
             const price =
-                parseFloat(
-                    order[0]
-                );
+                parseFloat(row[0]);
 
             const qty =
-                parseFloat(
-                    order[1]
-                );
+                parseFloat(row[1]);
 
+            if (!price)
+                continue;
 
             if (qty === 0) {
 
-                book.bids.delete(
-                    price
-                );
+                book.bids.delete(price);
 
             } else {
 
@@ -1064,29 +1024,22 @@ function applyDelta(
 
     }
 
-
     if (Array.isArray(data.a)) {
 
-        for (
-            const order of data.a
-        ) {
+        for (const row of data.a) {
 
             const price =
-                parseFloat(
-                    order[0]
-                );
+                parseFloat(row[0]);
 
             const qty =
-                parseFloat(
-                    order[1]
-                );
+                parseFloat(row[1]);
 
+            if (!price)
+                continue;
 
             if (qty === 0) {
 
-                book.asks.delete(
-                    price
-                );
+                book.asks.delete(price);
 
             } else {
 
@@ -1101,24 +1054,21 @@ function applyDelta(
 
     }
 
+    book.updated = now();
+
 }
 
 
 /* =====================================================
-   TRADE
+   TRADES
 ===================================================== */
 
-function processTrade(
-    data
-) {
+function processTrade(data) {
 
     if (!Array.isArray(data))
         return;
 
-
-    for (
-        const trade of data
-    ) {
+    for (const trade of data) {
 
         const symbol =
             trade.s;
@@ -1126,24 +1076,14 @@ function processTrade(
         const side =
             trade.S;
 
-
         const price =
-            parseFloat(
-                trade.p
-            );
-
+            parseFloat(trade.p);
 
         const qty =
-            parseFloat(
-                trade.v
-            );
-
+            parseFloat(trade.v);
 
         const timestamp =
-            Number(
-                trade.T
-            ) || now();
-
+            Number(trade.T) || now();
 
         if (
             !symbol ||
@@ -1152,10 +1092,8 @@ function processTrade(
         )
             continue;
 
-
         const value =
             price * qty;
-
 
         if (!trades.has(symbol)) {
 
@@ -1166,12 +1104,8 @@ function processTrade(
 
         }
 
-
         const list =
-            trades.get(
-                symbol
-            );
-
+            trades.get(symbol);
 
         list.push({
 
@@ -1188,15 +1122,8 @@ function processTrade(
         });
 
 
-        /*
-         * Последняя цена
-         */
-
         const book =
-            books.get(
-                symbol
-            );
-
+            books.get(symbol);
 
         if (book) {
 
@@ -1207,13 +1134,12 @@ function processTrade(
 
 
         /*
-         * Удаляем старые сделки
+         * Очищаем старые сделки.
          */
 
         const cutoff =
             now() -
-            PRICE_WINDOW;
-
+            TRADE_HISTORY;
 
         while (
             list.length &&
@@ -1230,169 +1156,48 @@ function processTrade(
 
 
 /* =====================================================
-   TRADE FLOW
+   CURRENT PRICE
 ===================================================== */
 
-function getTradeFlow(
+function getCurrentPrice(
     symbol
 ) {
 
-    const list =
-        trades.get(
-            symbol
-        ) || [];
+    const book =
+        books.get(symbol);
+
+    if (!book)
+        return null;
+
+    if (book.lastPrice)
+        return book.lastPrice;
 
 
-    const cutoff =
-        now() -
-        TRADE_WINDOW;
+    const bids =
+        [...book.bids.keys()]
+            .sort(
+                (a, b) => b - a
+            );
 
-
-    let buy = 0;
-
-    let sell = 0;
-
-    let buyCount = 0;
-
-    let sellCount = 0;
-
-
-    for (
-        let i = list.length - 1;
-
-        i >= 0;
-
-        i--
-    ) {
-
-        const t =
-            list[i];
-
-
-        if (
-            t.time < cutoff
-        )
-            break;
-
-
-        if (
-            t.side === "Buy"
-        ) {
-
-            buy += t.value;
-
-            buyCount++;
-
-        } else {
-
-            sell += t.value;
-
-            sellCount++;
-
-        }
-
-    }
-
-
-    const total =
-        buy + sell;
-
-
-    let imbalance = 0;
-
-
-    if (total > 0) {
-
-        imbalance =
-            (
-                buy - sell
-            ) / total;
-
-    }
-
-
-    return {
-
-        buy,
-
-        sell,
-
-        total,
-
-        imbalance,
-
-        buyCount,
-
-        sellCount
-
-    };
-
-}
-
-
-/* =====================================================
-   PRICE CHANGE
-===================================================== */
-
-function getPriceChange(
-    symbol
-) {
-
-    const list =
-        trades.get(
-            symbol
-        ) || [];
-
-
-    if (list.length < 2)
-        return 0;
-
-
-    const latest =
-        list[list.length - 1];
-
-
-    const cutoff =
-        now() -
-        PRICE_WINDOW;
-
-
-    let old = null;
-
-
-    for (
-        let i = 0;
-
-        i < list.length;
-
-        i++
-    ) {
-
-        if (
-            list[i].time >= cutoff
-        ) {
-
-            old =
-                list[i];
-
-            break;
-
-        }
-
-    }
-
+    const asks =
+        [...book.asks.keys()]
+            .sort(
+                (a, b) => a - b
+            );
 
     if (
-        !old ||
-        !old.price
-    )
-        return 0;
+        bids.length &&
+        asks.length
+    ) {
 
+        return (
+            bids[0] +
+            asks[0]
+        ) / 2;
 
-    return (
-        latest.price -
-        old.price
-    ) / old.price;
+    }
+
+    return null;
 
 }
 
@@ -1401,21 +1206,14 @@ function getPriceChange(
    LOCAL LIQUIDITY
 ===================================================== */
 
-
-/*
- * Берём ближайшие уровни
- * к текущей цене.
- *
- * Это позволяет сравнивать
- * стену с обычной ликвидностью
- * конкретного альта.
- */
-
 function getLocalLiquidity(
-    book,
+    symbol,
     side,
     currentPrice
 ) {
+
+    const book =
+        books.get(symbol);
 
     if (
         !book ||
@@ -1423,21 +1221,15 @@ function getLocalLiquidity(
     )
         return 1;
 
-
     const source =
         side === "Buy"
             ? book.bids
             : book.asks;
 
-
     const values = [];
 
-
     for (
-        const [
-            price,
-            qty
-        ]
+        const [price, qty]
         of source
     ) {
 
@@ -1448,7 +1240,6 @@ function getLocalLiquidity(
             ) /
             currentPrice;
 
-
         if (
             distance <= 0.003
         ) {
@@ -1456,193 +1247,234 @@ function getLocalLiquidity(
             const value =
                 price * qty;
 
-
-            if (
-                value > 0
-            ) {
-
-                values.push(
-                    value
-                );
-
-            }
+            if (value > 0)
+                values.push(value);
 
         }
 
     }
 
-
-    if (
-        values.length === 0
-    )
+    if (!values.length)
         return 1;
-
 
     values.sort(
         (a, b) => a - b
     );
-
-
-    /*
-     * Медиана.
-     */
 
     const middle =
         Math.floor(
             values.length / 2
         );
 
-
-    return values[middle];
+    return Math.max(
+        values[middle],
+        1
+    );
 
 }
 
 
 /* =====================================================
-   FIND WALLS
+   FLOW
 ===================================================== */
 
-function findWalls(
+function getTradeFlow(
     symbol
 ) {
 
-    const book =
-        books.get(
-            symbol
-        );
+    const list =
+        trades.get(symbol) || [];
+
+    const cutoff =
+        now() -
+        FLOW_WINDOW;
+
+    let buy = 0;
+
+    let sell = 0;
+
+    let buyCount = 0;
+
+    let sellCount = 0;
+
+    let latestPrice = null;
+
+    let oldestPrice = null;
 
 
-    if (!book)
-        return [];
+    for (
+        let i = list.length - 1;
+        i >= 0;
+        i--
+    ) {
 
-
-    /*
-     * Последняя цена.
-     */
-
-    let currentPrice =
-        book.lastPrice;
-
-
-    /*
-     * Если сделок ещё нет,
-     * берём середину best bid/ask.
-     */
-
-    if (!currentPrice) {
-
-        const bids =
-            [...book.bids.keys()]
-                .sort(
-                    (a, b) => b - a
-                );
-
-        const asks =
-            [...book.asks.keys()]
-                .sort(
-                    (a, b) => a - b
-                );
-
+        const t =
+            list[i];
 
         if (
-            bids.length &&
-            asks.length
+            t.time < cutoff
+        )
+            break;
+
+        if (!latestPrice)
+            latestPrice = t.price;
+
+        oldestPrice =
+            t.price;
+
+
+        /*
+         * В Bybit publicTrade
+         * S = taker side.
+         */
+
+        if (
+            t.side === "Buy"
         ) {
 
-            currentPrice =
-                (
-                    bids[0] +
-                    asks[0]
-                ) / 2;
+            buy += t.value;
+            buyCount++;
+
+        } else {
+
+            sell += t.value;
+            sellCount++;
 
         }
 
     }
 
 
-    if (!currentPrice)
+    const total =
+        buy + sell;
+
+    let imbalance = 0;
+
+    if (total > 0) {
+
+        imbalance =
+            (
+                buy -
+                sell
+            ) /
+            total;
+
+    }
+
+
+    let flowPriceChange = 0;
+
+    if (
+        latestPrice &&
+        oldestPrice
+    ) {
+
+        flowPriceChange =
+            (
+                latestPrice -
+                oldestPrice
+            ) /
+            oldestPrice;
+
+    }
+
+
+    return {
+
+        buy,
+        sell,
+        total,
+        imbalance,
+        buyCount,
+        sellCount,
+        flowPriceChange
+
+    };
+
+}
+
+
+/* =====================================================
+   LEVEL CANDIDATES
+===================================================== */
+
+function collectLevelCandidates(
+    symbol
+) {
+
+    const book =
+        books.get(symbol);
+
+    const price =
+        getCurrentPrice(symbol);
+
+    if (
+        !book ||
+        !price
+    )
         return [];
 
 
-    const result = [];
+    const candidates = [];
 
 
     /*
-     * BUY WALLS
+     * BID LIQUIDITY
      */
 
     for (
-        const [
-            price,
-            qty
-        ]
+        const [levelPrice, qty]
         of book.bids
     ) {
 
         const distance =
             (
-                currentPrice -
-                price
+                price -
+                levelPrice
             ) /
-            currentPrice;
-
+            price;
 
         if (
             distance < 0 ||
             distance >
-            MAX_WALL_DISTANCE
+            MAX_LEVEL_DISTANCE
         )
             continue;
 
-
         const value =
-            price * qty;
-
+            levelPrice * qty;
 
         const local =
             getLocalLiquidity(
-                book,
+                symbol,
                 "Buy",
-                currentPrice
+                price
             );
-
 
         const ratio =
             value /
-            Math.max(
-                local,
-                1
-            );
-
-
-        const threshold =
-            getBaseThreshold(
-                symbol
-            );
-
+            Math.max(local, 1);
 
         if (
-            value >= threshold &&
-            ratio >= MIN_WALL_RATIO
+            ratio >=
+            MIN_RELATIVE_LIQUIDITY
         ) {
 
-            result.push({
+            candidates.push({
 
                 symbol,
 
                 side: "Buy",
 
-                price,
-
-                qty,
+                price: levelPrice,
 
                 value,
 
+                qty,
+
                 distance,
 
-                ratio,
-
-                currentPrice
+                ratio
 
             });
 
@@ -1652,81 +1484,62 @@ function findWalls(
 
 
     /*
-     * SELL WALLS
+     * ASK LIQUIDITY
      */
 
     for (
-        const [
-            price,
-            qty
-        ]
+        const [levelPrice, qty]
         of book.asks
     ) {
 
         const distance =
             (
-                price -
-                currentPrice
+                levelPrice -
+                price
             ) /
-            currentPrice;
-
+            price;
 
         if (
             distance < 0 ||
             distance >
-            MAX_WALL_DISTANCE
+            MAX_LEVEL_DISTANCE
         )
             continue;
 
-
         const value =
-            price * qty;
-
+            levelPrice * qty;
 
         const local =
             getLocalLiquidity(
-                book,
+                symbol,
                 "Sell",
-                currentPrice
+                price
             );
-
 
         const ratio =
             value /
-            Math.max(
-                local,
-                1
-            );
-
-
-        const threshold =
-            getBaseThreshold(
-                symbol
-            );
-
+            Math.max(local, 1);
 
         if (
-            value >= threshold &&
-            ratio >= MIN_WALL_RATIO
+            ratio >=
+            MIN_RELATIVE_LIQUIDITY
         ) {
 
-            result.push({
+            candidates.push({
 
                 symbol,
 
                 side: "Sell",
 
-                price,
-
-                qty,
+                price: levelPrice,
 
                 value,
 
+                qty,
+
                 distance,
 
-                ratio,
-
-                currentPrice
+                ratio
 
             });
 
@@ -1735,274 +1548,1052 @@ function findWalls(
     }
 
 
-    /*
-     * Самые крупные.
-     */
+    return candidates;
 
-    result.sort(
+}
+
+
+/* =====================================================
+   CLUSTER LEVELS
+===================================================== */
+
+function clusterLevels(
+    symbol
+) {
+
+    const candidates =
+        collectLevelCandidates(symbol);
+
+    if (!candidates.length)
+        return [];
+
+
+    candidates.sort(
         (a, b) =>
             b.value -
             a.value
     );
 
 
-    return result.slice(
-        0,
-        6
-    );
-
-}
+    const clusters = [];
 
 
-/* =====================================================
-   WALL STABILITY
-===================================================== */
-
-function updateWallHistory(
-    wall
-) {
-
-    const key =
-        `${wall.symbol}_${wall.side}_${wall.price}`;
-
-
-    if (
-        !wallHistory.has(key)
+    for (
+        const candidate
+        of candidates
     ) {
 
-        wallHistory.set(
-            key,
-            {
-                firstSeen: now(),
-                lastSeen: now(),
-                lastValue:
-                    wall.value
+        let cluster = null;
+
+        for (
+            const existing
+            of clusters
+        ) {
+
+            const distance =
+                Math.abs(
+                    candidate.price -
+                    existing.price
+                ) /
+                candidate.price;
+
+            if (
+                candidate.side ===
+                existing.side &&
+                distance <=
+                LEVEL_CLUSTER_DISTANCE
+            ) {
+
+                cluster = existing;
+                break;
+
             }
-        );
 
-    } else {
-
-        const item =
-            wallHistory.get(
-                key
-            );
+        }
 
 
-        item.lastSeen =
-            now();
+        if (!cluster) {
 
+            clusters.push({
 
-        item.lastValue =
-            wall.value;
+                symbol,
+
+                side:
+                    candidate.side,
+
+                price:
+                    candidate.price,
+
+                totalValue:
+                    candidate.value,
+
+                maxValue:
+                    candidate.value,
+
+                maxRatio:
+                    candidate.ratio,
+
+                count: 1,
+
+                distance:
+                    candidate.distance
+
+            });
+
+        } else {
+
+            cluster.totalValue +=
+                candidate.value;
+
+            cluster.maxValue =
+                Math.max(
+                    cluster.maxValue,
+                    candidate.value
+                );
+
+            cluster.maxRatio =
+                Math.max(
+                    cluster.maxRatio,
+                    candidate.ratio
+                );
+
+            cluster.count++;
+
+            /*
+             * Взвешенная цена.
+             */
+
+            cluster.price =
+                (
+                    cluster.price *
+                    (
+                        cluster.count - 1
+                    ) +
+                    candidate.price
+                ) /
+                cluster.count;
+
+        }
 
     }
 
 
-    return wallHistory.get(
-        key
+    /*
+     * Сортируем по относительной
+     * значимости.
+     */
+
+    clusters.sort(
+        (a, b) =>
+            (
+                b.totalValue *
+                b.maxRatio
+            ) -
+            (
+                a.totalValue *
+                a.maxRatio
+            )
+    );
+
+
+    return clusters.slice(
+        0,
+        MAX_LEVELS_PER_SYMBOL
     );
 
 }
 
 
 /* =====================================================
-   SCORE
+   LEVEL HISTORY
 ===================================================== */
 
-function calculateScore(
-    wall,
-    flow,
-    priceChange,
-    age
+function levelKey(
+    level
+) {
+
+    /*
+     * Округляем цену,
+     * чтобы небольшие изменения
+     * стакана не создавали новый уровень.
+     */
+
+    const rounded =
+        Number(
+            level.price.toPrecision(8)
+        );
+
+    return (
+        level.symbol +
+        "_" +
+        level.side +
+        "_" +
+        rounded
+    );
+
+}
+
+
+function updateLevelHistory(
+    level
+) {
+
+    const key =
+        levelKey(level);
+
+    let history =
+        levelHistory.get(key);
+
+
+    if (!history) {
+
+        history = {
+
+            firstSeen: now(),
+
+            lastSeen: now(),
+
+            values: [
+                {
+                    time: now(),
+                    value:
+                        level.totalValue
+                }
+            ],
+
+            previousValue:
+                level.totalValue,
+
+            tests: 0,
+
+            rejectionCount: 0,
+
+            absorptionScore: 0,
+
+            lastPrice:
+                getCurrentPrice(
+                    level.symbol
+                ),
+
+            lastTestTime: 0
+
+        };
+
+        levelHistory.set(
+            key,
+            history
+        );
+
+    } else {
+
+        history.lastSeen =
+            now();
+
+
+        /*
+         * Сохраняем изменения
+         * ликвидности.
+         */
+
+        history.values.push({
+
+            time: now(),
+
+            value:
+                level.totalValue
+
+        });
+
+
+        /*
+         * Не храним бесконечную историю.
+         */
+
+        const cutoff =
+            now() -
+            LEVEL_HISTORY;
+
+        while (
+            history.values.length &&
+            history.values[0].time <
+            cutoff
+        ) {
+
+            history.values.shift();
+
+        }
+
+    }
+
+
+    /*
+     * Stability.
+     */
+
+    const age =
+        now() -
+        history.firstSeen;
+
+
+    /*
+     * Насколько изменилась
+     * ликвидность.
+     */
+
+    let stability = 100;
+
+
+    if (
+        history.previousValue > 0
+    ) {
+
+        const change =
+            Math.abs(
+                level.totalValue -
+                history.previousValue
+            ) /
+            history.previousValue;
+
+        stability =
+            clamp(
+                100 -
+                change * 100,
+                0,
+                100
+            );
+
+    }
+
+
+    history.previousValue =
+        level.totalValue;
+
+
+    /*
+     * Test detection.
+     */
+
+    const currentPrice =
+        getCurrentPrice(
+            level.symbol
+        );
+
+
+    if (
+        currentPrice &&
+        history.lastPrice
+    ) {
+
+        const previousDistance =
+            Math.abs(
+                history.lastPrice -
+                level.price
+            ) /
+            level.price;
+
+        const currentDistance =
+            Math.abs(
+                currentPrice -
+                level.price
+            ) /
+            level.price;
+
+        const testDistance =
+            parseFloat(
+                document
+                    .getElementById(
+                        "testDistance"
+                    )
+                    .value
+            );
+
+
+        /*
+         * Цена подошла к уровню.
+         */
+
+        if (
+            currentDistance <=
+            testDistance &&
+            previousDistance >
+            testDistance
+        ) {
+
+            if (
+                now() -
+                history.lastTestTime >
+                3000
+            ) {
+
+                history.tests++;
+
+                history.lastTestTime =
+                    now();
+
+            }
+
+        }
+
+    }
+
+
+    history.lastPrice =
+        currentPrice;
+
+
+    /*
+     * Rejection.
+     */
+
+    const reaction =
+        getLevelReaction(
+            level,
+            history
+        );
+
+
+    history.rejectionCount =
+        reaction.rejectionCount;
+
+    history.absorptionScore =
+        reaction.absorptionScore;
+
+
+    return {
+
+        key,
+
+        age,
+
+        stability,
+
+        tests:
+            history.tests,
+
+        rejectionCount:
+            history.rejectionCount,
+
+        absorptionScore:
+            history.absorptionScore,
+
+        refill:
+            calculateRefill(
+                history,
+                level
+            )
+
+    };
+
+}
+
+
+/* =====================================================
+   REFILL
+===================================================== */
+
+function calculateRefill(
+    history,
+    level
+) {
+
+    if (
+        history.values.length < 3
+    )
+        return 0;
+
+
+    const values =
+        history.values;
+
+
+    let replenishments = 0;
+
+    let opportunities = 0;
+
+
+    for (
+        let i = 1;
+        i < values.length;
+        i++
+    ) {
+
+        const previous =
+            values[i - 1].value;
+
+        const current =
+            values[i].value;
+
+
+        if (
+            previous <= 0
+        )
+            continue;
+
+
+        /*
+         * Если ликвидность сначала
+         * уменьшается, а потом
+         * восстанавливается.
+         */
+
+        if (
+            current <
+            previous * 0.85
+        ) {
+
+            opportunities++;
+
+        }
+
+
+        if (
+            opportunities > 0 &&
+            current >
+            previous * 1.10
+        ) {
+
+            replenishments++;
+
+        }
+
+    }
+
+
+    if (
+        opportunities === 0
+    )
+        return 0;
+
+
+    return clamp(
+        (
+            replenishments /
+            opportunities
+        ) * 100,
+        0,
+        100
+    );
+
+}
+
+
+/* =====================================================
+   LEVEL REACTION
+===================================================== */
+
+function getLevelReaction(
+    level,
+    history
+) {
+
+    const list =
+        trades.get(level.symbol) || [];
+
+
+    const cutoff =
+        now() -
+        FLOW_WINDOW;
+
+
+    let aggressiveIntoLevel = 0;
+
+    let aggressiveAway = 0;
+
+
+    for (
+        let i = list.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const trade =
+            list[i];
+
+        if (
+            trade.time < cutoff
+        )
+            break;
+
+
+        const distance =
+            Math.abs(
+                trade.price -
+                level.price
+            ) /
+            level.price;
+
+
+        /*
+         * Учитываем только сделки
+         * достаточно близко к уровню.
+         */
+
+        if (
+            distance >
+            0.001
+        )
+            continue;
+
+
+        /*
+         * BUY wall:
+         * aggressive SELL давит
+         * в поддержку.
+         *
+         * SELL wall:
+         * aggressive BUY давит
+         * в сопротивление.
+         */
+
+        if (
+            level.side === "Buy"
+        ) {
+
+            if (
+                trade.side === "Sell"
+            ) {
+
+                aggressiveIntoLevel +=
+                    trade.value;
+
+            } else {
+
+                aggressiveAway +=
+                    trade.value;
+
+            }
+
+        } else {
+
+            if (
+                trade.side === "Buy"
+            ) {
+
+                aggressiveIntoLevel +=
+                    trade.value;
+
+            } else {
+
+                aggressiveAway +=
+                    trade.value;
+
+            }
+
+        }
+
+    }
+
+
+    const pressure =
+        aggressiveIntoLevel +
+        aggressiveAway;
+
+
+    let absorptionScore = 0;
+
+
+    if (
+        pressure > 0 &&
+        level.totalValue > 0
+    ) {
+
+        /*
+         * Давление относительно
+         * лимитной ликвидности.
+         */
+
+        const pressureRatio =
+            aggressiveIntoLevel /
+            level.totalValue;
+
+
+        /*
+         * Чем больше агрессивного
+         * потока поглощается,
+         * тем выше показатель.
+         */
+
+        absorptionScore =
+            clamp(
+                pressureRatio * 70 +
+                (
+                    aggressiveIntoLevel /
+                    Math.max(
+                        pressure,
+                        1
+                    )
+                ) * 30,
+                0,
+                100
+            );
+
+    }
+
+
+    /*
+     * Rejection:
+     *
+     * большой агрессивный поток
+     * + цена не проходит уровень.
+     */
+
+    let rejectionCount = 0;
+
+
+    const currentPrice =
+        getCurrentPrice(
+            level.symbol
+        );
+
+
+    if (currentPrice) {
+
+        const distance =
+            (
+                currentPrice -
+                level.price
+            ) /
+            level.price;
+
+
+        if (
+            level.side === "Buy"
+        ) {
+
+            /*
+             * Цена немного ниже/около
+             * уровня, но не уходит дальше.
+             */
+
+            if (
+                aggressiveIntoLevel >
+                level.totalValue * 0.20 &&
+                distance > -0.001
+            ) {
+
+                rejectionCount = 1;
+
+            }
+
+        } else {
+
+            if (
+                aggressiveIntoLevel >
+                level.totalValue * 0.20 &&
+                distance < 0.001
+            ) {
+
+                rejectionCount = 1;
+
+            }
+
+        }
+
+    }
+
+
+    return {
+
+        absorptionScore,
+
+        rejectionCount
+
+    };
+
+}
+
+
+/* =====================================================
+   LEVEL SCORE
+===================================================== */
+
+function calculateLevelScore(
+    level,
+    history
 ) {
 
     let score = 0;
 
 
     /*
-     * 1. Размер стены
-     *
-     * Максимум 20
+     * 1. Relative liquidity
+     * 0–25
      */
 
-    const sizeScore =
-        Math.min(
-            20,
-            Math.log10(
-                Math.max(
-                    wall.value,
-                    1
-                ) /
-                50000
-            ) * 10
-        );
+    score += clamp(
+        (
+            level.maxRatio /
+            5
+        ) * 25,
+        0,
+        25
+    );
 
+
+    /*
+     * 2. Stability
+     * 0–15
+     */
 
     score +=
-        Math.max(
+        (
+            history.stability /
+            100
+        ) * 15;
+
+
+    /*
+     * 3. Age
+     * 0–10
+     */
+
+    score += clamp(
+        history.age /
+        1000,
+        0,
+        10
+    );
+
+
+    /*
+     * 4. Multiple tests
+     * 0–10
+     */
+
+    score += clamp(
+        history.tests * 3,
+        0,
+        10
+    );
+
+
+    /*
+     * 5. Rejection
+     * 0–10
+     */
+
+    score +=
+        history.rejectionCount *
+        10;
+
+
+    /*
+     * 6. Refill
+     * 0–10
+     */
+
+    score +=
+        (
+            history.refill /
+            100
+        ) * 10;
+
+
+    /*
+     * 7. Absorption
+     * 0–20
+     */
+
+    score +=
+        (
+            history.absorptionScore /
+            100
+        ) * 20;
+
+
+    return Math.round(
+        clamp(
+            score,
             0,
-            sizeScore
-        );
-
-
-    /*
-     * 2. Relative wall ratio
-     *
-     * Максимум 20
-     */
-
-    const ratioScore =
-        Math.min(
-            20,
-            wall.ratio * 5
-        );
-
-
-    score +=
-        ratioScore;
-
-
-    /*
-     * 3. Возраст стены
-     *
-     * Максимум 15
-     */
-
-    const ageScore =
-        Math.min(
-            15,
-            age / 1000
-        );
-
-
-    score +=
-        ageScore;
-
-
-    /*
-     * 4. Агрессивный поток
-     *
-     * Максимум 25
-     */
-
-    const flowStrength =
-        Math.min(
-            1,
-            Math.abs(
-                flow.imbalance
-            )
-        );
-
-
-    /*
-     * Если BUY wall —
-     * нам нужны aggressive BUY.
-     *
-     * Если SELL wall —
-     * aggressive SELL.
-     */
-
-    const alignedFlow =
-        wall.side === "Buy"
-
-            ? Math.max(
-                0,
-                flow.imbalance
-            )
-
-            : Math.max(
-                0,
-                -flow.imbalance
-            );
-
-
-    score +=
-        alignedFlow * 25;
-
-
-    /*
-     * 5. Цена
-     *
-     * Максимум 20
-     */
-
-    const alignedPrice =
-        wall.side === "Buy"
-
-            ? Math.max(
-                0,
-                priceChange
-            )
-
-            : Math.max(
-                0,
-                -priceChange
-            );
-
-
-    score +=
-        Math.min(
-            20,
-            alignedPrice *
-            1000
-        );
-
-
-    return Math.min(
-        100,
-        Math.round(score)
+            100
+        )
     );
 
 }
 
 
 /* =====================================================
-   DETERMINE SETUP
+   PRICE REACTION
 ===================================================== */
 
-function determineSetup(
-    wall,
-    flow,
-    priceChange
+function calculatePriceReaction(
+    level
 ) {
 
+    const list =
+        trades.get(level.symbol) || [];
+
+    const cutoff =
+        now() -
+        FLOW_WINDOW;
+
+
+    let oldest = null;
+
+    let latest = null;
+
+
+    for (
+        let i = list.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const trade =
+            list[i];
+
+        if (
+            trade.time < cutoff
+        )
+            break;
+
+
+        latest =
+            latest || trade;
+
+        oldest =
+            trade;
+
+    }
+
+
+    if (
+        !oldest ||
+        !latest ||
+        !oldest.price
+    )
+        return 0;
+
+
+    return (
+        latest.price -
+        oldest.price
+    ) /
+    oldest.price;
+
+}
+
+
+/* =====================================================
+   DETERMINE SCENARIO
+===================================================== */
+
+function determineScenario(
+    level,
+    history,
+    flow,
+    priceReaction
+) {
+
+    const currentPrice =
+        getCurrentPrice(
+            level.symbol
+        );
+
+
+    if (!currentPrice)
+        return null;
+
+
+    const distance =
+        (
+            currentPrice -
+            level.price
+        ) /
+        level.price;
+
+
+    const strongLevel =
+        history.score >=
+        parseInt(
+            document
+                .getElementById(
+                    "minLevelScore"
+                )
+                .value
+        );
+
+
+    if (!strongLevel)
+        return null;
+
+
     /*
-     * BUY WALL
+     * ==================================
+     * BUY LEVEL
+     * ==================================
      */
 
     if (
-        wall.side === "Buy"
+        level.side === "Buy"
     ) {
 
         /*
-         * Агрессивные покупки
-         * + цена растёт
+         * LONG:
+         *
+         * Цена около поддержки
+         * + продажи поглощаются
+         * + есть реакция вверх.
          */
 
+        const longConfirmation =
+            distance >= -0.0015 &&
+            history.absorptionScore >= 45 &&
+            (
+                flow.imbalance >= 0.08 ||
+                priceReaction >=
+                MIN_REACTION
+            );
+
+
         if (
-            flow.imbalance > 0.15 &&
-            priceChange > 0
+            longConfirmation
         ) {
 
-            return "LONG";
+            return {
+
+                direction: "LONG",
+
+                state: "CONFIRMED",
+
+                reason:
+                    "Поддержка удерживается: " +
+                    "продажи поглощаются, " +
+                    "появляется реакция вверх."
+
+            };
 
         }
 
 
         /*
-         * Стена съедается
-         * и продавцы давят.
+         * BREAKDOWN:
          *
-         * Это потенциальный
-         * breakdown.
+         * поддержка не выдержала.
          */
 
+        const breakdown =
+            distance < -0.001 &&
+            flow.imbalance < -0.15 &&
+            priceReaction < 0 &&
+            history.absorptionScore < 35;
+
+
         if (
-            flow.imbalance < -0.20 &&
-            priceChange < 0
+            breakdown
         ) {
 
-            return "SHORT";
+            return {
+
+                direction: "SHORT",
+
+                state: "CONFIRMED",
+
+                reason:
+                    "Поддержка теряет ликвидность: " +
+                    "продавцы давят, поглощение слабое."
+
+            };
 
         }
 
@@ -2010,46 +2601,456 @@ function determineSetup(
 
 
     /*
-     * SELL WALL
+     * ==================================
+     * SELL LEVEL
+     * ==================================
      */
 
     if (
-        wall.side === "Sell"
+        level.side === "Sell"
     ) {
 
         /*
-         * Агрессивные продажи
-         * + цена падает
+         * SHORT:
+         *
+         * сопротивление удерживается.
          */
 
+        const shortConfirmation =
+            distance <= 0.0015 &&
+            history.absorptionScore >= 45 &&
+            (
+                flow.imbalance <= -0.08 ||
+                priceReaction <=
+                -MIN_REACTION
+            );
+
+
         if (
-            flow.imbalance < -0.15 &&
-            priceChange < 0
+            shortConfirmation
         ) {
 
-            return "SHORT";
+            return {
+
+                direction: "SHORT",
+
+                state: "CONFIRMED",
+
+                reason:
+                    "Сопротивление удерживается: " +
+                    "покупки поглощаются, " +
+                    "появляется реакция вниз."
+
+            };
 
         }
 
 
         /*
-         * Стена съедается
-         * покупателями.
+         * BREAKOUT LONG
          */
 
+        const breakout =
+            distance > 0.001 &&
+            flow.imbalance > 0.15 &&
+            priceReaction > 0 &&
+            history.absorptionScore < 35;
+
+
         if (
-            flow.imbalance > 0.20 &&
-            priceChange > 0
+            breakout
         ) {
 
-            return "LONG";
+            return {
+
+                direction: "LONG",
+
+                state: "CONFIRMED",
+
+                reason:
+                    "Сопротивление поглощается: " +
+                    "покупатели давят и цена " +
+                    "выходит выше уровня."
+
+            };
 
         }
+
+    }
+
+
+    /*
+     * Если уровень сильный,
+     * но подтверждения ещё нет,
+     * создаём WATCH.
+     */
+
+    const closeToLevel =
+        Math.abs(distance) <=
+        0.002;
+
+
+    if (
+        closeToLevel &&
+        history.age >=
+        MIN_LEVEL_AGE
+    ) {
+
+        return {
+
+            direction: "WATCH",
+
+            state: "WATCH",
+
+            reason:
+                "Сильный уровень рядом с ценой. " +
+                "Ждём подтверждение реакции."
+
+        };
 
     }
 
 
     return null;
+
+}
+
+
+/* =====================================================
+   SCENARIO STATE
+===================================================== */
+
+function updateScenarioState(
+    level,
+    scenario
+) {
+
+    const key =
+        levelKey(level);
+
+
+    let state =
+        scenarios.get(key);
+
+
+    if (!state) {
+
+        state = {
+
+            direction: null,
+
+            state: "WATCH",
+
+            firstConfirmed: 0,
+
+            lastUpdate: now(),
+
+            invalidated: false
+
+        };
+
+        scenarios.set(
+            key,
+            state
+        );
+
+    }
+
+
+    /*
+     * Если новый сигнал совпадает
+     * с предыдущим — обновляем.
+     */
+
+    if (
+        scenario &&
+        scenario.direction !==
+        "WATCH"
+    ) {
+
+        if (
+            state.direction ===
+            scenario.direction
+        ) {
+
+            state.state =
+                "CONFIRMED";
+
+            state.lastUpdate =
+                now();
+
+            return state;
+
+        }
+
+
+        /*
+         * Защита от мгновенного
+         * переворота.
+         *
+         * Чтобы LONG не стал
+         * SHORT через 500 мс,
+         * предыдущий сценарий должен
+         * сначала потерять условия.
+         */
+
+        if (
+            state.direction &&
+            state.direction !==
+            scenario.direction &&
+            !state.invalidated
+        ) {
+
+            /*
+             * Первый конфликт —
+             * просто помечаем,
+             * но не переворачиваем.
+             */
+
+            state.conflictSince =
+                state.conflictSince ||
+                now();
+
+            /*
+             * Нужно минимум 3 секунды
+             * устойчивого противоположного
+             * сценария.
+             */
+
+            if (
+                now() -
+                state.conflictSince <
+                3000
+            ) {
+
+                return state;
+
+            }
+
+        }
+
+
+        state.direction =
+            scenario.direction;
+
+        state.state =
+            "CONFIRMED";
+
+        state.invalidated =
+            false;
+
+        state.conflictSince =
+            0;
+
+        state.firstConfirmed =
+            state.firstConfirmed ||
+            now();
+
+        state.lastUpdate =
+            now();
+
+        return state;
+
+    }
+
+
+    /*
+     * WATCH не сбрасывает
+     * подтверждённый сценарий
+     * мгновенно.
+     */
+
+    if (
+        scenario &&
+        scenario.direction ===
+        "WATCH"
+    ) {
+
+        if (
+            !state.direction
+        ) {
+
+            state.state =
+                "WATCH";
+
+        }
+
+    }
+
+
+    return state;
+
+}
+
+
+/* =====================================================
+   INVALIDATION
+===================================================== */
+
+function isScenarioInvalid(
+    level,
+    state,
+    history,
+    flow
+) {
+
+    if (
+        !state.direction ||
+        state.direction ===
+        "WATCH"
+    )
+        return false;
+
+
+    const price =
+        getCurrentPrice(
+            level.symbol
+        );
+
+    if (!price)
+        return false;
+
+
+    const distance =
+        (
+            price -
+            level.price
+        ) /
+        level.price;
+
+
+    /*
+     * LONG от BUY wall:
+     * поддержка разрушена.
+     */
+
+    if (
+        state.direction ===
+        "LONG" &&
+        level.side === "Buy"
+    ) {
+
+        if (
+            distance < -0.0025 &&
+            flow.imbalance < -0.12 &&
+            history.absorptionScore < 25
+        ) {
+
+            return true;
+
+        }
+
+    }
+
+
+    /*
+     * SHORT от SELL wall:
+     * сопротивление пробито.
+     */
+
+    if (
+        state.direction ===
+        "SHORT" &&
+        level.side === "Sell"
+    ) {
+
+        if (
+            distance > 0.0025 &&
+            flow.imbalance > 0.12 &&
+            history.absorptionScore < 25
+        ) {
+
+            return true;
+
+        }
+
+    }
+
+
+    return false;
+
+}
+
+
+/* =====================================================
+   FINAL SCORE
+===================================================== */
+
+function calculateSignalScore(
+    level,
+    history,
+    flow,
+    direction,
+    priceReaction
+) {
+
+    let score =
+        history.score * 0.45;
+
+
+    /*
+     * Flow alignment
+     */
+
+    let flowAlignment = 0;
+
+
+    if (
+        direction === "LONG"
+    ) {
+
+        flowAlignment =
+            Math.max(
+                0,
+                flow.imbalance
+            );
+
+    } else {
+
+        flowAlignment =
+            Math.max(
+                0,
+                -flow.imbalance
+            );
+
+    }
+
+
+    score +=
+        flowAlignment * 25;
+
+
+    /*
+     * Reaction
+     */
+
+    score += clamp(
+        Math.abs(
+            priceReaction
+        ) * 10000,
+        0,
+        15
+    );
+
+
+    /*
+     * Tests
+     */
+
+    score += clamp(
+        history.tests * 2,
+        0,
+        10
+    );
+
+
+    return Math.round(
+        clamp(
+            score,
+            0,
+            100
+        )
+    );
 
 }
 
@@ -2062,95 +3063,163 @@ function analyzeSymbol(
     symbol
 ) {
 
-    const book =
-        books.get(
-            symbol
-        );
+    const price =
+        getCurrentPrice(symbol);
 
-
-    if (!book)
+    if (!price)
         return;
 
 
-    const wallsFound =
-        findWalls(
-            symbol
-        );
-
-
-    const flow =
-        getTradeFlow(
-            symbol
-        );
-
-
-    const priceChange =
-        getPriceChange(
-            symbol
-        );
+    const found =
+        clusterLevels(symbol);
 
 
     for (
-        const wall
-        of wallsFound
+        const level
+        of found
     ) {
 
-        const history =
-            updateWallHistory(
-                wall
+        const historyData =
+            updateLevelHistory(
+                level
             );
 
 
-        const age =
-            now() -
-            history.firstSeen;
+        const history = {
+
+            ...historyData,
+
+            score:
+                calculateLevelScore(
+                    level,
+                    historyData
+                )
+
+        };
 
 
-        /*
-         * Не рассматриваем
-         * слишком свежую стену.
-         */
+        const flow =
+            getTradeFlow(symbol);
 
-        const requiredAge =
-            parseInt(
-                document
-                    .getElementById(
-                        "wallAge"
-                    )
-                    .value
-            ) * 1000;
+
+        const priceReaction =
+            calculatePriceReaction(
+                level
+            );
+
+
+        const scenario =
+            determineScenario(
+                level,
+                history,
+                flow,
+                priceReaction
+            );
+
+
+        if (!scenario)
+            continue;
+
+
+        const state =
+            updateScenarioState(
+                level,
+                scenario
+            );
 
 
         if (
-            age <
-            requiredAge
-        )
+            isScenarioInvalid(
+                level,
+                state,
+                history,
+                flow
+            )
+        ) {
+
+            state.invalidated =
+                true;
+
+            state.direction =
+                null;
+
+            state.state =
+                "INVALIDATED";
+
             continue;
 
-
-        const setup =
-            determineSetup(
-                wall,
-                flow,
-                priceChange
-            );
+        }
 
 
         /*
-         * Если направления нет —
-         * просто наблюдаем.
+         * WATCH.
          */
 
-        if (!setup)
+        if (
+            state.state ===
+            "WATCH" ||
+            state.direction ===
+            null
+        ) {
+
+            const key =
+                levelKey(level);
+
+            signals.set(
+                key,
+                {
+
+                    key,
+
+                    symbol,
+
+                    rank:
+                        symbolRanks.get(
+                            symbol
+                        ),
+
+                    direction:
+                        "WATCH",
+
+                    state:
+                        "WATCH",
+
+                    score:
+                        history.score,
+
+                    level,
+
+                    history,
+
+                    flow,
+
+                    priceReaction,
+
+                    reason:
+                        scenario.reason,
+
+                    updated:
+                        now()
+
+                }
+            );
+
             continue;
 
+        }
+
+
+        /*
+         * CONFIRMED.
+         */
 
         const score =
-            calculateScore(
-                wall,
+            calculateSignalScore(
+                level,
+                history,
                 flow,
-                priceChange,
-                age
+                state.direction,
+                priceReaction
             );
 
 
@@ -2165,14 +3234,13 @@ function analyzeSymbol(
 
 
         if (
-            score <
-            minScore
+            score < minScore
         )
             continue;
 
 
         const key =
-            `${symbol}_${wall.side}_${wall.price}`;
+            levelKey(level);
 
 
         signals.set(
@@ -2188,23 +3256,69 @@ function analyzeSymbol(
                         symbol
                     ),
 
-                setup,
+                direction:
+                    state.direction,
+
+                state:
+                    "CONFIRMED",
 
                 score,
 
-                wall,
+                level,
+
+                history,
 
                 flow,
 
-                priceChange,
+                priceReaction,
 
-                age,
+                reason:
+                    scenario.reason,
 
                 updated:
                     now()
 
             }
         );
+
+    }
+
+}
+
+
+/* =====================================================
+   CLEAN HISTORY
+===================================================== */
+
+function cleanHistory() {
+
+    const cutoff =
+        now() -
+        LEVEL_HISTORY;
+
+
+    for (
+        const [
+            key,
+            history
+        ]
+        of levelHistory
+    ) {
+
+        if (
+            history.lastSeen <
+            cutoff
+        ) {
+
+            levelHistory.delete(
+                key
+            );
+
+            scenarios.delete(
+                key
+            );
+
+        }
 
     }
 
@@ -2233,13 +3347,20 @@ function analyzeAll() {
     }
 
 
+    cleanHistory();
+
+
     /*
-     * Удаляем старые сигналы.
+     * Удаляем сигналы,
+     * которые давно не обновлялись.
+     *
+     * Здесь специально 15 секунд,
+     * а не 5 секунд как раньше.
      */
 
     const expiry =
         now() -
-        5000;
+        15000;
 
 
     for (
@@ -2255,13 +3376,86 @@ function analyzeAll() {
             expiry
         ) {
 
-            signals.delete(
-                key
-            );
+            signals.delete(key);
 
         }
 
     }
+
+}
+
+
+/* =====================================================
+   FILTER
+===================================================== */
+
+function setFilter(filter) {
+
+    currentFilter =
+        filter;
+
+
+    document
+        .querySelectorAll(
+            ".filter-btn"
+        )
+        .forEach(
+            btn =>
+                btn.classList.remove(
+                    "active"
+                )
+        );
+
+
+    if (
+        filter === "ALL"
+    )
+        document
+            .getElementById(
+                "filterAll"
+            )
+            .classList.add(
+                "active"
+            );
+
+
+    if (
+        filter === "LONG"
+    )
+        document
+            .getElementById(
+                "filterLong"
+            )
+            .classList.add(
+                "active"
+            );
+
+
+    if (
+        filter === "SHORT"
+    )
+        document
+            .getElementById(
+                "filterShort"
+            )
+            .classList.add(
+                "active"
+            );
+
+
+    if (
+        filter === "WATCH"
+    )
+        document
+            .getElementById(
+                "filterWatch"
+            )
+            .classList.add(
+                "active"
+            );
+
+
+    renderSignals();
 
 }
 
@@ -2272,41 +3466,68 @@ function analyzeAll() {
 
 function renderSignals() {
 
-    const sorted =
-        [...signals.values()]
-            .sort(
-                (a, b) =>
-                    b.score -
-                    a.score
-            )
-            .slice(
-                0,
-                MAX_SIGNALS
-            );
-
-
-    candidateCountEl.innerText =
-        signals.size;
-
-
-    signalCountEl.innerText =
-        sorted.length;
+    let list =
+        [...signals.values()];
 
 
     if (
-        sorted.length === 0
+        currentFilter !==
+        "ALL"
     ) {
+
+        list =
+            list.filter(
+                s =>
+                    s.direction ===
+                    currentFilter
+            );
+
+    }
+
+
+    list.sort(
+        (a, b) =>
+            b.score -
+            a.score
+    );
+
+
+    list =
+        list.slice(
+            0,
+            MAX_SIGNALS
+        );
+
+
+    signalCountEl.innerText =
+        list.length;
+
+
+    levelCountEl.innerText =
+        levelHistory.size;
+
+
+    if (!list.length) {
 
         signalsEl.innerHTML = `
 
             <div class="empty">
 
-                🔎 Ищем ситуацию...
+                🔎 Ищем уровни...
 
                 <br><br>
 
-                Пока нет подтверждённого
-                LONG / SHORT сетапа.
+                Пока нет ситуации,
+                соответствующей фильтрам.
+
+                <br><br>
+
+                <span class="gray">
+
+                    Важно: отсутствие сигнала —
+                    нормальный результат.
+
+                </span>
 
             </div>
 
@@ -2321,153 +3542,189 @@ function renderSignals() {
 
 
     for (
-        const signal
-        of sorted
+        const s of list
     ) {
 
-        const s =
-            signal;
+        const level =
+            s.level;
+
+        const h =
+            s.history;
+
+        const flow =
+            s.flow;
 
 
-        let directionIcon =
-            "🟢";
+        let cardClass =
+            "watch";
 
+        let icon =
+            "👀";
 
-        let directionClass =
-            "long";
+        let direction =
+            "WATCH";
 
 
         if (
-            s.setup ===
+            s.direction ===
+            "LONG"
+        ) {
+
+            cardClass =
+                "long";
+
+            icon =
+                "🟢";
+
+            direction =
+                "LONG";
+
+        }
+
+
+        if (
+            s.direction ===
             "SHORT"
         ) {
 
-            directionIcon =
-                "🔴";
-
-            directionClass =
+            cardClass =
                 "short";
 
-        }
+            icon =
+                "🔴";
 
-
-        if (
-            s.setup ===
-            "BREAKOUT"
-        ) {
-
-            directionIcon =
-                "🟠";
-
-            directionClass =
-                "breakout";
+            direction =
+                "SHORT";
 
         }
 
 
-        const wallSide =
-            s.wall.side ===
-            "Buy"
-
-                ? "BUY WALL"
-
-                : "SELL WALL";
+        const levelType =
+            level.side === "Buy"
+                ? "SUPPORT"
+                : "RESISTANCE";
 
 
         const alignedFlow =
-            s.wall.side ===
-            "Buy"
-
-                ? s.flow.buy
-
-                : s.flow.sell;
-
-
-        const oppositeFlow =
-            s.wall.side ===
-            "Buy"
-
-                ? s.flow.sell
-
-                : s.flow.buy;
+            direction === "LONG"
+                ? flow.buy
+                : direction === "SHORT"
+                    ? flow.sell
+                    : Math.max(
+                        flow.buy,
+                        flow.sell
+                    );
 
 
-        const reason =
-            s.wall.side ===
-            "Buy"
+        const distance =
+            level.distance;
 
-                ? (
-                    s.flow.imbalance > 0
-                        ? "BUY wall + агрессивные покупки"
-                        : "BUY wall + давление продавцов"
-                )
 
-                : (
-                    s.flow.imbalance < 0
-                        ? "SELL wall + агрессивные продажи"
-                        : "SELL wall + агрессивные покупки"
-                );
+        const progress =
+            clamp(
+                s.score,
+                0,
+                100
+            );
 
 
         html += `
 
-            <div
-                class="signal ${directionClass}">
+            <div class="signal ${cardClass}">
 
-                <div
-                    class="signal-top">
+                <div class="signal-top">
 
-                    <div
-                        class="symbol">
+                    <div class="symbol">
 
-                        ${directionIcon}
+                        ${icon}
 
                         ${s.symbol}
 
-                        <span
-                            class="gray">
-
-                            #${s.rank}
-
+                        <span class="rank">
+                            #${s.rank || "-"}
                         </span>
 
                     </div>
 
+                    <div class="direction">
 
-                    <div
-                        class="direction">
-
-                        ${s.setup}
+                        ${direction}
 
                     </div>
 
                 </div>
 
 
-                <div
-                    class="score">
+                <div class="score">
 
-                    Score:
                     ${s.score}/100
 
                 </div>
 
 
-                <div
-                    class="data-grid">
-
+                <div class="progress">
 
                     <div
-                        class="data-box">
+                        class="progress-inner"
+                        style="width:${progress}%">
+                    </div>
 
-                        Лимитная ликвидность
+                </div>
+
+
+                <div class="level-box">
+
+                    <div class="level-header">
+
+                        <div>
+
+                            <div class="level-title">
+
+                                ${levelType}
+
+                            </div>
+
+                            <div class="level-price">
+
+                                ${priceFormat(
+                                    level.price
+                                )}
+
+                            </div>
+
+                        </div>
+
+                        <div
+                            class="${
+                                level.side === "Buy"
+                                ? "green"
+                                : "red"
+                            }">
+
+                            ${
+                                level.side === "Buy"
+                                ? "BID"
+                                : "ASK"
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="data-grid">
+
+
+                    <div class="data-box">
+
+                        Ликвидность
 
                         <strong>
-
-                            ${wallSide}
 
                             $${money(
-                                s.wall.value
+                                level.totalValue
                             )}
 
                         </strong>
@@ -2475,30 +3732,13 @@ function renderSignals() {
                     </div>
 
 
-                    <div
-                        class="data-box">
+                    <div class="data-box">
 
-                        Цена стены
-
-                        <strong>
-
-                            ${priceFormat(
-                                s.wall.price
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div
-                        class="data-box">
-
-                        Относительный размер
+                        Relative
 
                         <strong>
 
-                            ${s.wall.ratio.toFixed(
+                            ${level.maxRatio.toFixed(
                                 1
                             )}x
 
@@ -2507,23 +3747,93 @@ function renderSignals() {
                     </div>
 
 
-                    <div
-                        class="data-box">
+                    <div class="data-box">
 
-                        Стена живёт
+                        Stability
 
                         <strong>
 
-                            ${(s.age / 1000)
-                                .toFixed(1)} сек
+                            ${h.stability.toFixed(
+                                0
+                            )}%
 
                         </strong>
 
                     </div>
 
 
-                    <div
-                        class="data-box">
+                    <div class="data-box">
+
+                        Level Score
+
+                        <strong>
+
+                            ${h.score}/100
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="data-box">
+
+                        Tests
+
+                        <strong>
+
+                            ${h.tests}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="data-box">
+
+                        Refill
+
+                        <strong>
+
+                            ${h.refill.toFixed(
+                                0
+                            )}%
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="data-box">
+
+                        Absorption
+
+                        <strong>
+
+                            ${h.absorptionScore.toFixed(
+                                0
+                            )}%
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="data-box">
+
+                        До уровня
+
+                        <strong>
+
+                            ${percent(
+                                distance
+                            )}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="data-box">
 
                         Aggressive BUY
 
@@ -2531,7 +3841,7 @@ function renderSignals() {
                             class="green">
 
                             $${money(
-                                s.flow.buy
+                                flow.buy
                             )}
 
                         </strong>
@@ -2539,8 +3849,7 @@ function renderSignals() {
                     </div>
 
 
-                    <div
-                        class="data-box">
+                    <div class="data-box">
 
                         Aggressive SELL
 
@@ -2548,7 +3857,7 @@ function renderSignals() {
                             class="red">
 
                             $${money(
-                                s.flow.sell
+                                flow.sell
                             )}
 
                         </strong>
@@ -2556,15 +3865,14 @@ function renderSignals() {
                     </div>
 
 
-                    <div
-                        class="data-box">
+                    <div class="data-box">
 
-                        BUY/SELL imbalance
+                        Flow imbalance
 
                         <strong>
 
                             ${percent(
-                                s.flow.imbalance
+                                flow.imbalance
                             )}
 
                         </strong>
@@ -2572,15 +3880,14 @@ function renderSignals() {
                     </div>
 
 
-                    <div
-                        class="data-box">
+                    <div class="data-box">
 
-                        Цена / 1 мин
+                        Reaction
 
                         <strong>
 
                             ${percent(
-                                s.priceChange
+                                s.priceReaction
                             )}
 
                         </strong>
@@ -2590,32 +3897,35 @@ function renderSignals() {
                 </div>
 
 
-                <div
-                    class="reason">
+                <div class="reason">
 
-                    💡 ${reason}
+                    💡 ${s.reason}
 
-                    <br>
+                    <br><br>
 
-                    📍 До стены:
-
-                    ${percent(
-                        s.wall.distance
-                    )}
-
-                    <br>
-
-                    ⚡ Aggressive flow:
+                    ⚡ Поток:
 
                     $${money(
                         alignedFlow
                     )}
 
-                    vs
+                    <br>
 
-                    $${money(
-                        oppositeFlow
-                    )}
+                    🧱 Уровень:
+
+                    ${
+                        level.side === "Buy"
+                        ? "лимитные покупки"
+                        : "лимитные продажи"
+                    }
+
+                    <br>
+
+                    ⏱ Уровень наблюдается:
+
+                    ${(
+                        h.age / 1000
+                    ).toFixed(1)} сек
 
                 </div>
 
@@ -2673,14 +3983,6 @@ function connectWebSocket() {
             "#27ae60";
 
 
-        /*
-         * Формируем подписки:
-         *
-         * orderbook.50.SYMBOL
-         *
-         * publicTrade.SYMBOL
-         */
-
         const args = [];
 
 
@@ -2701,18 +4003,41 @@ function connectWebSocket() {
 
 
         /*
-         * Подписка.
+         * Bybit допускает несколько
+         * subscription requests.
+         *
+         * Разбиваем подписки пачками,
+         * чтобы не отправлять огромный
+         * JSON одним сообщением.
          */
 
-        ws.send(
-            JSON.stringify({
+        const chunkSize = 20;
 
-                op: "subscribe",
 
-                args: args
+        for (
+            let i = 0;
+            i < args.length;
+            i += chunkSize
+        ) {
 
-            })
-        );
+            const chunk =
+                args.slice(
+                    i,
+                    i + chunkSize
+                );
+
+
+            ws.send(
+                JSON.stringify({
+
+                    op: "subscribe",
+
+                    args: chunk
+
+                })
+            );
+
+        }
 
     };
 
@@ -2727,18 +4052,11 @@ function connectWebSocket() {
                 );
 
 
-            /*
-             * PONG
-             */
-
             if (
                 data.op ===
                 "pong"
-            ) {
-
+            )
                 return;
-
-            }
 
 
             if (
@@ -2752,17 +4070,13 @@ function connectWebSocket() {
              */
 
             if (
-                data.topic
-                    .startsWith(
-                        "orderbook."
-                    )
+                data.topic.startsWith(
+                    "orderbook."
+                )
             ) {
 
                 const parts =
-                    data.topic
-                        .split(
-                            "."
-                        );
+                    data.topic.split(".");
 
 
                 const symbol =
@@ -2802,10 +4116,9 @@ function connectWebSocket() {
              */
 
             else if (
-                data.topic
-                    .startsWith(
-                        "publicTrade."
-                    )
+                data.topic.startsWith(
+                    "publicTrade."
+                )
             ) {
 
                 processTrade(
@@ -2813,7 +4126,6 @@ function connectWebSocket() {
                 );
 
             }
-
 
         } catch (error) {
 
@@ -2881,26 +4193,31 @@ function connectWebSocket() {
 
 function startPing() {
 
-    setInterval(
-        () => {
+    if (pingTimer)
+        clearInterval(pingTimer);
 
-            if (
-                ws &&
-                ws.readyState ===
-                WebSocket.OPEN
-            ) {
 
-                ws.send(
-                    JSON.stringify({
-                        op: "ping"
-                    })
-                );
+    pingTimer =
+        setInterval(
+            () => {
 
-            }
+                if (
+                    ws &&
+                    ws.readyState ===
+                    WebSocket.OPEN
+                ) {
 
-        },
-        20000
-    );
+                    ws.send(
+                        JSON.stringify({
+                            op: "ping"
+                        })
+                    );
+
+                }
+
+            },
+            20000
+        );
 
 }
 
@@ -2922,9 +4239,7 @@ async function loadSymbols() {
 
         const response =
             await fetch(
-
                 "https://api.bybit.com/v5/market/tickers?category=linear"
-
             );
 
 
@@ -2952,10 +4267,9 @@ async function loadSymbols() {
                 .filter(
                     item =>
                         item.symbol &&
-                        item.symbol
-                            .endsWith(
-                                "USDT"
-                            ) &&
+                        item.symbol.endsWith(
+                            "USDT"
+                        ) &&
                         parseFloat(
                             item.turnover24h
                         ) > 0
@@ -2989,7 +4303,6 @@ async function loadSymbols() {
                     item.symbol
                 );
 
-
                 symbolRanks.set(
                     item.symbol,
                     index + 1
@@ -3009,7 +4322,7 @@ async function loadSymbols() {
     } catch (error) {
 
         console.error(
-            "TOP loading error:",
+            "TOP error:",
             error
         );
 
@@ -3054,31 +4367,21 @@ async function startScanner() {
     }
 
 
-    /*
-     * Очищаем состояние.
-     */
-
     books.clear();
 
     trades.clear();
 
-    walls.clear();
+    levels.clear();
 
     signals.clear();
 
-    wallHistory.clear();
+    levelHistory.clear();
 
+    scenarios.clear();
 
-    /*
-     * Подключение.
-     */
 
     connectWebSocket();
 
-
-    /*
-     * Анализ.
-     */
 
     analysisTimer =
         setInterval(
@@ -3087,20 +4390,12 @@ async function startScanner() {
         );
 
 
-    /*
-     * Интерфейс.
-     */
-
     uiTimer =
         setInterval(
             renderSignals,
             UI_INTERVAL
         );
 
-
-    /*
-     * Обновление TOP.
-     */
 
     symbolRefreshTimer =
         setInterval(
@@ -3112,15 +4407,22 @@ async function startScanner() {
 
                 trades.clear();
 
-                wallHistory.clear();
+                levels.clear();
 
                 signals.clear();
+
+                levelHistory.clear();
+
+                scenarios.clear();
 
                 connectWebSocket();
 
             },
             SYMBOL_REFRESH
         );
+
+
+    startPing();
 
 }
 
@@ -3215,7 +4517,9 @@ function clearSignals() {
 
     signals.clear();
 
-    signalCounter = 0;
+    levelHistory.clear();
+
+    scenarios.clear();
 
     renderSignals();
 
@@ -3223,14 +4527,14 @@ function clearSignals() {
 
 
 /* =====================================================
-   INITIALIZATION
+   INIT
 ===================================================== */
 
 startPing();
 
 
 console.log(
-    "🐋 Bybit Whale Flow Scanner loaded"
+    "🎯 Bybit Level Scanner PRO loaded"
 );
 
 console.log(
@@ -3239,17 +4543,23 @@ console.log(
 );
 
 console.log(
-    "OrderBook:",
+    "OrderBook depth:",
     ORDERBOOK_DEPTH
 );
 
 console.log(
-    "Base thresholds:",
-    BASE_THRESHOLDS
+    "Level engine: ON"
+);
+
+console.log(
+    "Absorption engine: ON"
+);
+
+console.log(
+    "Reaction engine: ON"
 );
 
 </script>
 
 </body>
-
 </html>
