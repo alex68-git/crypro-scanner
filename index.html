@@ -6,12 +6,9 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width,
-               initial-scale=1.0,
-               maximum-scale=1.0,
-               user-scalable=no">
+      content="width=device-width, initial-scale=1.0">
 
-<title>Bybit Whale Flow Scanner PRO</title>
+<title>Bybit Whale Flow Scanner</title>
 
 <style>
 
@@ -19,12 +16,16 @@
     box-sizing: border-box;
 }
 
-html,
 body {
+
     margin: 0;
-    padding: 0;
+
+    padding: 15px;
+
     background: #0b0e11;
+
     color: #eaecef;
+
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -33,228 +34,363 @@ body {
         sans-serif;
 }
 
-body {
-    padding: 12px;
-    -webkit-overflow-scrolling: touch;
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+
+    background: #1e2329;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    margin-bottom: 15px;
+}
+
+h1 {
+
+    font-size: 20px;
+
+    margin: 0 0 15px 0;
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+.controls {
+
+    display: flex;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 12px;
 }
 
 button,
 select {
+
     border: none;
-    border-radius: 9px;
-    padding: 11px 14px;
-    font-weight: 700;
-    font-size: 13px;
-    -webkit-appearance: none;
+
+    border-radius: 8px;
+
+    padding: 10px 14px;
+
+    font-weight: bold;
+
+    cursor: pointer;
 }
 
 button {
+
     background: #f7931a;
-    color: #111;
+
+    color: #1e2329;
 }
 
 button.stop {
+
     background: #e74c3c;
+
     color: white;
 }
 
 button.clear {
-    background: #444;
-    color: white;
-}
 
-button:active {
-    transform: scale(.97);
+    background: #555;
+
+    color: white;
 }
 
 select {
+
     background: #2b3139;
+
     color: white;
 }
 
-.header {
-    background: #1e2329;
-    padding: 14px;
-    border-radius: 13px;
-    margin-bottom: 12px;
-}
 
-h1 {
-    font-size: 19px;
-    margin: 0 0 13px 0;
-}
-
-.controls {
-    display: flex;
-    gap: 7px;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-}
-
-.control-group {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 11px;
-    color: #848e9c;
-}
+/* =========================
+   STATUS
+========================= */
 
 .status {
-    font-size: 12px;
+
     color: #848e9c;
-    margin-top: 7px;
+
+    font-size: 13px;
+
+    margin-top: 8px;
 }
 
+
+/* =========================
+   STATS
+========================= */
+
 .stats {
+
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-    margin-top: 10px;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 8px;
+
+    margin-top: 12px;
 }
 
 .stat {
+
     background: #161a1e;
+
     border-radius: 8px;
-    padding: 8px 4px;
+
+    padding: 9px;
+
     text-align: center;
-    font-size: 10px;
-    color: #848e9c;
+
+    font-size: 11px;
 }
 
 .stat-value {
+
     display: block;
-    font-size: 14px;
-    font-weight: 800;
-    margin-top: 3px;
-    color: #eaecef;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    margin-top: 4px;
 }
+
+
+/* =========================
+   SIGNAL LIST
+========================= */
 
 .section-title {
+
     color: #848e9c;
-    font-size: 13px;
-    margin: 13px 0 8px;
+
+    font-size: 14px;
+
+    margin: 15px 0 8px;
 }
+
 
 .signals {
-    height: 68vh;
-    min-height: 350px;
+
+    height: 70vh;
+
+    min-height: 400px;
+
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
+
+/* =========================
+   SIGNAL CARD
+========================= */
+
 .signal {
+
     background: #1e2329;
+
     border-radius: 11px;
-    padding: 12px;
-    margin-bottom: 8px;
+
+    padding: 13px;
+
+    margin-bottom: 9px;
+
     border-left: 5px solid #555;
 }
 
 .signal.long {
+
     border-left-color: #27ae60;
 }
 
 .signal.short {
+
     border-left-color: #e74c3c;
 }
 
 .signal.breakout {
+
     border-left-color: #f7931a;
 }
 
+
+/* =========================
+   CARD TOP
+========================= */
+
 .signal-top {
+
     display: flex;
-    justify-content: space-between;
+
+    justify-content:
+        space-between;
+
     align-items: center;
 }
 
 .symbol {
-    font-size: 16px;
-    font-weight: 800;
+
+    font-size: 17px;
+
+    font-weight: bold;
 }
 
 .direction {
-    font-size: 12px;
-    font-weight: 800;
+
+    font-weight: bold;
+
+    font-size: 13px;
 }
+
+
+/* =========================
+   SCORE
+========================= */
 
 .score {
+
     font-size: 21px;
-    font-weight: 900;
-    margin-top: 4px;
+
+    font-weight: bold;
+
+    margin-top: 5px;
 }
 
+
+/* =========================
+   DATA GRID
+========================= */
+
 .data-grid {
+
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
-    margin-top: 9px;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 7px;
+
+    margin-top: 10px;
 }
 
 .data-box {
+
     background: #161a1e;
-    padding: 7px;
+
+    padding: 8px;
+
     border-radius: 7px;
-    font-size: 10px;
+
+    font-size: 11px;
+
     color: #848e9c;
 }
 
 .data-box strong {
+
     display: block;
+
     color: #eaecef;
-    font-size: 12px;
+
+    font-size: 13px;
+
     margin-top: 3px;
 }
 
+
+/* =========================
+   REASON
+========================= */
+
 .reason {
-    margin-top: 8px;
+
+    margin-top: 9px;
+
     padding: 8px;
+
     border-radius: 7px;
+
     background: #161a1e;
-    font-size: 11px;
+
+    font-size: 12px;
+
     line-height: 1.5;
 }
 
+
+/* =========================
+   EMPTY
+========================= */
+
 .empty {
+
     text-align: center;
+
     color: #848e9c;
-    padding: 55px 15px;
+
+    padding: 60px 15px;
 }
 
+
+/* =========================
+   COLORS
+========================= */
+
 .green {
-    color: #27ae60 !important;
+
+    color: #27ae60;
 }
 
 .red {
-    color: #e74c3c !important;
+
+    color: #e74c3c;
 }
 
 .orange {
-    color: #f7931a !important;
+
+    color: #f7931a;
 }
 
 .blue {
-    color: #3498db !important;
+
+    color: #3498db;
 }
 
 .gray {
+
     color: #848e9c;
 }
 
-.warning {
-    color: #f7931a;
-    font-size: 11px;
-    margin-top: 5px;
-}
+
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 600px) {
 
     .stats {
-        grid-template-columns: repeat(2, 1fr);
+
+        grid-template-columns:
+            repeat(2, 1fr);
     }
 
     .signals {
-        height: 64vh;
+
+        height: 65vh;
     }
 
 }
@@ -267,209 +403,181 @@ h1 {
 <body>
 
 
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
 <div class="header">
 
-<h1>
-🐋 Bybit Whale Flow Scanner PRO
-</h1>
+    <h1>
+        🐋 Bybit Whale Flow Scanner
+    </h1>
 
 
-<div class="controls">
+    <div class="controls">
 
-<button onclick="startScanner()">
-▶ Запустить
-</button>
+        <button onclick="startScanner()">
+            ▶ Запустить
+        </button>
 
-<button
-    class="stop"
-    onclick="stopScanner()">
 
-⏹ Стоп
+        <button
+            class="stop"
+            onclick="stopScanner()">
 
-</button>
+            ⏹ Стоп
 
-<button
-    class="clear"
-    onclick="clearSignals()">
+        </button>
 
-🗑 Очистить
 
-</button>
+        <button
+            class="clear"
+            onclick="clearSignals()">
+
+            🗑 Очистить
+
+        </button>
+
+    </div>
+
+
+    <div class="controls">
+
+        <label>
+
+            Подтверждение стены:
+
+            <select id="wallAge">
+
+                <option value="3">
+                    3 сек
+                </option>
+
+                <option value="5"
+                        selected>
+                    5 сек
+                </option>
+
+                <option value="10">
+                    10 сек
+                </option>
+
+            </select>
+
+        </label>
+
+
+        <label>
+
+            Минимальный Score:
+
+            <select id="minScore">
+
+                <option value="60">
+                    60
+                </option>
+
+                <option value="70"
+                        selected>
+                    70
+                </option>
+
+                <option value="80">
+                    80
+                </option>
+
+            </select>
+
+        </label>
+
+    </div>
+
+
+    <div class="status">
+
+        Статус:
+
+        <span id="status">
+            Остановлен
+        </span>
+
+    </div>
+
+
+    <div class="stats">
+
+
+        <div class="stat">
+
+            TOP
+
+            <span
+                id="coinCount"
+                class="stat-value">
+
+                0
+
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            WS
+
+            <span
+                id="wsStatus"
+                class="stat-value">
+
+                OFF
+
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            Кандидатов
+
+            <span
+                id="candidateCount"
+                class="stat-value">
+
+                0
+
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            Сигналов
+
+            <span
+                id="signalCount"
+                class="stat-value">
+
+                0
+
+            </span>
+
+        </div>
+
+    </div>
 
 </div>
 
 
-<div class="controls">
-
-
-<div class="control-group">
-
-<label>
-Возраст стены
-</label>
-
-<select id="wallAge">
-
-<option value="3">
-3 сек
-</option>
-
-<option value="5" selected>
-5 сек
-</option>
-
-<option value="8">
-8 сек
-</option>
-
-<option value="10">
-10 сек
-</option>
-
-</select>
-
-</div>
-
-
-<div class="control-group">
-
-<label>
-Минимальный Score
-</label>
-
-<select id="minScore">
-
-<option value="70">
-70
-</option>
-
-<option value="75" selected>
-75
-</option>
-
-<option value="80">
-80
-</option>
-
-<option value="85">
-85
-</option>
-
-</select>
-
-</div>
-
-
-<div class="control-group">
-
-<label>
-Режим
-</label>
-
-<select id="scanMode">
-
-<option value="balanced" selected>
-Balanced
-</option>
-
-<option value="strict">
-Strict
-</option>
-
-</select>
-
-</div>
-
-</div>
-
-
-<div class="status">
-
-Статус:
-
-<span id="status">
-Остановлен
-</span>
-
-</div>
-
-<div
-    id="dataWarning"
-    class="warning">
-</div>
-
-
-<div class="stats">
-
-
-<div class="stat">
-
-МОНЕТ
-
-<span
-    id="coinCount"
-    class="stat-value">
-
-0
-
-</span>
-
-</div>
-
-
-<div class="stat">
-
-WS
-
-<span
-    id="wsStatus"
-    class="stat-value">
-
-OFF
-
-</span>
-
-</div>
-
-
-<div class="stat">
-
-КАНДИДАТЫ
-
-<span
-    id="candidateCount"
-    class="stat-value">
-
-0
-
-</span>
-
-</div>
-
-
-<div class="stat">
-
-СИГНАЛЫ
-
-<span
-    id="signalCount"
-    class="stat-value">
-
-0
-
-</span>
-
-</div>
-
-
-</div>
-
-</div>
-
+<!-- =====================================================
+     SIGNALS
+===================================================== -->
 
 <div class="section-title">
 
-🔥 Крупнейшие подтверждённые торговые ситуации
+    🔥 Лучшие текущие торговые ситуации
 
 </div>
 
@@ -478,28 +586,32 @@ OFF
     id="signals"
     class="signals">
 
-<div class="empty">
+    <div
+        id="empty"
+        class="empty">
 
-Запусти сканер.
+        Запусти сканер.<br><br>
 
-<br><br>
+        Он будет искать:
 
-Ищем:
+        <br>
 
-<br>
-🟢 LONG
-<br>
-🔴 SHORT
-<br>
-🟠 BREAKOUT
+        🟢 LONG
 
-</div>
+        <br>
+
+        🔴 SHORT
+
+        <br>
+
+        🟠 BREAKOUT
+
+    </div>
 
 </div>
 
 
 <script>
-
 
 /* =====================================================
    CONFIG
@@ -507,187 +619,97 @@ OFF
 
 
 /*
- * ВАЖНО:
- *
- * Для iPhone не пытаемся держать 100 монет.
- *
- * 40 наиболее ликвидных USDT perpetual.
+ * Сколько монет сканируем
  */
 
-const MAX_SYMBOLS = 40;
+const MAX_SYMBOLS = 100;
 
 
 /*
- * Orderbook 50.
+ * Глубина стакана
  */
 
 const ORDERBOOK_DEPTH = 50;
 
 
 /*
- * Максимум отображаемых сигналов.
+ * TOP-10
  */
 
-const MAX_SIGNALS = 12;
+const MAX_SIGNALS = 10;
 
 
 /*
- * Анализ не чаще 2 раз в секунду.
+ * Как часто анализируем рынок
  */
 
-const ANALYSIS_INTERVAL = 700;
+const ANALYSIS_INTERVAL = 500;
 
 
 /*
- * UI.
+ * Как часто обновляем экран
  */
 
-const UI_INTERVAL = 1200;
+const UI_INTERVAL = 1000;
 
 
 /*
- * Обновляем TOP каждые 10 минут.
+ * Обновление TOP
  */
 
 const SYMBOL_REFRESH =
-    10 * 60 * 1000;
+    5 * 60 * 1000;
 
 
 /*
- * Максимальное расстояние стены.
+ * Минимальная относительная
+ * сила стены.
+ */
+
+const MIN_WALL_RATIO = 3;
+
+
+/*
+ * Минимальный размер стены
+ * по группам.
+ */
+
+const BASE_THRESHOLDS = {
+
+    top5: 500000,
+
+    top20: 300000,
+
+    top50: 150000,
+
+    top100: 50000
+
+};
+
+
+/*
+ * Максимальное расстояние стены
+ * от текущей цены.
+ *
+ * 0.8% достаточно для
+ * внутридневного поиска.
  */
 
 const MAX_WALL_DISTANCE = 0.008;
 
 
 /*
- * Окно aggressive flow.
+ * Окно агрессивных сделок.
  */
 
 const TRADE_WINDOW = 10000;
 
 
 /*
- * Окно цены.
+ * Окно движения цены.
  */
 
 const PRICE_WINDOW = 60000;
-
-
-/*
- * Минимальный relative wall ratio.
- *
- * Было 3x.
- *
- * Теперь 5x.
- */
-
-const MIN_WALL_RATIO = 5;
-
-
-/*
- * Минимальный absolute wall.
- *
- * Это базовый минимум.
- */
-
-const GLOBAL_MIN_WALL = 100000;
-
-
-/*
- * Минимальный aggressive flow
- * за 10 секунд.
- */
-
-const MIN_TRADE_FLOW = 75000;
-
-
-/*
- * Максимум сделок в памяти
- * на монету.
- */
-
-const MAX_TRADES_PER_SYMBOL = 400;
-
-
-/*
- * Максимум уровней orderbook
- * локально.
- */
-
-const MAX_BOOK_LEVELS = 70;
-
-
-/*
- * WebSocket subscribe batch.
- *
- * Мы сознательно делаем маленькие
- * пачки для стабильности.
- */
-
-const SUBSCRIBE_BATCH_SIZE = 10;
-
-
-/* =====================================================
-   ABSOLUTE THRESHOLDS
-===================================================== */
-
-
-/*
- * Порог зависит от ликвидности
- * актива.
- *
- * Это уже намного строже,
- * чем исходный вариант.
- */
-
-const LIQUIDITY_THRESHOLDS = {
-
-    top5: 1000000,
-
-    top10: 750000,
-
-    top20: 500000,
-
-    top30: 350000,
-
-    top40: 250000
-
-};
-
-
-/*
- * Специальный минимум
- * для самых крупных активов.
- *
- * Например:
- *
- * BTC / ETH / SOL
- */
-
-const MAJOR_THRESHOLDS = {
-
-    BTCUSDT: 2500000,
-
-    ETHUSDT: 1500000,
-
-    SOLUSDT: 750000,
-
-    XRPUSDT: 500000,
-
-    BNBUSDT: 600000,
-
-    DOGEUSDT: 500000,
-
-    ADAUSDT: 400000,
-
-    SUIUSDT: 350000,
-
-    AVAXUSDT: 350000,
-
-    LINKUSDT: 350000
-
-};
 
 
 /* =====================================================
@@ -700,63 +722,62 @@ let running = false;
 
 let reconnectTimer = null;
 
+let symbolRefreshTimer = null;
+
 let analysisTimer = null;
 
 let uiTimer = null;
 
-let symbolRefreshTimer = null;
-
-let pingTimer = null;
-
-let watchdogTimer = null;
-
 
 /*
- * Symbols.
+ * TOP-100
  */
 
 const symbols = [];
 
 const symbolRanks = new Map();
 
-const symbolTurnovers = new Map();
-
 
 /*
- * Books.
+ * Order books
  */
 
 const books = new Map();
 
 
 /*
- * Trades.
+ * Поток сделок
  */
 
 const trades = new Map();
 
 
 /*
- * Walls.
+ * Текущие стены
  */
 
-const wallHistory = new Map();
+const walls = new Map();
 
 
 /*
- * Signals.
+ * Сигналы
  */
 
 const signals = new Map();
 
 
 /*
- * Statistics.
+ * Для стабильности стены
  */
 
-let lastMarketMessage = 0;
+const wallHistory = new Map();
 
-let marketMessageCount = 0;
+
+/*
+ * Счётчик
+ */
+
+let signalCounter = 0;
 
 
 /* =====================================================
@@ -764,25 +785,34 @@ let marketMessageCount = 0;
 ===================================================== */
 
 const statusEl =
-    document.getElementById("status");
+    document.getElementById(
+        "status"
+    );
 
 const wsEl =
-    document.getElementById("wsStatus");
+    document.getElementById(
+        "wsStatus"
+    );
 
 const coinCountEl =
-    document.getElementById("coinCount");
+    document.getElementById(
+        "coinCount"
+    );
 
 const candidateCountEl =
-    document.getElementById("candidateCount");
+    document.getElementById(
+        "candidateCount"
+    );
 
 const signalCountEl =
-    document.getElementById("signalCount");
+    document.getElementById(
+        "signalCount"
+    );
 
 const signalsEl =
-    document.getElementById("signals");
-
-const dataWarningEl =
-    document.getElementById("dataWarning");
+    document.getElementById(
+        "signals"
+    );
 
 
 /* =====================================================
@@ -811,7 +841,8 @@ function money(value) {
 
 function priceFormat(value) {
 
-    const n = Number(value);
+    const n =
+        Number(value);
 
     if (n >= 1000)
         return n.toFixed(2);
@@ -827,124 +858,43 @@ function priceFormat(value) {
 function percent(value) {
 
     return (
-        Number(value) * 100
+        value * 100
     ).toFixed(2) + "%";
 
 }
 
 
-function clamp(
-    value,
-    min,
-    max
-) {
-
-    return Math.max(
-        min,
-        Math.min(max, value)
-    );
-
-}
-
-
 /* =====================================================
-   DYNAMIC WALL THRESHOLD
+   THRESHOLD
 ===================================================== */
 
 function getBaseThreshold(
     symbol
 ) {
 
-    /*
-     * Специальные активы.
-     */
-
-    if (
-        MAJOR_THRESHOLDS[symbol]
-    ) {
-
-        return MAJOR_THRESHOLDS[
-            symbol
-        ];
-
-    }
-
-
     const rank =
-        symbolRanks.get(symbol);
-
-
-    if (!rank) {
-
-        return 250000;
-
-    }
-
-
-    if (rank <= 5)
-        return LIQUIDITY_THRESHOLDS.top5;
-
-
-    if (rank <= 10)
-        return LIQUIDITY_THRESHOLDS.top10;
-
-
-    if (rank <= 20)
-        return LIQUIDITY_THRESHOLDS.top20;
-
-
-    if (rank <= 30)
-        return LIQUIDITY_THRESHOLDS.top30;
-
-
-    return LIQUIDITY_THRESHOLDS.top40;
-
-}
-
-
-/* =====================================================
-   DYNAMIC TURNOVER THRESHOLD
-===================================================== */
-
-function getDynamicThreshold(
-    symbol
-) {
-
-    const turnover =
-        symbolTurnovers.get(
-            symbol
-        ) || 0;
-
-
-    const base =
-        getBaseThreshold(
+        symbolRanks.get(
             symbol
         );
 
 
-    /*
-     * Чем выше суточный оборот,
-     * тем выше требуемая стена.
-     *
-     * turnover / 1000
-     *
-     * 0.002% от оборота.
-     */
-
-    const turnoverThreshold =
-        turnover * 0.000025;
+    if (!rank)
+        return 50000;
 
 
-    /*
-     * Не даём dynamic threshold
-     * стать слишком большим.
-     */
+    if (rank <= 5)
+        return BASE_THRESHOLDS.top5;
 
-    return Math.max(
-        GLOBAL_MIN_WALL,
-        base,
-        turnoverThreshold
-    );
+
+    if (rank <= 20)
+        return BASE_THRESHOLDS.top20;
+
+
+    if (rank <= 50)
+        return BASE_THRESHOLDS.top50;
+
+
+    return BASE_THRESHOLDS.top100;
 
 }
 
@@ -962,8 +912,7 @@ function createBook(
         {
             bids: new Map(),
             asks: new Map(),
-            lastPrice: null,
-            lastUpdate: 0
+            lastPrice: null
         }
     );
 
@@ -971,7 +920,7 @@ function createBook(
 
 
 /* =====================================================
-   APPLY SNAPSHOT
+   SNAPSHOT
 ===================================================== */
 
 function applySnapshot(
@@ -979,25 +928,32 @@ function applySnapshot(
     data
 ) {
 
-    createBook(symbol);
+    createBook(
+        symbol
+    );
+
 
     const book =
-        books.get(symbol);
+        books.get(
+            symbol
+        );
 
 
-    if (
-        Array.isArray(data.b)
-    ) {
+    if (Array.isArray(data.b)) {
 
         for (
             const order of data.b
         ) {
 
             const price =
-                Number(order[0]);
+                parseFloat(
+                    order[0]
+                );
 
             const qty =
-                Number(order[1]);
+                parseFloat(
+                    order[1]
+                );
 
 
             if (
@@ -1017,19 +973,21 @@ function applySnapshot(
     }
 
 
-    if (
-        Array.isArray(data.a)
-    ) {
+    if (Array.isArray(data.a)) {
 
         for (
             const order of data.a
         ) {
 
             const price =
-                Number(order[0]);
+                parseFloat(
+                    order[0]
+                );
 
             const qty =
-                Number(order[1]);
+                parseFloat(
+                    order[1]
+                );
 
 
             if (
@@ -1048,15 +1006,11 @@ function applySnapshot(
 
     }
 
-
-    book.lastUpdate =
-        now();
-
 }
 
 
 /* =====================================================
-   APPLY DELTA
+   DELTA
 ===================================================== */
 
 function applyDelta(
@@ -1065,26 +1019,30 @@ function applyDelta(
 ) {
 
     const book =
-        books.get(symbol);
+        books.get(
+            symbol
+        );
 
 
     if (!book)
         return;
 
 
-    if (
-        Array.isArray(data.b)
-    ) {
+    if (Array.isArray(data.b)) {
 
         for (
             const order of data.b
         ) {
 
             const price =
-                Number(order[0]);
+                parseFloat(
+                    order[0]
+                );
 
             const qty =
-                Number(order[1]);
+                parseFloat(
+                    order[1]
+                );
 
 
             if (qty === 0) {
@@ -1107,19 +1065,21 @@ function applyDelta(
     }
 
 
-    if (
-        Array.isArray(data.a)
-    ) {
+    if (Array.isArray(data.a)) {
 
         for (
             const order of data.a
         ) {
 
             const price =
-                Number(order[0]);
+                parseFloat(
+                    order[0]
+                );
 
             const qty =
-                Number(order[1]);
+                parseFloat(
+                    order[1]
+                );
 
 
             if (qty === 0) {
@@ -1141,95 +1101,18 @@ function applyDelta(
 
     }
 
-
-    /*
-     * Защита памяти.
-     */
-
-    if (
-        book.bids.size >
-        MAX_BOOK_LEVELS
-    ) {
-
-        trimBook(
-            book.bids,
-            true
-        );
-
-    }
-
-
-    if (
-        book.asks.size >
-        MAX_BOOK_LEVELS
-    ) {
-
-        trimBook(
-            book.asks,
-            false
-        );
-
-    }
-
-
-    book.lastUpdate =
-        now();
-
 }
 
 
 /* =====================================================
-   TRIM BOOK
-===================================================== */
-
-function trimBook(
-    map,
-    bids
-) {
-
-    const entries =
-        [...map.entries()]
-            .sort(
-                (a, b) =>
-                    bids
-                        ? b[0] - a[0]
-                        : a[0] - b[0]
-            );
-
-
-    map.clear();
-
-
-    entries
-        .slice(
-            0,
-            MAX_BOOK_LEVELS
-        )
-        .forEach(
-            ([price, qty]) => {
-
-                map.set(
-                    price,
-                    qty
-                );
-
-            }
-        );
-
-}
-
-
-/* =====================================================
-   PROCESS TRADES
+   TRADE
 ===================================================== */
 
 function processTrade(
     data
 ) {
 
-    if (
-        !Array.isArray(data)
-    )
+    if (!Array.isArray(data))
         return;
 
 
@@ -1243,15 +1126,23 @@ function processTrade(
         const side =
             trade.S;
 
+
         const price =
-            Number(trade.p);
+            parseFloat(
+                trade.p
+            );
+
 
         const qty =
-            Number(trade.v);
+            parseFloat(
+                trade.v
+            );
+
 
         const timestamp =
-            Number(trade.T) ||
-            now();
+            Number(
+                trade.T
+            ) || now();
 
 
         if (
@@ -1266,9 +1157,7 @@ function processTrade(
             price * qty;
 
 
-        if (
-            !trades.has(symbol)
-        ) {
+        if (!trades.has(symbol)) {
 
             trades.set(
                 symbol,
@@ -1279,26 +1168,34 @@ function processTrade(
 
 
         const list =
-            trades.get(symbol);
+            trades.get(
+                symbol
+            );
 
 
         list.push({
 
             time: timestamp,
 
-            side,
+            side: side,
 
-            price,
+            price: price,
 
-            qty,
+            qty: qty,
 
-            value
+            value: value
 
         });
 
 
+        /*
+         * Последняя цена
+         */
+
         const book =
-            books.get(symbol);
+            books.get(
+                symbol
+            );
 
 
         if (book) {
@@ -1310,7 +1207,7 @@ function processTrade(
 
 
         /*
-         * Удаляем старые.
+         * Удаляем старые сделки
          */
 
         const cutoff =
@@ -1320,31 +1217,10 @@ function processTrade(
 
         while (
             list.length &&
-            (
-                list[0].time <
-                cutoff
-            )
+            list[0].time < cutoff
         ) {
 
             list.shift();
-
-        }
-
-
-        /*
-         * Ограничение памяти.
-         */
-
-        if (
-            list.length >
-            MAX_TRADES_PER_SYMBOL
-        ) {
-
-            list.splice(
-                0,
-                list.length -
-                MAX_TRADES_PER_SYMBOL
-            );
 
         }
 
@@ -1362,7 +1238,9 @@ function getTradeFlow(
 ) {
 
     const list =
-        trades.get(symbol) || [];
+        trades.get(
+            symbol
+        ) || [];
 
 
     const cutoff =
@@ -1380,8 +1258,7 @@ function getTradeFlow(
 
 
     for (
-        let i =
-            list.length - 1;
+        let i = list.length - 1;
 
         i >= 0;
 
@@ -1393,8 +1270,7 @@ function getTradeFlow(
 
 
         if (
-            t.time <
-            cutoff
+            t.time < cutoff
         )
             break;
 
@@ -1422,12 +1298,17 @@ function getTradeFlow(
         buy + sell;
 
 
-    const imbalance =
-        total > 0
-            ? (
+    let imbalance = 0;
+
+
+    if (total > 0) {
+
+        imbalance =
+            (
                 buy - sell
-            ) / total
-            : 0;
+            ) / total;
+
+    }
 
 
     return {
@@ -1458,12 +1339,12 @@ function getPriceChange(
 ) {
 
     const list =
-        trades.get(symbol) || [];
+        trades.get(
+            symbol
+        ) || [];
 
 
-    if (
-        list.length < 2
-    )
+    if (list.length < 2)
         return 0;
 
 
@@ -1488,8 +1369,7 @@ function getPriceChange(
     ) {
 
         if (
-            list[i].time >=
-            cutoff
+            list[i].time >= cutoff
         ) {
 
             old =
@@ -1520,6 +1400,16 @@ function getPriceChange(
 /* =====================================================
    LOCAL LIQUIDITY
 ===================================================== */
+
+
+/*
+ * Берём ближайшие уровни
+ * к текущей цене.
+ *
+ * Это позволяет сравнивать
+ * стену с обычной ликвидностью
+ * конкретного альта.
+ */
 
 function getLocalLiquidity(
     book,
@@ -1583,28 +1473,27 @@ function getLocalLiquidity(
 
 
     if (
-        values.length < 3
+        values.length === 0
     )
         return 1;
 
 
     values.sort(
-        (a, b) =>
-            a - b
+        (a, b) => a - b
     );
 
 
     /*
-     * Вместо одной случайной
-     * медианы используем
-     * median.
+     * Медиана.
      */
 
-    return values[
+    const middle =
         Math.floor(
             values.length / 2
-        )
-    ];
+        );
+
+
+    return values[middle];
 
 }
 
@@ -1618,19 +1507,26 @@ function findWalls(
 ) {
 
     const book =
-        books.get(symbol);
+        books.get(
+            symbol
+        );
 
 
     if (!book)
         return [];
 
 
+    /*
+     * Последняя цена.
+     */
+
     let currentPrice =
         book.lastPrice;
 
 
     /*
-     * Fallback mid price.
+     * Если сделок ещё нет,
+     * берём середину best bid/ask.
      */
 
     if (!currentPrice) {
@@ -1638,15 +1534,13 @@ function findWalls(
         const bids =
             [...book.bids.keys()]
                 .sort(
-                    (a, b) =>
-                        b - a
+                    (a, b) => b - a
                 );
 
         const asks =
             [...book.asks.keys()]
                 .sort(
-                    (a, b) =>
-                        a - b
+                    (a, b) => a - b
                 );
 
 
@@ -1672,14 +1566,9 @@ function findWalls(
 
     const result = [];
 
-    const threshold =
-        getDynamicThreshold(
-            symbol
-        );
-
 
     /*
-     * BUY WALL
+     * BUY WALLS
      */
 
     for (
@@ -1710,13 +1599,6 @@ function findWalls(
             price * qty;
 
 
-        if (
-            value <
-            threshold
-        )
-            continue;
-
-
         const local =
             getLocalLiquidity(
                 book,
@@ -1733,38 +1615,44 @@ function findWalls(
             );
 
 
+        const threshold =
+            getBaseThreshold(
+                symbol
+            );
+
+
         if (
-            ratio <
-            MIN_WALL_RATIO
-        )
-            continue;
+            value >= threshold &&
+            ratio >= MIN_WALL_RATIO
+        ) {
 
+            result.push({
 
-        result.push({
+                symbol,
 
-            symbol,
+                side: "Buy",
 
-            side: "Buy",
+                price,
 
-            price,
+                qty,
 
-            qty,
+                value,
 
-            value,
+                distance,
 
-            distance,
+                ratio,
 
-            ratio,
+                currentPrice
 
-            currentPrice
+            });
 
-        });
+        }
 
     }
 
 
     /*
-     * SELL WALL
+     * SELL WALLS
      */
 
     for (
@@ -1795,13 +1683,6 @@ function findWalls(
             price * qty;
 
 
-        if (
-            value <
-            threshold
-        )
-            continue;
-
-
         const local =
             getLocalLiquidity(
                 book,
@@ -1818,35 +1699,45 @@ function findWalls(
             );
 
 
+        const threshold =
+            getBaseThreshold(
+                symbol
+            );
+
+
         if (
-            ratio <
-            MIN_WALL_RATIO
-        )
-            continue;
+            value >= threshold &&
+            ratio >= MIN_WALL_RATIO
+        ) {
 
+            result.push({
 
-        result.push({
+                symbol,
 
-            symbol,
+                side: "Sell",
 
-            side: "Sell",
+                price,
 
-            price,
+                qty,
 
-            qty,
+                value,
 
-            value,
+                distance,
 
-            distance,
+                ratio,
 
-            ratio,
+                currentPrice
 
-            currentPrice
+            });
 
-        });
+        }
 
     }
 
+
+    /*
+     * Самые крупные.
+     */
 
     result.sort(
         (a, b) =>
@@ -1857,44 +1748,22 @@ function findWalls(
 
     return result.slice(
         0,
-        5
+        6
     );
 
 }
 
 
 /* =====================================================
-   WALL HISTORY
+   WALL STABILITY
 ===================================================== */
 
 function updateWallHistory(
     wall
 ) {
 
-    /*
-     * Округляем цену, чтобы
-     * небольшие изменения уровня
-     * не создавали новую стену.
-     */
-
-    const precision =
-        wall.price >= 100
-            ? 1
-            : wall.price >= 1
-                ? 3
-                : 6;
-
-
-    const normalizedPrice =
-        Number(
-            wall.price.toFixed(
-                precision
-            )
-        );
-
-
     const key =
-        `${wall.symbol}_${wall.side}_${normalizedPrice}`;
+        `${wall.symbol}_${wall.side}_${wall.price}`;
 
 
     if (
@@ -1906,15 +1775,17 @@ function updateWallHistory(
             {
                 firstSeen: now(),
                 lastSeen: now(),
-                lastValue: wall.value,
-                key
+                lastValue:
+                    wall.value
             }
         );
 
     } else {
 
         const item =
-            wallHistory.get(key);
+            wallHistory.get(
+                key
+            );
 
 
         item.lastSeen =
@@ -1949,69 +1820,52 @@ function calculateScore(
 
 
     /*
-     * 1.
-     * Absolute size.
+     * 1. Размер стены
      *
-     * 25 points.
+     * Максимум 20
      */
-
-    const threshold =
-        getDynamicThreshold(
-            wall.symbol
-        );
-
-
-    const sizeRatio =
-        wall.value /
-        Math.max(
-            threshold,
-            1
-        );
-
 
     const sizeScore =
         Math.min(
-            25,
+            20,
             Math.log10(
                 Math.max(
-                    sizeRatio,
+                    wall.value,
                     1
-                )
-            ) * 20
+                ) /
+                50000
+            ) * 10
         );
 
 
-    score += sizeScore;
+    score +=
+        Math.max(
+            0,
+            sizeScore
+        );
 
 
     /*
-     * 2.
-     * Relative wall.
+     * 2. Relative wall ratio
      *
-     * 20 points.
+     * Максимум 20
      */
 
     const ratioScore =
         Math.min(
             20,
-            Math.max(
-                0,
-                (
-                    wall.ratio -
-                    4
-                ) * 3
-            )
+            wall.ratio * 5
         );
 
 
-    score += ratioScore;
+    score +=
+        ratioScore;
 
 
     /*
-     * 3.
-     * Age.
+     * 3. Возраст стены
      *
-     * 15 points.
+     * Максимум 15
      */
 
     const ageScore =
@@ -2021,14 +1875,31 @@ function calculateScore(
         );
 
 
-    score += ageScore;
+    score +=
+        ageScore;
 
 
     /*
-     * 4.
-     * Flow.
+     * 4. Агрессивный поток
      *
-     * 25 points.
+     * Максимум 25
+     */
+
+    const flowStrength =
+        Math.min(
+            1,
+            Math.abs(
+                flow.imbalance
+            )
+        );
+
+
+    /*
+     * Если BUY wall —
+     * нам нужны aggressive BUY.
+     *
+     * Если SELL wall —
+     * aggressive SELL.
      */
 
     const alignedFlow =
@@ -2050,10 +1921,9 @@ function calculateScore(
 
 
     /*
-     * 5.
-     * Price.
+     * 5. Цена
      *
-     * 15 points.
+     * Максимум 20
      */
 
     const alignedPrice =
@@ -2072,8 +1942,9 @@ function calculateScore(
 
     score +=
         Math.min(
-            15,
-            alignedPrice * 1000
+            20,
+            alignedPrice *
+            1000
         );
 
 
@@ -2086,7 +1957,7 @@ function calculateScore(
 
 
 /* =====================================================
-   SETUP
+   DETERMINE SETUP
 ===================================================== */
 
 function determineSetup(
@@ -2104,16 +1975,13 @@ function determineSetup(
     ) {
 
         /*
-         * Поддержка.
+         * Агрессивные покупки
+         * + цена растёт
          */
 
         if (
-            flow.total >=
-                MIN_TRADE_FLOW &&
-            flow.imbalance >=
-                0.15 &&
-            priceChange >=
-                -0.0005
+            flow.imbalance > 0.15 &&
+            priceChange > 0
         ) {
 
             return "LONG";
@@ -2122,18 +1990,19 @@ function determineSetup(
 
 
         /*
-         * Breakdown.
+         * Стена съедается
+         * и продавцы давят.
+         *
+         * Это потенциальный
+         * breakdown.
          */
 
         if (
-            flow.total >=
-                MIN_TRADE_FLOW &&
-            flow.imbalance <=
-                -0.25 &&
+            flow.imbalance < -0.20 &&
             priceChange < 0
         ) {
 
-            return "BREAKOUT";
+            return "SHORT";
 
         }
 
@@ -2149,16 +2018,13 @@ function determineSetup(
     ) {
 
         /*
-         * Resistance.
+         * Агрессивные продажи
+         * + цена падает
          */
 
         if (
-            flow.total >=
-                MIN_TRADE_FLOW &&
-            flow.imbalance <=
-                -0.15 &&
-            priceChange <=
-                0.0005
+            flow.imbalance < -0.15 &&
+            priceChange < 0
         ) {
 
             return "SHORT";
@@ -2167,18 +2033,16 @@ function determineSetup(
 
 
         /*
-         * Breakout вверх.
+         * Стена съедается
+         * покупателями.
          */
 
         if (
-            flow.total >=
-                MIN_TRADE_FLOW &&
-            flow.imbalance >=
-                0.25 &&
+            flow.imbalance > 0.20 &&
             priceChange > 0
         ) {
 
-            return "BREAKOUT";
+            return "LONG";
 
         }
 
@@ -2199,68 +2063,36 @@ function analyzeSymbol(
 ) {
 
     const book =
-        books.get(symbol);
+        books.get(
+            symbol
+        );
 
 
     if (!book)
         return;
 
 
-    /*
-     * Не анализируем
-     * полностью мёртвую книгу.
-     */
-
-    if (
-        now() -
-        book.lastUpdate >
-        10000
-    ) {
-
-        return;
-
-    }
-
-
-    const walls =
-        findWalls(symbol);
-
-
-    if (
-        walls.length === 0
-    )
-        return;
+    const wallsFound =
+        findWalls(
+            symbol
+        );
 
 
     const flow =
-        getTradeFlow(symbol);
+        getTradeFlow(
+            symbol
+        );
 
 
     const priceChange =
-        getPriceChange(symbol);
-
-
-    const requiredAge =
-        Number(
-            document
-                .getElementById(
-                    "wallAge"
-                )
-                .value
-        ) * 1000;
-
-
-    const strict =
-        document
-            .getElementById(
-                "scanMode"
-            )
-            .value ===
-        "strict";
+        getPriceChange(
+            symbol
+        );
 
 
     for (
-        const wall of walls
+        const wall
+        of wallsFound
     ) {
 
         const history =
@@ -2274,27 +2106,24 @@ function analyzeSymbol(
             history.firstSeen;
 
 
+        /*
+         * Не рассматриваем
+         * слишком свежую стену.
+         */
+
+        const requiredAge =
+            parseInt(
+                document
+                    .getElementById(
+                        "wallAge"
+                    )
+                    .value
+            ) * 1000;
+
+
         if (
             age <
             requiredAge
-        )
-            continue;
-
-
-        /*
-         * Strict режим.
-         */
-
-        const minimumFlow =
-            strict
-                ? MIN_TRADE_FLOW *
-                    1.5
-                : MIN_TRADE_FLOW;
-
-
-        if (
-            flow.total <
-            minimumFlow
         )
             continue;
 
@@ -2306,6 +2135,11 @@ function analyzeSymbol(
                 priceChange
             );
 
+
+        /*
+         * Если направления нет —
+         * просто наблюдаем.
+         */
 
         if (!setup)
             continue;
@@ -2321,7 +2155,7 @@ function analyzeSymbol(
 
 
         const minScore =
-            Number(
+            parseInt(
                 document
                     .getElementById(
                         "minScore"
@@ -2338,7 +2172,7 @@ function analyzeSymbol(
 
 
         const key =
-            `${wall.symbol}_${wall.side}_${wall.price}`;
+            `${symbol}_${wall.side}_${wall.price}`;
 
 
         signals.set(
@@ -2366,11 +2200,6 @@ function analyzeSymbol(
 
                 age,
 
-                threshold:
-                    getDynamicThreshold(
-                        symbol
-                    ),
-
                 updated:
                     now()
 
@@ -2392,14 +2221,9 @@ function analyzeAll() {
         return;
 
 
-    /*
-     * Вместо тяжёлой работы
-     * каждый тик анализируем
-     * только активные книги.
-     */
-
     for (
-        const symbol of symbols
+        const symbol
+        of symbols
     ) {
 
         analyzeSymbol(
@@ -2410,12 +2234,12 @@ function analyzeAll() {
 
 
     /*
-     * Сигнал живёт 6 секунд.
+     * Удаляем старые сигналы.
      */
 
     const expiry =
         now() -
-        6000;
+        5000;
 
 
     for (
@@ -2432,37 +2256,6 @@ function analyzeAll() {
         ) {
 
             signals.delete(
-                key
-            );
-
-        }
-
-    }
-
-
-    /*
-     * Чистим старые стены.
-     */
-
-    const historyExpiry =
-        now() -
-        30000;
-
-
-    for (
-        const [
-            key,
-            item
-        ]
-        of wallHistory
-    ) {
-
-        if (
-            item.lastSeen <
-            historyExpiry
-        ) {
-
-            wallHistory.delete(
                 key
             );
 
@@ -2512,16 +2305,8 @@ function renderSignals() {
 
                 <br><br>
 
-                Сейчас нет подтверждённой
-                whale-ситуации.
-
-                <br><br>
-
-                Минимум стены:
-
-                ${money(
-                    getGlobalDisplayThreshold()
-                )}
+                Пока нет подтверждённого
+                LONG / SHORT сетапа.
 
             </div>
 
@@ -2536,11 +2321,17 @@ function renderSignals() {
 
 
     for (
-        const s of sorted
+        const signal
+        of sorted
     ) {
+
+        const s =
+            signal;
+
 
         let directionIcon =
             "🟢";
+
 
         let directionClass =
             "long";
@@ -2601,275 +2392,234 @@ function renderSignals() {
                 : s.flow.buy;
 
 
-        let reason = "";
+        const reason =
+            s.wall.side ===
+            "Buy"
 
+                ? (
+                    s.flow.imbalance > 0
+                        ? "BUY wall + агрессивные покупки"
+                        : "BUY wall + давление продавцов"
+                )
 
-        if (
-            s.setup ===
-            "LONG"
-        ) {
-
-            reason =
-                "BUY wall + подтверждённые aggressive BUY";
-
-        }
-
-
-        else if (
-            s.setup ===
-            "SHORT"
-        ) {
-
-            reason =
-                "SELL wall + подтверждённые aggressive SELL";
-
-        }
-
-
-        else {
-
-            reason =
-                "Стена атакована противоположным aggressive flow";
-
-        }
+                : (
+                    s.flow.imbalance < 0
+                        ? "SELL wall + агрессивные продажи"
+                        : "SELL wall + агрессивные покупки"
+                );
 
 
         html += `
 
-        <div
-            class="signal ${directionClass}">
+            <div
+                class="signal ${directionClass}">
+
+                <div
+                    class="signal-top">
+
+                    <div
+                        class="symbol">
+
+                        ${directionIcon}
+
+                        ${s.symbol}
+
+                        <span
+                            class="gray">
+
+                            #${s.rank}
+
+                        </span>
+
+                    </div>
 
 
-            <div class="signal-top">
+                    <div
+                        class="direction">
 
-                <div class="symbol">
+                        ${s.setup}
 
-                    ${directionIcon}
-
-                    ${s.symbol}
-
-                    <span class="gray">
-
-                        #${s.rank}
-
-                    </span>
+                    </div>
 
                 </div>
 
 
-                <div class="direction">
+                <div
+                    class="score">
 
-                    ${s.setup}
+                    Score:
+                    ${s.score}/100
+
+                </div>
+
+
+                <div
+                    class="data-grid">
+
+
+                    <div
+                        class="data-box">
+
+                        Лимитная ликвидность
+
+                        <strong>
+
+                            ${wallSide}
+
+                            $${money(
+                                s.wall.value
+                            )}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="data-box">
+
+                        Цена стены
+
+                        <strong>
+
+                            ${priceFormat(
+                                s.wall.price
+                            )}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="data-box">
+
+                        Относительный размер
+
+                        <strong>
+
+                            ${s.wall.ratio.toFixed(
+                                1
+                            )}x
+
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="data-box">
+
+                        Стена живёт
+
+                        <strong>
+
+                            ${(s.age / 1000)
+                                .toFixed(1)} сек
+
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="data-box">
+
+                        Aggressive BUY
+
+                        <strong
+                            class="green">
+
+                            $${money(
+                                s.flow.buy
+                            )}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="data-box">
+
+                        Aggressive SELL
+
+                        <strong
+                            class="red">
+
+                            $${money(
+                                s.flow.sell
+                            )}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="data-box">
+
+                        BUY/SELL imbalance
+
+                        <strong>
+
+                            ${percent(
+                                s.flow.imbalance
+                            )}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="data-box">
+
+                        Цена / 1 мин
+
+                        <strong>
+
+                            ${percent(
+                                s.priceChange
+                            )}
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="reason">
+
+                    💡 ${reason}
+
+                    <br>
+
+                    📍 До стены:
+
+                    ${percent(
+                        s.wall.distance
+                    )}
+
+                    <br>
+
+                    ⚡ Aggressive flow:
+
+                    $${money(
+                        alignedFlow
+                    )}
+
+                    vs
+
+                    $${money(
+                        oppositeFlow
+                    )}
 
                 </div>
 
             </div>
-
-
-            <div class="score">
-
-                Score:
-                ${s.score}/100
-
-            </div>
-
-
-            <div class="data-grid">
-
-
-                <div class="data-box">
-
-                    Whale Wall
-
-                    <strong>
-
-                        ${wallSide}
-
-                        $${money(
-                            s.wall.value
-                        )}
-
-                    </strong>
-
-                </div>
-
-
-                <div class="data-box">
-
-                    Минимум
-
-                    <strong>
-
-                        $${money(
-                            s.threshold
-                        )}
-
-                    </strong>
-
-                </div>
-
-
-                <div class="data-box">
-
-                    Цена стены
-
-                    <strong>
-
-                        ${priceFormat(
-                            s.wall.price
-                        )}
-
-                    </strong>
-
-                </div>
-
-
-                <div class="data-box">
-
-                    Wall Ratio
-
-                    <strong>
-
-                        ${s.wall.ratio.toFixed(
-                            1
-                        )}x
-
-                    </strong>
-
-                </div>
-
-
-                <div class="data-box">
-
-                    Возраст стены
-
-                    <strong>
-
-                        ${(s.age / 1000)
-                            .toFixed(1)} сек
-
-                    </strong>
-
-                </div>
-
-
-                <div class="data-box">
-
-                    До стены
-
-                    <strong>
-
-                        ${percent(
-                            s.wall.distance
-                        )}
-
-                    </strong>
-
-                </div>
-
-
-                <div class="data-box">
-
-                    Aggressive BUY
-
-                    <strong
-                        class="green">
-
-                        $${money(
-                            s.flow.buy
-                        )}
-
-                    </strong>
-
-                </div>
-
-
-                <div class="data-box">
-
-                    Aggressive SELL
-
-                    <strong
-                        class="red">
-
-                        $${money(
-                            s.flow.sell
-                        )}
-
-                    </strong>
-
-                </div>
-
-
-                <div class="data-box">
-
-                    Imbalance
-
-                    <strong>
-
-                        ${percent(
-                            s.flow.imbalance
-                        )}
-
-                    </strong>
-
-                </div>
-
-
-                <div class="data-box">
-
-                    Цена / 1 мин
-
-                    <strong>
-
-                        ${percent(
-                            s.priceChange
-                        )}
-
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="reason">
-
-                💡 ${reason}
-
-                <br>
-
-                ⚡ Aligned flow:
-
-                $${money(
-                    alignedFlow
-                )}
-
-                vs
-
-                $${money(
-                    oppositeFlow
-                )}
-
-                <br>
-
-                💰 Wall:
-
-                $${money(
-                    s.wall.value
-                )}
-
-                |
-
-                минимум:
-
-                $${money(
-                    s.threshold
-                )}
-
-            </div>
-
-
-        </div>
 
         `;
 
@@ -2878,102 +2628,6 @@ function renderSignals() {
 
     signalsEl.innerHTML =
         html;
-
-}
-
-
-/* =====================================================
-   DISPLAY THRESHOLD
-===================================================== */
-
-function getGlobalDisplayThreshold() {
-
-    return 250000;
-
-}
-
-
-/* =====================================================
-   SUBSCRIBE IN BATCHES
-===================================================== */
-
-function subscribeInBatches() {
-
-    if (
-        !ws ||
-        ws.readyState !==
-        WebSocket.OPEN
-    )
-        return;
-
-
-    const args = [];
-
-
-    for (
-        const symbol of symbols
-    ) {
-
-        args.push(
-            `orderbook.${ORDERBOOK_DEPTH}.${symbol}`
-        );
-
-        args.push(
-            `publicTrade.${symbol}`
-        );
-
-    }
-
-
-    /*
-     * Делим на небольшие
-     * сообщения.
-     */
-
-    for (
-        let i = 0;
-
-        i < args.length;
-
-        i += SUBSCRIBE_BATCH_SIZE
-    ) {
-
-        const batch =
-            args.slice(
-                i,
-                i +
-                SUBSCRIBE_BATCH_SIZE
-            );
-
-
-        setTimeout(
-            () => {
-
-                if (
-                    ws &&
-                    ws.readyState ===
-                    WebSocket.OPEN
-                ) {
-
-                    ws.send(
-                        JSON.stringify({
-
-                            op:
-                                "subscribe",
-
-                            args:
-                                batch
-
-                        })
-                    );
-
-                }
-
-            },
-            i * 35
-        );
-
-    }
 
 }
 
@@ -2997,13 +2651,6 @@ function connectWebSocket() {
     }
 
 
-    statusEl.innerText =
-        "Подключение WebSocket...";
-
-    statusEl.style.color =
-        "#f7931a";
-
-
     ws =
         new WebSocket(
             "wss://stream.bybit.com/v5/public/linear"
@@ -3020,25 +2667,57 @@ function connectWebSocket() {
 
 
         statusEl.innerText =
-            "WebSocket подключён";
+            "Сканирование активно";
 
         statusEl.style.color =
             "#27ae60";
 
 
-        lastMarketMessage =
-            now();
+        /*
+         * Формируем подписки:
+         *
+         * orderbook.50.SYMBOL
+         *
+         * publicTrade.SYMBOL
+         */
 
-        marketMessageCount = 0;
+        const args = [];
 
 
-        subscribeInBatches();
+        for (
+            const symbol
+            of symbols
+        ) {
+
+            args.push(
+                `orderbook.${ORDERBOOK_DEPTH}.${symbol}`
+            );
+
+            args.push(
+                `publicTrade.${symbol}`
+            );
+
+        }
+
+
+        /*
+         * Подписка.
+         */
+
+        ws.send(
+            JSON.stringify({
+
+                op: "subscribe",
+
+                args: args
+
+            })
+        );
 
     };
 
 
-    ws.onmessage =
-        event => {
+    ws.onmessage = event => {
 
         try {
 
@@ -3049,33 +2728,7 @@ function connectWebSocket() {
 
 
             /*
-             * Subscribe response.
-             */
-
-            if (
-                data.op ===
-                "subscribe"
-            ) {
-
-                if (
-                    data.success ===
-                    false
-                ) {
-
-                    console.error(
-                        "Subscribe error:",
-                        data
-                    );
-
-                }
-
-                return;
-
-            }
-
-
-            /*
-             * Pong.
+             * PONG
              */
 
             if (
@@ -3094,14 +2747,8 @@ function connectWebSocket() {
                 return;
 
 
-            lastMarketMessage =
-                now();
-
-            marketMessageCount++;
-
-
             /*
-             * ORDERBOOK.
+             * ORDERBOOK
              */
 
             if (
@@ -3112,7 +2759,10 @@ function connectWebSocket() {
             ) {
 
                 const parts =
-                    data.topic.split(".");
+                    data.topic
+                        .split(
+                            "."
+                        );
 
 
                 const symbol =
@@ -3148,7 +2798,7 @@ function connectWebSocket() {
 
 
             /*
-             * PUBLIC TRADE.
+             * TRADES
              */
 
             else if (
@@ -3164,12 +2814,11 @@ function connectWebSocket() {
 
             }
 
-        }
 
-        catch (error) {
+        } catch (error) {
 
             console.error(
-                "WS parse error:",
+                "WS message error:",
                 error
             );
 
@@ -3178,11 +2827,10 @@ function connectWebSocket() {
     };
 
 
-    ws.onerror =
-        error => {
+    ws.onerror = error => {
 
         console.error(
-            "WebSocket error",
+            "WebSocket error:",
             error
         );
 
@@ -3196,8 +2844,7 @@ function connectWebSocket() {
     };
 
 
-    ws.onclose =
-        () => {
+    ws.onclose = () => {
 
         wsEl.innerText =
             "OFF";
@@ -3206,57 +2853,24 @@ function connectWebSocket() {
             "stat-value red";
 
 
-        if (
-            running
-        ) {
+        if (running) {
 
             statusEl.innerText =
-                "WS разорван — переподключение";
+                "Переподключение...";
 
             statusEl.style.color =
                 "#f7931a";
 
 
-            scheduleReconnect();
+            reconnectTimer =
+                setTimeout(
+                    connectWebSocket,
+                    3000
+                );
 
         }
 
     };
-
-}
-
-
-/* =====================================================
-   RECONNECT
-===================================================== */
-
-function scheduleReconnect() {
-
-    if (
-        reconnectTimer
-    )
-        return;
-
-
-    reconnectTimer =
-        setTimeout(
-            () => {
-
-                reconnectTimer =
-                    null;
-
-
-                if (
-                    running
-                ) {
-
-                    connectWebSocket();
-
-                }
-
-            },
-            3000
-        );
 
 }
 
@@ -3267,107 +2881,32 @@ function scheduleReconnect() {
 
 function startPing() {
 
-    if (
-        pingTimer
-    )
-        clearInterval(
-            pingTimer
-        );
+    setInterval(
+        () => {
 
+            if (
+                ws &&
+                ws.readyState ===
+                WebSocket.OPEN
+            ) {
 
-    pingTimer =
-        setInterval(
-            () => {
+                ws.send(
+                    JSON.stringify({
+                        op: "ping"
+                    })
+                );
 
-                if (
-                    ws &&
-                    ws.readyState ===
-                    WebSocket.OPEN
-                ) {
+            }
 
-                    ws.send(
-                        JSON.stringify({
-                            op: "ping"
-                        })
-                    );
-
-                }
-
-            },
-            20000
-        );
+        },
+        20000
+    );
 
 }
 
 
 /* =====================================================
-   WATCHDOG
-===================================================== */
-
-function startWatchdog() {
-
-    if (
-        watchdogTimer
-    )
-        clearInterval(
-            watchdogTimer
-        );
-
-
-    watchdogTimer =
-        setInterval(
-            () => {
-
-                if (!running)
-                    return;
-
-
-                const silence =
-                    now() -
-                    lastMarketMessage;
-
-
-                /*
-                 * Если 12 секунд нет
-                 * market data — считаем
-                 * соединение подозрительным.
-                 */
-
-                if (
-                    silence >
-                    12000
-                ) {
-
-                    dataWarningEl.innerText =
-                        "⚠️ Нет market data > 12 сек. Переподключение...";
-
-
-                    if (
-                        ws
-                    ) {
-
-                        try {
-                            ws.close();
-                        } catch (e) {}
-
-                    }
-
-                } else {
-
-                    dataWarningEl.innerText =
-                        "";
-
-                }
-
-            },
-            5000
-        );
-
-}
-
-
-/* =====================================================
-   LOAD TOP
+   LOAD TOP 100
 ===================================================== */
 
 async function loadSymbols() {
@@ -3375,7 +2914,7 @@ async function loadSymbols() {
     try {
 
         statusEl.innerText =
-            "Загрузка ликвидных монет...";
+            "Загрузка TOP-100...";
 
         statusEl.style.color =
             "#f7931a";
@@ -3383,23 +2922,10 @@ async function loadSymbols() {
 
         const response =
             await fetch(
-                "https://api.bybit.com/v5/market/tickers?category=linear",
-                {
-                    cache: "no-store"
-                }
+
+                "https://api.bybit.com/v5/market/tickers?category=linear"
+
             );
-
-
-        if (
-            !response.ok
-        ) {
-
-            throw new Error(
-                "HTTP " +
-                response.status
-            );
-
-        }
 
 
         const json =
@@ -3430,17 +2956,17 @@ async function loadSymbols() {
                             .endsWith(
                                 "USDT"
                             ) &&
-                        Number(
+                        parseFloat(
                             item.turnover24h
                         ) > 0
                 )
 
                 .sort(
                     (a, b) =>
-                        Number(
+                        parseFloat(
                             b.turnover24h
                         ) -
-                        Number(
+                        parseFloat(
                             a.turnover24h
                         )
                 )
@@ -3454,8 +2980,6 @@ async function loadSymbols() {
         symbols.length = 0;
 
         symbolRanks.clear();
-
-        symbolTurnovers.clear();
 
 
         list.forEach(
@@ -3471,14 +2995,6 @@ async function loadSymbols() {
                     index + 1
                 );
 
-
-                symbolTurnovers.set(
-                    item.symbol,
-                    Number(
-                        item.turnover24h
-                    )
-                );
-
             }
         );
 
@@ -3487,21 +3003,13 @@ async function loadSymbols() {
             symbols.length;
 
 
-        statusEl.innerText =
-            `TOP ${symbols.length} загружен`;
-
-        statusEl.style.color =
-            "#27ae60";
-
-
         return true;
 
-    }
 
-    catch (error) {
+    } catch (error) {
 
         console.error(
-            "TOP error:",
+            "TOP loading error:",
             error
         );
 
@@ -3521,47 +3029,23 @@ async function loadSymbols() {
 
 
 /* =====================================================
-   RESET MARKET STATE
-===================================================== */
-
-function resetMarketState() {
-
-    books.clear();
-
-    trades.clear();
-
-    wallHistory.clear();
-
-    signals.clear();
-
-}
-
-
-/* =====================================================
    START
 ===================================================== */
 
 async function startScanner() {
 
-    if (
-        running
-    )
+    if (running)
         return;
 
 
     running = true;
 
 
-    resetMarketState();
-
-
     const success =
         await loadSymbols();
 
 
-    if (
-        !success
-    ) {
+    if (!success) {
 
         running = false;
 
@@ -3570,12 +3054,31 @@ async function startScanner() {
     }
 
 
+    /*
+     * Очищаем состояние.
+     */
+
+    books.clear();
+
+    trades.clear();
+
+    walls.clear();
+
+    signals.clear();
+
+    wallHistory.clear();
+
+
+    /*
+     * Подключение.
+     */
+
     connectWebSocket();
 
-    startPing();
 
-    startWatchdog();
-
+    /*
+     * Анализ.
+     */
 
     analysisTimer =
         setInterval(
@@ -3584,6 +3087,10 @@ async function startScanner() {
         );
 
 
+    /*
+     * Интерфейс.
+     */
+
     uiTimer =
         setInterval(
             renderSignals,
@@ -3591,28 +3098,29 @@ async function startScanner() {
         );
 
 
+    /*
+     * Обновление TOP.
+     */
+
     symbolRefreshTimer =
         setInterval(
             async () => {
 
-                if (!running)
-                    return;
-
-
                 await loadSymbols();
 
+                books.clear();
 
-                resetMarketState();
+                trades.clear();
 
+                wallHistory.clear();
+
+                signals.clear();
 
                 connectWebSocket();
 
             },
             SYMBOL_REFRESH
         );
-
-
-    renderSignals();
 
 }
 
@@ -3626,99 +3134,57 @@ function stopScanner() {
     running = false;
 
 
-    if (
-        analysisTimer
-    ) {
+    if (analysisTimer) {
 
         clearInterval(
             analysisTimer
         );
 
-        analysisTimer =
-            null;
+        analysisTimer = null;
 
     }
 
 
-    if (
-        uiTimer
-    ) {
+    if (uiTimer) {
 
         clearInterval(
             uiTimer
         );
 
-        uiTimer =
-            null;
+        uiTimer = null;
 
     }
 
 
-    if (
-        symbolRefreshTimer
-    ) {
+    if (symbolRefreshTimer) {
 
         clearInterval(
             symbolRefreshTimer
         );
 
-        symbolRefreshTimer =
-            null;
+        symbolRefreshTimer = null;
 
     }
 
 
-    if (
-        reconnectTimer
-    ) {
+    if (reconnectTimer) {
 
         clearTimeout(
             reconnectTimer
         );
 
-        reconnectTimer =
-            null;
+        reconnectTimer = null;
 
     }
 
 
-    if (
-        pingTimer
-    ) {
-
-        clearInterval(
-            pingTimer
-        );
-
-        pingTimer =
-            null;
-
-    }
-
-
-    if (
-        watchdogTimer
-    ) {
-
-        clearInterval(
-            watchdogTimer
-        );
-
-        watchdogTimer =
-            null;
-
-    }
-
-
-    if (
-        ws
-    ) {
+    if (ws) {
 
         try {
-            ws.close();
-        }
 
-        catch (e) {}
+            ws.close();
+
+        } catch (e) {}
 
         ws = null;
 
@@ -3738,10 +3204,6 @@ function stopScanner() {
     statusEl.style.color =
         "#848e9c";
 
-
-    dataWarningEl.innerText =
-        "";
-
 }
 
 
@@ -3753,94 +3215,37 @@ function clearSignals() {
 
     signals.clear();
 
+    signalCounter = 0;
+
     renderSignals();
 
 }
 
 
 /* =====================================================
-   VISIBILITY
+   INITIALIZATION
 ===================================================== */
 
+startPing();
 
-/*
- * iOS может замораживать
- * background tab.
- *
- * Когда вкладка возвращается —
- * проверяем поток.
- */
-
-document.addEventListener(
-    "visibilitychange",
-    () => {
-
-        if (
-            document.visibilityState ===
-            "visible"
-        ) {
-
-            if (
-                running
-            ) {
-
-                const silence =
-                    now() -
-                    lastMarketMessage;
-
-
-                if (
-                    silence >
-                    10000
-                ) {
-
-                    statusEl.innerText =
-                        "Восстановление WebSocket...";
-
-
-                    connectWebSocket();
-
-                }
-
-            }
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   INIT
-===================================================== */
 
 console.log(
-    "🐋 Bybit Whale Flow Scanner PRO"
+    "🐋 Bybit Whale Flow Scanner loaded"
 );
 
 console.log(
-    "MAX_SYMBOLS:",
+    "TOP:",
     MAX_SYMBOLS
 );
 
 console.log(
-    "ORDERBOOK:",
+    "OrderBook:",
     ORDERBOOK_DEPTH
 );
 
 console.log(
-    "MIN WALL RATIO:",
-    MIN_WALL_RATIO
-);
-
-console.log(
-    "MIN TRADE FLOW:",
-    MIN_TRADE_FLOW
-);
-
-console.log(
-    "SOL MIN WALL:",
-    MAJOR_THRESHOLDS.SOLUSDT
+    "Base thresholds:",
+    BASE_THRESHOLDS
 );
 
 </script>
