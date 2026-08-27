@@ -59,7 +59,7 @@ h1 {
 
 
 /* =====================================================
-   BUTTONS
+   CONTROLS
 ===================================================== */
 
 .controls {
@@ -139,7 +139,7 @@ select {
     display: grid;
 
     grid-template-columns:
-        repeat(5, 1fr);
+        repeat(4, 1fr);
 
     gap: 8px;
 
@@ -172,7 +172,7 @@ select {
 
 
 /* =====================================================
-   SIGNAL LIST
+   SIGNALS
 ===================================================== */
 
 .section-title {
@@ -183,7 +183,6 @@ select {
 
     margin: 15px 0 8px;
 }
-
 
 .signals {
 
@@ -222,14 +221,9 @@ select {
     border-left-color: #e74c3c;
 }
 
-.signal.breakout {
-
-    border-left-color: #f7931a;
-}
-
 
 /* =====================================================
-   CARD TOP
+   SIGNAL TOP
 ===================================================== */
 
 .signal-top {
@@ -268,6 +262,65 @@ select {
     font-weight: bold;
 
     margin-top: 5px;
+}
+
+
+/* =====================================================
+   TRADE PLAN
+===================================================== */
+
+.trade-plan {
+
+    margin-top: 11px;
+
+    padding: 11px;
+
+    background: #161a1e;
+
+    border-radius: 9px;
+}
+
+.trade-row {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    padding: 5px 0;
+
+    font-size: 12px;
+
+    color: #848e9c;
+}
+
+.trade-row strong {
+
+    color: #eaecef;
+
+    font-size: 15px;
+}
+
+.entry {
+
+    color: #f7931a !important;
+}
+
+.take {
+
+    color: #27ae60 !important;
+}
+
+.stop {
+
+    color: #e74c3c !important;
+}
+
+.rr {
+
+    color: #3498db !important;
 }
 
 
@@ -380,17 +433,12 @@ select {
    MOBILE
 ===================================================== */
 
-@media (max-width: 700px) {
+@media (max-width: 600px) {
 
     .stats {
 
         grid-template-columns:
             repeat(2, 1fr);
-    }
-
-    .stats .stat:last-child {
-
-        grid-column: span 2;
     }
 
     .signals {
@@ -454,17 +502,20 @@ select {
 
             <select id="wallAge">
 
-                <option value="2">
-                    2 сек
-                </option>
-
-                <option value="3"
-                        selected>
+                <option value="3">
                     3 сек
                 </option>
 
-                <option value="5">
+                <option value="5" selected>
                     5 сек
+                </option>
+
+                <option value="8">
+                    8 сек
+                </option>
+
+                <option value="10">
+                    10 сек
                 </option>
 
             </select>
@@ -482,9 +533,16 @@ select {
                     60
                 </option>
 
-                <option value="70"
-                        selected>
+                <option value="65">
+                    65
+                </option>
+
+                <option value="70" selected>
                     70
+                </option>
+
+                <option value="75">
+                    75
                 </option>
 
                 <option value="80">
@@ -511,6 +569,7 @@ select {
 
     <div class="stats">
 
+
         <div class="stat">
 
             TOP
@@ -534,7 +593,7 @@ select {
                 id="wsStatus"
                 class="stat-value">
 
-                0/4
+                OFF
 
             </span>
 
@@ -565,21 +624,6 @@ select {
                 class="stat-value">
 
                 0
-
-            </span>
-
-        </div>
-
-
-        <div class="stat">
-
-            Последнее обновление
-
-            <span
-                id="lastUpdate"
-                class="stat-value">
-
-                —
 
             </span>
 
@@ -621,9 +665,21 @@ select {
 
         🔴 SHORT
 
+        <br><br>
+
+        И сразу рассчитывать:
+
         <br>
 
-        🟠 BREAKOUT
+        📍 Вход
+
+        <br>
+
+        🎯 Take Profit
+
+        <br>
+
+        🛑 Stop Loss
 
     </div>
 
@@ -632,54 +688,50 @@ select {
 
 <script>
 
+
 /* =====================================================
    CONFIG
 ===================================================== */
 
 
 /*
- * TOP-100 монет.
+ * Сканируем TOP-100.
  */
 
 const MAX_SYMBOLS = 100;
 
 
 /*
- * Bybit orderbook level 50.
+ * 50 уровней стакана.
  */
 
 const ORDERBOOK_DEPTH = 50;
 
 
 /*
- * Максимальное количество
- * одновременно отображаемых
- * сигналов.
+ * Максимум одновременно
+ * отображаемых сигналов.
  */
 
 const MAX_SIGNALS = 10;
 
 
 /*
- * Интервал анализа.
+ * Анализ.
  */
 
 const ANALYSIS_INTERVAL = 500;
 
 
 /*
- * Интервал UI.
+ * UI.
  */
 
-const UI_INTERVAL = 1000;
+const UI_INTERVAL = 700;
 
 
 /*
  * Обновление TOP.
- *
- * Сам WebSocket при этом
- * не пересоздаётся без
- * необходимости.
  */
 
 const SYMBOL_REFRESH =
@@ -687,128 +739,137 @@ const SYMBOL_REFRESH =
 
 
 /*
- * Сколько WebSocket соединений.
- */
-
-const WS_CONNECTIONS = 4;
-
-
-/*
- * Монет на один WebSocket.
- */
-
-const SYMBOLS_PER_WS =
-    Math.ceil(
-        MAX_SYMBOLS /
-        WS_CONNECTIONS
-    );
-
-
-/*
- * Heartbeat Bybit.
- */
-
-const PING_INTERVAL = 20000;
-
-
-/*
- * Reconnect delay.
- */
-
-const RECONNECT_DELAY = 3000;
-
-
-/*
- * Максимальное расстояние
- * стены от текущей цены.
- */
-
-const MAX_WALL_DISTANCE = 0.008;
-
-
-/*
- * Локальная область,
- * используемая для оценки
- * ликвидности.
- */
-
-const LOCAL_LIQUIDITY_DISTANCE =
-    0.003;
-
-
-/*
- * Относительная сила стены.
- */
-
-const MIN_WALL_RATIO = 2.5;
-
-
-/*
- * Минимальная абсолютная
- * стоимость стены для
- * монет 21-100.
- */
-
-const BASE_THRESHOLDS = {
-
-    top21_50: 150000,
-
-    top51_100: 50000
-
-};
-
-
-/*
- * Для TOP-20 используем
- * локальную ликвидность.
- */
-
-const TOP20_MIN_MULTIPLIER = 3;
-
-
-/*
- * Минимальный размер стены
- * TOP-20 даже если локальная
- * ликвидность маленькая.
- */
-
-const TOP20_MIN_ABSOLUTE = {
-
-    top1_5: 250000,
-
-    top6_20: 150000
-
-};
-
-
-/*
- * Агрессивные сделки.
+ * Окно агрессивных сделок.
  */
 
 const TRADE_WINDOW = 10000;
 
 
 /*
- * Движение цены.
+ * Окно цены.
  */
 
 const PRICE_WINDOW = 60000;
 
 
 /*
- * Сигнал считается свежим
- * столько миллисекунд.
+ * Максимальное расстояние
+ * стены от цены.
  */
 
-const SIGNAL_EXPIRY = 5000;
+const MAX_WALL_DISTANCE = 0.008;
 
 
 /*
- * Максимальное число записей
- * истории стены.
+ * Risk / Reward.
  */
 
-const MAX_WALL_HISTORY = 5000;
+const TAKE_PROFIT_RR = 1.8;
+
+
+/*
+ * WebSocket heartbeat.
+ */
+
+const PING_INTERVAL = 20000;
+
+
+/*
+ * Сколько символов
+ * на одно WS соединение.
+ *
+ * Это снижает нагрузку
+ * и делает соединение
+ * стабильнее.
+ */
+
+const WS_CHUNK_SIZE = 50;
+
+
+/* =====================================================
+   ADAPTIVE SETTINGS
+===================================================== */
+
+
+/*
+ * Для каждой группы:
+ *
+ * localRange =
+ * зона локальной ликвидности
+ *
+ * minRatio =
+ * насколько стена должна быть
+ * крупнее обычного уровня
+ *
+ * minWall =
+ * абсолютный минимальный размер
+ *
+ * stopBuffer =
+ * минимальный буфер SL.
+ */
+
+const GROUP_SETTINGS = {
+
+    top5: {
+
+        maxRank: 5,
+
+        localRange: 0.0030,
+
+        minRatio: 3.0,
+
+        minWall: 500000,
+
+        stopBuffer: 0.0018
+
+    },
+
+
+    top20: {
+
+        maxRank: 20,
+
+        localRange: 0.0035,
+
+        minRatio: 2.8,
+
+        minWall: 300000,
+
+        stopBuffer: 0.0022
+
+    },
+
+
+    top50: {
+
+        maxRank: 50,
+
+        localRange: 0.0050,
+
+        minRatio: 2.5,
+
+        minWall: 150000,
+
+        stopBuffer: 0.0030
+
+    },
+
+
+    top100: {
+
+        maxRank: 100,
+
+        localRange: 0.0070,
+
+        minRatio: 2.2,
+
+        minWall: 50000,
+
+        stopBuffer: 0.0040
+
+    }
+
+};
 
 
 /* =====================================================
@@ -817,21 +878,39 @@ const MAX_WALL_HISTORY = 5000;
 
 let running = false;
 
-let reconnectTimers = [];
 
-let pingTimers = [];
+/*
+ * Несколько WS соединений.
+ */
 
-let wsConnections = [];
+let sockets = [];
+
+
+/*
+ * Таймеры.
+ */
+
+let reconnectTimer = null;
+
+let symbolRefreshTimer = null;
 
 let analysisTimer = null;
 
 let uiTimer = null;
 
-let symbolRefreshTimer = null;
+let pingTimer = null;
 
 
 /*
- * TOP-100
+ * Чтобы не запускать
+ * два reconnect одновременно.
+ */
+
+let reconnecting = false;
+
+
+/*
+ * TOP symbols.
  */
 
 const symbols = [];
@@ -854,13 +933,6 @@ const trades = new Map();
 
 
 /*
- * Signals.
- */
-
-const signals = new Map();
-
-
-/*
  * Wall history.
  */
 
@@ -868,11 +940,10 @@ const wallHistory = new Map();
 
 
 /*
- * Для контроля текущей версии
- * списка символов.
+ * Signals.
  */
 
-let symbolsVersion = 0;
+const signals = new Map();
 
 
 /* =====================================================
@@ -902,11 +973,6 @@ const candidateCountEl =
 const signalCountEl =
     document.getElementById(
         "signalCount"
-    );
-
-const lastUpdateEl =
-    document.getElementById(
-        "lastUpdate"
     );
 
 const signalsEl =
@@ -953,15 +1019,23 @@ function priceFormat(value) {
         return n.toFixed(2);
 
 
+    if (n >= 100)
+        return n.toFixed(3);
+
+
     if (n >= 1)
         return n.toFixed(4);
 
 
     if (n >= 0.01)
-        return n.toFixed(6);
+        return n.toFixed(5);
 
 
-    return n.toFixed(8);
+    if (n >= 0.0001)
+        return n.toFixed(7);
+
+
+    return n.toFixed(10);
 
 }
 
@@ -969,86 +1043,41 @@ function priceFormat(value) {
 function percent(value) {
 
     return (
-        Number(value || 0) * 100
+        value * 100
     ).toFixed(2) + "%";
 
 }
 
 
-function clamp(
-    value,
-    min,
-    max
-) {
-
-    return Math.max(
-        min,
-        Math.min(
-            max,
-            value
-        )
-    );
-
-}
-
-
 /* =====================================================
-   WEBSOCKET STATUS
+   GROUP SETTINGS
 ===================================================== */
 
-function updateWSStatus() {
+function getGroupSettings(symbol) {
 
-    let connected = 0;
-
-
-    for (
-        const connection
-        of wsConnections
-    ) {
-
-        if (
-            connection &&
-            connection.ws &&
-            connection.ws.readyState ===
-            WebSocket.OPEN
-        ) {
-
-            connected++;
-
-        }
-
-    }
+    const rank =
+        symbolRanks.get(
+            symbol
+        );
 
 
-    wsEl.innerText =
-        `${connected}/${WS_CONNECTIONS}`;
+    if (!rank)
+        return GROUP_SETTINGS.top100;
 
 
-    if (
-        connected ===
-        WS_CONNECTIONS
-    ) {
+    if (rank <= 5)
+        return GROUP_SETTINGS.top5;
 
-        wsEl.className =
-            "stat-value green";
 
-    }
+    if (rank <= 20)
+        return GROUP_SETTINGS.top20;
 
-    else if (
-        connected > 0
-    ) {
 
-        wsEl.className =
-            "stat-value orange";
+    if (rank <= 50)
+        return GROUP_SETTINGS.top50;
 
-    }
 
-    else {
-
-        wsEl.className =
-            "stat-value red";
-
-    }
+    return GROUP_SETTINGS.top100;
 
 }
 
@@ -1057,41 +1086,28 @@ function updateWSStatus() {
    CREATE BOOK
 ===================================================== */
 
-function createBook(
-    symbol
-) {
+function createBook(symbol) {
 
-    if (
-        !books.has(symbol)
-    ) {
+    books.set(
+        symbol,
+        {
 
-        books.set(
-            symbol,
-            {
+            bids: new Map(),
 
-                bids: new Map(),
+            asks: new Map(),
 
-                asks: new Map(),
+            lastPrice: null,
 
-                lastPrice: null,
+            lastUpdate: now()
 
-                lastUpdate: now()
-
-            }
-        );
-
-    }
-
-
-    return books.get(
-        symbol
+        }
     );
 
 }
 
 
 /* =====================================================
-   APPLY SNAPSHOT
+   SNAPSHOT
 ===================================================== */
 
 function applySnapshot(
@@ -1099,39 +1115,27 @@ function applySnapshot(
     data
 ) {
 
-    if (
-        !data ||
-        !symbol
-    )
-        return;
+    /*
+     * Snapshot всегда
+     * полностью заменяет
+     * старый стакан.
+     */
+
+    createBook(
+        symbol
+    );
 
 
     const book =
-        createBook(
+        books.get(
             symbol
         );
 
 
-    /*
-     * Очень важно:
-     * новый snapshot полностью
-     * заменяет старый стакан.
-     */
-
-    book.bids.clear();
-
-    book.asks.clear();
-
-
-    if (
-        Array.isArray(
-            data.b
-        )
-    ) {
+    if (Array.isArray(data.b)) {
 
         for (
-            const order
-            of data.b
+            const order of data.b
         ) {
 
             const price =
@@ -1162,15 +1166,10 @@ function applySnapshot(
     }
 
 
-    if (
-        Array.isArray(
-            data.a
-        )
-    ) {
+    if (Array.isArray(data.a)) {
 
         for (
-            const order
-            of data.a
+            const order of data.a
         ) {
 
             const price =
@@ -1204,21 +1203,11 @@ function applySnapshot(
     book.lastUpdate =
         now();
 
-
-    /*
-     * Если цены ещё нет —
-     * определяем mid price.
-     */
-
-    updateBookMidPrice(
-        book
-    );
-
 }
 
 
 /* =====================================================
-   APPLY DELTA
+   DELTA
 ===================================================== */
 
 function applyDelta(
@@ -1232,22 +1221,14 @@ function applyDelta(
         );
 
 
-    if (
-        !book ||
-        !data
-    )
+    if (!book)
         return;
 
 
-    if (
-        Array.isArray(
-            data.b
-        )
-    ) {
+    if (Array.isArray(data.b)) {
 
         for (
-            const order
-            of data.b
+            const order of data.b
         ) {
 
             const price =
@@ -1261,27 +1242,17 @@ function applyDelta(
                 );
 
 
-            if (
-                !Number.isFinite(
-                    price
-                )
-            )
+            if (!price)
                 continue;
 
 
-            if (
-                qty === 0
-            ) {
+            if (qty === 0) {
 
                 book.bids.delete(
                     price
                 );
 
-            }
-
-            else if (
-                qty > 0
-            ) {
+            } else {
 
                 book.bids.set(
                     price,
@@ -1295,15 +1266,10 @@ function applyDelta(
     }
 
 
-    if (
-        Array.isArray(
-            data.a
-        )
-    ) {
+    if (Array.isArray(data.a)) {
 
         for (
-            const order
-            of data.a
+            const order of data.a
         ) {
 
             const price =
@@ -1317,27 +1283,17 @@ function applyDelta(
                 );
 
 
-            if (
-                !Number.isFinite(
-                    price
-                )
-            )
+            if (!price)
                 continue;
 
 
-            if (
-                qty === 0
-            ) {
+            if (qty === 0) {
 
                 book.asks.delete(
                     price
                 );
 
-            }
-
-            else if (
-                qty > 0
-            ) {
+            } else {
 
                 book.asks.set(
                     price,
@@ -1354,81 +1310,28 @@ function applyDelta(
     book.lastUpdate =
         now();
 
-
-    updateBookMidPrice(
-        book
-    );
-
 }
 
 
 /* =====================================================
-   UPDATE MID PRICE
-===================================================== */
-
-function updateBookMidPrice(
-    book
-) {
-
-    if (!book)
-        return;
-
-
-    const bids =
-        [...book.bids.keys()]
-            .sort(
-                (a, b) =>
-                    b - a
-            );
-
-
-    const asks =
-        [...book.asks.keys()]
-            .sort(
-                (a, b) =>
-                    a - b
-            );
-
-
-    if (
-        bids.length &&
-        asks.length
-    ) {
-
-        book.lastPrice =
-            (
-                bids[0] +
-                asks[0]
-            ) / 2;
-
-    }
-
-}
-
-
-/* =====================================================
-   PROCESS TRADES
+   TRADE
 ===================================================== */
 
 function processTrade(
     data
 ) {
 
-    if (
-        !Array.isArray(
-            data
-        )
-    )
+    if (!Array.isArray(data))
         return;
 
 
     for (
-        const trade
-        of data
+        const trade of data
     ) {
 
         const symbol =
             trade.s;
+
 
         const side =
             trade.S;
@@ -1454,10 +1357,8 @@ function processTrade(
 
         if (
             !symbol ||
-            !Number.isFinite(price) ||
-            !Number.isFinite(qty) ||
-            price <= 0 ||
-            qty <= 0
+            !price ||
+            !qty
         )
             continue;
 
@@ -1488,15 +1389,20 @@ function processTrade(
 
         list.push({
 
-            time: timestamp,
+            time:
+                timestamp,
 
-            side,
+            side:
+                side,
 
-            price,
+            price:
+                price,
 
-            qty,
+            qty:
+                qty,
 
-            value
+            value:
+                value
 
         });
 
@@ -1514,29 +1420,11 @@ function processTrade(
 
         }
 
-    }
 
-}
+        const cutoff =
+            now() -
+            PRICE_WINDOW;
 
-
-/* =====================================================
-   CLEAN OLD TRADES
-===================================================== */
-
-function cleanupTrades() {
-
-    const cutoff =
-        now() -
-        PRICE_WINDOW;
-
-
-    for (
-        const [
-            symbol,
-            list
-        ]
-        of trades
-    ) {
 
         while (
             list.length &&
@@ -1545,17 +1433,6 @@ function cleanupTrades() {
         ) {
 
             list.shift();
-
-        }
-
-
-        if (
-            list.length === 0
-        ) {
-
-            trades.delete(
-                symbol
-            );
 
         }
 
@@ -1601,36 +1478,30 @@ function getTradeFlow(
         i--
     ) {
 
-        const trade =
+        const t =
             list[i];
 
 
         if (
-            trade.time <
+            t.time <
             cutoff
         )
             break;
 
 
         if (
-            trade.side ===
-            "Buy"
+            t.side === "Buy"
         ) {
 
             buy +=
-                trade.value;
+                t.value;
 
             buyCount++;
 
-        }
-
-        else if (
-            trade.side ===
-            "Sell"
-        ) {
+        } else {
 
             sell +=
-                trade.value;
+                t.value;
 
             sellCount++;
 
@@ -1643,14 +1514,19 @@ function getTradeFlow(
         buy + sell;
 
 
-    const imbalance =
-        total > 0
+    let imbalance = 0;
 
-            ? (
-                buy - sell
-            ) / total
 
-            : 0;
+    if (total > 0) {
+
+        imbalance =
+            (
+                buy -
+                sell
+            ) /
+            total;
+
+    }
 
 
     return {
@@ -1748,10 +1624,24 @@ function getPriceChange(
    LOCAL LIQUIDITY
 ===================================================== */
 
+
+/*
+ * Адаптивная локальная
+ * ликвидность.
+ *
+ * Для каждого ранга
+ * своя зона.
+ *
+ * Потенциальная стена
+ * исключается из расчёта.
+ */
+
 function getLocalLiquidity(
     book,
     side,
-    currentPrice
+    currentPrice,
+    excludePrice,
+    settings
 ) {
 
     if (
@@ -1763,9 +1653,7 @@ function getLocalLiquidity(
 
     const source =
         side === "Buy"
-
             ? book.bids
-
             : book.asks;
 
 
@@ -1780,6 +1668,13 @@ function getLocalLiquidity(
         of source
     ) {
 
+        if (
+            price ===
+            excludePrice
+        )
+            continue;
+
+
         const distance =
             Math.abs(
                 price -
@@ -1790,7 +1685,7 @@ function getLocalLiquidity(
 
         if (
             distance >
-            LOCAL_LIQUIDITY_DISTANCE
+            settings.localRange
         )
             continue;
 
@@ -1825,109 +1720,51 @@ function getLocalLiquidity(
 
 
     /*
-     * Вместо одной случайной
-     * заявки берём медиану.
-     */
-
-    const middle =
-        Math.floor(
-            values.length / 2
-        );
-
-
-    return values[middle];
-
-}
-
-
-/* =====================================================
-   WALL THRESHOLD
-===================================================== */
-
-function getWallThreshold(
-    symbol,
-    side,
-    currentPrice,
-    book
-) {
-
-    const rank =
-        symbolRanks.get(
-            symbol
-        );
-
-
-    if (!rank)
-        return 50000;
-
-
-    /*
-     * TOP-20:
+     * Убираем верхние
+     * экстремальные значения.
      *
-     * динамический порог
-     * от локальной ликвидности.
+     * Это защищает
+     * baseline от другой
+     * крупной стены.
      */
+
+    let filtered =
+        values;
+
 
     if (
-        rank <= 20
+        values.length >= 8
     ) {
 
-        const local =
-            getLocalLiquidity(
-                book,
-                side,
-                currentPrice
+        const upperIndex =
+            Math.floor(
+                values.length *
+                0.80
             );
 
 
-        let absoluteMinimum =
-            TOP20_MIN_ABSOLUTE
-                .top6_20;
+        filtered =
+            values.slice(
+                0,
+                Math.max(
+                    3,
+                    upperIndex
+                )
+            );
+
+    }
 
 
-        if (
-            rank <= 5
-        ) {
-
-            absoluteMinimum =
-                TOP20_MIN_ABSOLUTE
-                    .top1_5;
-
-        }
-
-
-        return Math.max(
-
-            absoluteMinimum,
-
-            local *
-            TOP20_MIN_MULTIPLIER
-
+    const middle =
+        Math.floor(
+            filtered.length / 2
         );
 
-    }
 
-
-    /*
-     * 21-50.
-     */
-
-    if (
-        rank <= 50
-    ) {
-
-        return BASE_THRESHOLDS
-            .top21_50;
-
-    }
-
-
-    /*
-     * 51-100.
-     */
-
-    return BASE_THRESHOLDS
-        .top51_100;
+    return Math.max(
+        filtered[middle],
+        1
+    );
 
 }
 
@@ -1954,14 +1791,41 @@ function findWalls(
         book.lastPrice;
 
 
+    /*
+     * Если trades ещё нет,
+     * используем mid price.
+     */
+
     if (!currentPrice) {
 
-        updateBookMidPrice(
-            book
-        );
+        const bids =
+            [...book.bids.keys()]
+                .sort(
+                    (a, b) =>
+                        b - a
+                );
 
-        currentPrice =
-            book.lastPrice;
+
+        const asks =
+            [...book.asks.keys()]
+                .sort(
+                    (a, b) =>
+                        a - b
+                );
+
+
+        if (
+            bids.length &&
+            asks.length
+        ) {
+
+            currentPrice =
+                (
+                    bids[0] +
+                    asks[0]
+                ) / 2;
+
+        }
 
     }
 
@@ -1970,12 +1834,18 @@ function findWalls(
         return [];
 
 
+    const settings =
+        getGroupSettings(
+            symbol
+        );
+
+
     const result = [];
 
 
-    /*
-     * BUY WALLS
-     */
+    /* =================================================
+       BUY WALLS
+    ================================================= */
 
     for (
         const [
@@ -2005,11 +1875,20 @@ function findWalls(
             price * qty;
 
 
+        if (
+            value <
+            settings.minWall
+        )
+            continue;
+
+
         const local =
             getLocalLiquidity(
                 book,
                 "Buy",
-                currentPrice
+                currentPrice,
+                price,
+                settings
             );
 
 
@@ -2021,27 +1900,17 @@ function findWalls(
             );
 
 
-        const threshold =
-            getWallThreshold(
-                symbol,
-                "Buy",
-                currentPrice,
-                book
-            );
-
-
         if (
-            value >=
-            threshold &&
             ratio >=
-            MIN_WALL_RATIO
+            settings.minRatio
         ) {
 
             result.push({
 
                 symbol,
 
-                side: "Buy",
+                side:
+                    "Buy",
 
                 price,
 
@@ -2053,7 +1922,9 @@ function findWalls(
 
                 ratio,
 
-                currentPrice
+                currentPrice,
+
+                settings
 
             });
 
@@ -2062,9 +1933,9 @@ function findWalls(
     }
 
 
-    /*
-     * SELL WALLS
-     */
+    /* =================================================
+       SELL WALLS
+    ================================================= */
 
     for (
         const [
@@ -2094,11 +1965,20 @@ function findWalls(
             price * qty;
 
 
+        if (
+            value <
+            settings.minWall
+        )
+            continue;
+
+
         const local =
             getLocalLiquidity(
                 book,
                 "Sell",
-                currentPrice
+                currentPrice,
+                price,
+                settings
             );
 
 
@@ -2110,27 +1990,17 @@ function findWalls(
             );
 
 
-        const threshold =
-            getWallThreshold(
-                symbol,
-                "Sell",
-                currentPrice,
-                book
-            );
-
-
         if (
-            value >=
-            threshold &&
             ratio >=
-            MIN_WALL_RATIO
+            settings.minRatio
         ) {
 
             result.push({
 
                 symbol,
 
-                side: "Sell",
+                side:
+                    "Sell",
 
                 price,
 
@@ -2142,7 +2012,9 @@ function findWalls(
 
                 ratio,
 
-                currentPrice
+                currentPrice,
+
+                settings
 
             });
 
@@ -2153,31 +2025,30 @@ function findWalls(
 
     result.sort(
         (a, b) =>
-            b.value -
-            a.value
+            (
+                b.ratio *
+                Math.log10(
+                    Math.max(
+                        b.value,
+                        1
+                    )
+                )
+            ) -
+            (
+                a.ratio *
+                Math.log10(
+                    Math.max(
+                        a.value,
+                        1
+                    )
+                )
+            )
     );
 
 
     return result.slice(
         0,
-        8
-    );
-
-}
-
-
-/* =====================================================
-   WALL KEY
-===================================================== */
-
-function getWallKey(
-    wall
-) {
-
-    return (
-        `${wall.symbol}_` +
-        `${wall.side}_` +
-        `${wall.price}`
+        6
     );
 
 }
@@ -2191,10 +2062,29 @@ function updateWallHistory(
     wall
 ) {
 
-    const key =
-        getWallKey(
-            wall
+    /*
+     * Округляем цену ключа,
+     * чтобы небольшие изменения
+     * не создавали бесконечно
+     * новые стены.
+     */
+
+    const precision =
+        wall.price < 1
+            ? 6
+            : 3;
+
+
+    const normalizedPrice =
+        Number(
+            wall.price.toFixed(
+                precision
+            )
         );
+
+
+    const key =
+        `${wall.symbol}_${wall.side}_${normalizedPrice}`;
 
 
     if (
@@ -2216,123 +2106,49 @@ function updateWallHistory(
                 lastValue:
                     wall.value,
 
-                maxValue:
-                    wall.value
+                lastDistance:
+                    wall.distance
 
             }
         );
 
-    }
+    } else {
 
-    else {
-
-        const history =
+        const item =
             wallHistory.get(
                 key
             );
 
 
-        history.lastSeen =
+        item.lastSeen =
             now();
 
 
-        history.lastValue =
+        item.lastValue =
             wall.value;
 
 
-        history.maxValue =
-            Math.max(
-                history.maxValue,
-                wall.value
-            );
+        item.lastDistance =
+            wall.distance;
 
     }
 
 
-    return wallHistory.get(
-        key
-    );
+    return {
+
+        key,
+
+        ...wallHistory.get(
+            key
+        )
+
+    };
 
 }
 
 
 /* =====================================================
-   CLEAN WALL HISTORY
-===================================================== */
-
-function cleanupWallHistory() {
-
-    const cutoff =
-        now() -
-        30000;
-
-
-    for (
-        const [
-            key,
-            history
-        ]
-        of wallHistory
-    ) {
-
-        if (
-            history.lastSeen <
-            cutoff
-        ) {
-
-            wallHistory.delete(
-                key
-            );
-
-        }
-
-    }
-
-
-    /*
-     * Дополнительный лимит.
-     */
-
-    if (
-        wallHistory.size >
-        MAX_WALL_HISTORY
-    ) {
-
-        const entries =
-            [...wallHistory.entries()]
-                .sort(
-                    (a, b) =>
-                        a[1].lastSeen -
-                        b[1].lastSeen
-                );
-
-
-        const removeCount =
-            wallHistory.size -
-            MAX_WALL_HISTORY;
-
-
-        for (
-            let i = 0;
-
-            i < removeCount;
-
-            i++
-        ) {
-
-            wallHistory.delete(
-                entries[i][0]
-            );
-
-        }
-
-    }
-
-}
-
-
-/* =====================================================
-   SCORE
+   CALCULATE SCORE
 ===================================================== */
 
 function calculateScore(
@@ -2346,34 +2162,35 @@ function calculateScore(
 
 
     /*
-     * 1. Размер стены.
+     * SIZE
      *
-     * 20 баллов.
+     * До 20.
      */
 
     const sizeBase =
-        50000;
+        wall.settings.minWall;
+
+
+    const sizeMultiple =
+        wall.value /
+        Math.max(
+            sizeBase,
+            1
+        );
 
 
     const sizeScore =
         Math.min(
-
             20,
-
             Math.max(
-
                 0,
-
-                Math.log10(
+                Math.log2(
                     Math.max(
-                        wall.value,
+                        sizeMultiple,
                         1
-                    ) /
-                    sizeBase
-                ) * 10
-
+                    )
+                ) * 7
             )
-
         );
 
 
@@ -2382,21 +2199,27 @@ function calculateScore(
 
 
     /*
-     * 2. Относительная сила.
+     * RELATIVE WALL
      *
-     * 20 баллов.
+     * До 25.
      */
+
+    const ratioBase =
+        wall.settings.minRatio;
+
+
+    const ratioExcess =
+        wall.ratio /
+        Math.max(
+            ratioBase,
+            1
+        );
+
 
     const ratioScore =
         Math.min(
-
-            20,
-
-            Math.max(
-                0,
-                wall.ratio * 4
-            )
-
+            25,
+            ratioExcess * 8
         );
 
 
@@ -2405,9 +2228,9 @@ function calculateScore(
 
 
     /*
-     * 3. Возраст.
+     * AGE
      *
-     * 15 баллов.
+     * До 15.
      */
 
     const ageScore =
@@ -2422,24 +2245,33 @@ function calculateScore(
 
 
     /*
-     * 4. Aggressive flow.
+     * FLOW
      *
-     * 25 баллов.
+     * До 25.
      */
 
-    const alignedFlow =
+    let alignedFlow = 0;
 
+
+    if (
         wall.side === "Buy"
+    ) {
 
-            ? Math.max(
+        alignedFlow =
+            Math.max(
                 0,
                 flow.imbalance
-            )
+            );
 
-            : Math.max(
+    } else {
+
+        alignedFlow =
+            Math.max(
                 0,
                 -flow.imbalance
             );
+
+    }
 
 
     score +=
@@ -2447,40 +2279,47 @@ function calculateScore(
 
 
     /*
-     * 5. Цена.
+     * PRICE
      *
-     * 20 баллов.
+     * До 15.
      */
 
-    const alignedPrice =
+    let alignedPrice = 0;
 
+
+    if (
         wall.side === "Buy"
+    ) {
 
-            ? Math.max(
+        alignedPrice =
+            Math.max(
                 0,
                 priceChange
-            )
+            );
 
-            : Math.max(
+    } else {
+
+        alignedPrice =
+            Math.max(
                 0,
                 -priceChange
             );
 
-
-    score += Math.min(
-
-        20,
-
-        alignedPrice * 1000
-
-    );
+    }
 
 
-    return Math.round(
-        clamp(
-            score,
-            0,
-            100
+    score +=
+        Math.min(
+            15,
+            alignedPrice *
+            700
+        );
+
+
+    return Math.min(
+        100,
+        Math.round(
+            score
         )
     );
 
@@ -2507,15 +2346,13 @@ function determineSetup(
     ) {
 
         /*
-         * Покупатели агрессивны,
-         * цена не падает.
+         * BUY wall +
+         * aggressive buyers.
          */
 
         if (
             flow.imbalance >=
-            0.15 &&
-            priceChange >=
-            -0.0003
+            0.12
         ) {
 
             return "LONG";
@@ -2524,13 +2361,13 @@ function determineSetup(
 
 
         /*
-         * Продавцы давят,
-         * цена идёт вниз.
+         * BUY wall +
+         * сильное давление продавцов.
          */
 
         if (
             flow.imbalance <=
-            -0.20 &&
+                -0.22 &&
             priceChange < 0
         ) {
 
@@ -2551,15 +2388,13 @@ function determineSetup(
     ) {
 
         /*
-         * Продавцы агрессивны,
-         * цена падает.
+         * SELL wall +
+         * aggressive sellers.
          */
 
         if (
             flow.imbalance <=
-            -0.15 &&
-            priceChange <=
-            0.0003
+            -0.12
         ) {
 
             return "SHORT";
@@ -2568,13 +2403,13 @@ function determineSetup(
 
 
         /*
-         * Покупатели поглощают
-         * SELL wall.
+         * SELL wall +
+         * покупатели съедают стену.
          */
 
         if (
             flow.imbalance >=
-            0.20 &&
+                0.22 &&
             priceChange > 0
         ) {
 
@@ -2586,6 +2421,194 @@ function determineSetup(
 
 
     return null;
+
+}
+
+
+/* =====================================================
+   ENTRY / TP / SL
+===================================================== */
+
+
+/*
+ * Рассчитываем торговый план.
+ *
+ * LONG:
+ *
+ * Entry = BUY wall
+ *
+ * SL = ниже стены
+ *
+ * TP = Entry + risk * RR
+ *
+ *
+ * SHORT:
+ *
+ * Entry = SELL wall
+ *
+ * SL = выше стены
+ *
+ * TP = Entry - risk * RR
+ */
+
+function calculateTradePlan(
+    wall,
+    setup,
+    priceChange
+) {
+
+    const entry =
+        wall.price;
+
+
+    /*
+     * Базовый stop buffer
+     * зависит от группы монеты.
+     */
+
+    let stopBuffer =
+        wall.settings.stopBuffer;
+
+
+    /*
+     * Если монета сейчас
+     * сильно двигается,
+     * немного расширяем SL.
+     */
+
+    const movement =
+        Math.abs(
+            priceChange
+        );
+
+
+    if (
+        movement >
+        stopBuffer * 0.7
+    ) {
+
+        stopBuffer =
+            Math.max(
+                stopBuffer,
+                movement * 0.65
+            );
+
+    }
+
+
+    /*
+     * Ограничиваем слишком
+     * огромный stop.
+     */
+
+    stopBuffer =
+        Math.min(
+            stopBuffer,
+            0.012
+        );
+
+
+    let stop;
+
+    let takeProfit;
+
+
+    if (
+        setup ===
+        "LONG"
+    ) {
+
+        stop =
+            entry *
+            (
+                1 -
+                stopBuffer
+            );
+
+
+        const risk =
+            entry -
+            stop;
+
+
+        takeProfit =
+            entry +
+            (
+                risk *
+                TAKE_PROFIT_RR
+            );
+
+    }
+
+
+    else {
+
+        stop =
+            entry *
+            (
+                1 +
+                stopBuffer
+            );
+
+
+        const risk =
+            stop -
+            entry;
+
+
+        takeProfit =
+            entry -
+            (
+                risk *
+                TAKE_PROFIT_RR
+            );
+
+    }
+
+
+    /*
+     * Проверка.
+     */
+
+    if (
+        !Number.isFinite(
+            entry
+        ) ||
+        !Number.isFinite(
+            stop
+        ) ||
+        !Number.isFinite(
+            takeProfit
+        )
+    ) {
+
+        return null;
+
+    }
+
+
+    const riskPercent =
+        Math.abs(
+            entry -
+            stop
+        ) /
+        entry;
+
+
+    return {
+
+        entry,
+
+        stop,
+
+        takeProfit,
+
+        riskPercent,
+
+        rr:
+            TAKE_PROFIT_RR
+
+    };
 
 }
 
@@ -2609,30 +2632,25 @@ function analyzeSymbol(
 
 
     /*
-     * Если стакан давно
-     * не обновлялся —
-     * пропускаем его.
+     * Не анализируем
+     * полностью пустой стакан.
      */
 
     if (
-        now() -
-        book.lastUpdate >
-        10000
-    ) {
-
+        !book.bids.size ||
+        !book.asks.size
+    )
         return;
 
-    }
 
-
-    const walls =
+    const wallsFound =
         findWalls(
             symbol
         );
 
 
     if (
-        walls.length === 0
+        !wallsFound.length
     )
         return;
 
@@ -2651,7 +2669,7 @@ function analyzeSymbol(
 
     for (
         const wall
-        of walls
+        of wallsFound
     ) {
 
         const history =
@@ -2665,6 +2683,11 @@ function analyzeSymbol(
             history.firstSeen;
 
 
+        /*
+         * Минимальный возраст
+         * стены.
+         */
+
         const requiredAge =
             parseInt(
                 document
@@ -2672,14 +2695,8 @@ function analyzeSymbol(
                         "wallAge"
                     )
                     .value
-            ) *
-            1000;
+            ) * 1000;
 
-
-        /*
-         * Стена должна немного
-         * прожить, но не 5-10 секунд.
-         */
 
         if (
             age <
@@ -2726,10 +2743,20 @@ function analyzeSymbol(
             continue;
 
 
-        const key =
-            getWallKey(
-                wall
+        const tradePlan =
+            calculateTradePlan(
+                wall,
+                setup,
+                priceChange
             );
+
+
+        if (!tradePlan)
+            continue;
+
+
+        const key =
+            `${symbol}_${wall.side}_${history.key}`;
 
 
         signals.set(
@@ -2757,6 +2784,8 @@ function analyzeSymbol(
 
                 age,
 
+                tradePlan,
+
                 updated:
                     now()
 
@@ -2778,11 +2807,6 @@ function analyzeAll() {
         return;
 
 
-    cleanupTrades();
-
-    cleanupWallHistory();
-
-
     for (
         const symbol
         of symbols
@@ -2801,7 +2825,7 @@ function analyzeAll() {
 
     const expiry =
         now() -
-        SIGNAL_EXPIRY;
+        4000;
 
 
     for (
@@ -2812,9 +2836,35 @@ function analyzeAll() {
         of signals
     ) {
 
+        /*
+         * Если сигнал старый.
+         */
+
         if (
             signal.updated <
             expiry
+        ) {
+
+            signals.delete(
+                key
+            );
+
+            continue;
+
+        }
+
+
+        /*
+         * Если сама стена
+         * давно не обновлялась —
+         * сигнал больше не актуален.
+         */
+
+        if (
+            signal.wall &&
+            now() -
+            signal.wall.currentPrice >
+            999999999
         ) {
 
             signals.delete(
@@ -2891,40 +2941,21 @@ function renderSignals() {
             signal;
 
 
-        let directionIcon =
-            "🟢";
-
-
-        let directionClass =
-            "long";
-
-
-        if (
+        const isLong =
             s.setup ===
-            "SHORT"
-        ) {
-
-            directionIcon =
-                "🔴";
-
-            directionClass =
-                "short";
-
-        }
+            "LONG";
 
 
-        if (
-            s.setup ===
-            "BREAKOUT"
-        ) {
+        const directionIcon =
+            isLong
+                ? "🟢"
+                : "🔴";
 
-            directionIcon =
-                "🟠";
 
-            directionClass =
-                "breakout";
-
-        }
+        const directionClass =
+            isLong
+                ? "long"
+                : "short";
 
 
         const wallSide =
@@ -2954,59 +2985,40 @@ function renderSignals() {
                 : s.flow.buy;
 
 
-        let reason = "";
-
-
-        if (
+        const reason =
             s.wall.side ===
             "Buy"
-        ) {
 
-            if (
-                s.flow.imbalance >
-                0
-            ) {
+                ? (
+                    s.flow.imbalance > 0
 
-                reason =
-                    "BUY wall + агрессивные покупки";
+                        ? "BUY wall + агрессивные покупки"
 
-            }
+                        : "BUY wall + давление продавцов"
+                )
 
-            else {
+                : (
+                    s.flow.imbalance < 0
 
-                reason =
-                    "BUY wall + давление продавцов";
+                        ? "SELL wall + агрессивные продажи"
 
-            }
+                        : "SELL wall + агрессивные покупки"
+                );
 
-        }
 
-        else {
-
-            if (
-                s.flow.imbalance <
-                0
-            ) {
-
-                reason =
-                    "SELL wall + агрессивные продажи";
-
-            }
-
-            else {
-
-                reason =
-                    "SELL wall + агрессивные покупки";
-
-            }
-
-        }
+        const plan =
+            s.tradePlan;
 
 
         html += `
 
             <div
                 class="signal ${directionClass}">
+
+
+                <!-- =========================
+                     TOP
+                ========================== -->
 
                 <div
                     class="signal-top">
@@ -3038,6 +3050,10 @@ function renderSignals() {
                 </div>
 
 
+                <!-- =========================
+                     SCORE
+                ========================== -->
+
                 <div
                     class="score">
 
@@ -3046,6 +3062,123 @@ function renderSignals() {
 
                 </div>
 
+
+                <!-- =========================
+                     TRADE PLAN
+                ========================== -->
+
+                <div
+                    class="trade-plan">
+
+
+                    <div
+                        class="trade-row">
+
+                        <span>
+
+                            📍 Вход
+
+                        </span>
+
+                        <strong
+                            class="entry">
+
+                            ${priceFormat(
+                                plan.entry
+                            )}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="trade-row">
+
+                        <span>
+
+                            🎯 Take Profit
+
+                        </span>
+
+                        <strong
+                            class="take">
+
+                            ${priceFormat(
+                                plan.takeProfit
+                            )}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="trade-row">
+
+                        <span>
+
+                            🛑 Stop Loss
+
+                        </span>
+
+                        <strong
+                            class="stop">
+
+                            ${priceFormat(
+                                plan.stop
+                            )}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="trade-row">
+
+                        <span>
+
+                            Risk / Reward
+
+                        </span>
+
+                        <strong
+                            class="rr">
+
+                            1 : ${plan.rr.toFixed(1)}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="trade-row">
+
+                        <span>
+
+                            Риск до SL
+
+                        </span>
+
+                        <strong>
+
+                            ${percent(
+                                plan.riskPercent
+                            )}
+
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- =========================
+                     DATA
+                ========================== -->
 
                 <div
                     class="data-grid">
@@ -3109,7 +3242,9 @@ function renderSignals() {
                         <strong>
 
                             ${(s.age / 1000)
-                                .toFixed(1)} сек
+                                .toFixed(1)}
+
+                            сек
 
                         </strong>
 
@@ -3184,6 +3319,10 @@ function renderSignals() {
                 </div>
 
 
+                <!-- =========================
+                     REASON
+                ========================== -->
+
                 <div
                     class="reason">
 
@@ -3213,6 +3352,7 @@ function renderSignals() {
 
                 </div>
 
+
             </div>
 
         `;
@@ -3227,143 +3367,72 @@ function renderSignals() {
 
 
 /* =====================================================
-   CREATE WS CONNECTION
+   CLOSE ALL SOCKETS
 ===================================================== */
 
-function createWSConnection(
-    index,
-    chunk,
-    version
-) {
+function closeAllSockets() {
 
-    if (!running)
-        return;
-
-
-    /*
-     * Если версия списка монет
-     * уже изменилась —
-     * старое соединение не нужно.
-     */
-
-    if (
-        version !==
-        symbolsVersion
-    )
-        return;
-
-
-    /*
-     * Закрываем только
-     * конкретное соединение.
-     */
-
-    const existing =
-        wsConnections[index];
-
-
-    if (
-        existing &&
-        existing.ws
+    for (
+        const socket
+        of sockets
     ) {
 
         try {
 
-            existing.ws.onclose =
-                null;
-
-            existing.ws.onerror =
-                null;
-
-            existing.ws.close();
+            socket.close();
 
         } catch (e) {}
 
     }
 
 
-    if (
-        pingTimers[index]
-    ) {
+    sockets = [];
 
-        clearInterval(
-            pingTimers[index]
-        );
-
-        pingTimers[index] =
-            null;
-
-    }
+}
 
 
-    const state = {
+/* =====================================================
+   CONNECT ONE SOCKET
+===================================================== */
 
-        index,
+function connectSocket(
+    symbolChunk,
+    index
+) {
 
-        ws: null,
-
-        generation:
-            (existing?.generation || 0) + 1,
-
-        version,
-
-        manualClose: false
-
-    };
+    if (!running)
+        return;
 
 
-    wsConnections[index] =
-        state;
-
-
-    const generation =
-        state.generation;
-
-
-    const ws =
+    const socket =
         new WebSocket(
             "wss://stream.bybit.com/v5/public/linear"
         );
 
 
-    state.ws =
-        ws;
+    sockets[index] =
+        socket;
 
 
-    ws.onopen = () => {
+    socket.onopen = () => {
 
         /*
-         * Проверяем, что это
-         * ещё актуальное соединение.
+         * Подписываем только
+         * свой chunk.
          */
-
-        if (
-            wsConnections[index] !==
-            state ||
-            state.generation !==
-            generation
-        ) {
-
-            try {
-                ws.close();
-            } catch (e) {}
-
-            return;
-
-        }
-
 
         const args = [];
 
 
         for (
             const symbol
-            of chunk
+            of symbolChunk
         ) {
 
             args.push(
                 `orderbook.${ORDERBOOK_DEPTH}.${symbol}`
             );
+
 
             args.push(
                 `publicTrade.${symbol}`
@@ -3372,83 +3441,25 @@ function createWSConnection(
         }
 
 
-        /*
-         * Отправляем подписку.
-         */
+        socket.send(
+            JSON.stringify({
 
-        if (
-            ws.readyState ===
-            WebSocket.OPEN
-        ) {
+                op:
+                    "subscribe",
 
-            ws.send(
-                JSON.stringify({
-
-                    req_id:
-                        `scanner_${index}_${generation}`,
-
-                    op:
-                        "subscribe",
-
+                args:
                     args
 
-                })
-            );
-
-        }
-
-
-        /*
-         * Heartbeat.
-         */
-
-        pingTimers[index] =
-            setInterval(
-                () => {
-
-                    if (
-                        ws.readyState ===
-                        WebSocket.OPEN
-                    ) {
-
-                        try {
-
-                            ws.send(
-                                JSON.stringify({
-                                    op: "ping"
-                                })
-                            );
-
-                        } catch (error) {
-
-                            console.error(
-                                `WS ${index + 1} ping error`,
-                                error
-                            );
-
-                        }
-
-                    }
-
-                },
-                PING_INTERVAL
-            );
+            })
+        );
 
 
         updateWSStatus();
 
-
-        statusEl.innerText =
-            "Сканирование активно";
-
-
-        statusEl.style.color =
-            "#27ae60";
-
     };
 
 
-    ws.onmessage =
+    socket.onmessage =
         event => {
 
             try {
@@ -3460,19 +3471,7 @@ function createWSConnection(
 
 
                 /*
-                 * Проверяем актуальность
-                 * соединения.
-                 */
-
-                if (
-                    wsConnections[index] !==
-                    state
-                )
-                    return;
-
-
-                /*
-                 * PONG.
+                 * Pong.
                  */
 
                 if (
@@ -3486,24 +3485,13 @@ function createWSConnection(
 
 
                 /*
-                 * SUBSCRIBE response.
+                 * Subscribe response.
                  */
 
                 if (
                     data.op ===
                     "subscribe"
                 ) {
-
-                    if (
-                        data.success === false
-                    ) {
-
-                        console.error(
-                            `WS ${index + 1} subscription error:`,
-                            data
-                        );
-
-                    }
 
                     return;
 
@@ -3517,19 +3505,21 @@ function createWSConnection(
 
 
                 /*
-                 * ORDERBOOK.
+                 * ORDERBOOK
                  */
 
                 if (
-                    data.topic.startsWith(
-                        "orderbook."
-                    )
+                    data.topic
+                        .startsWith(
+                            "orderbook."
+                        )
                 ) {
 
                     const parts =
-                        data.topic.split(
-                            "."
-                        );
+                        data.topic
+                            .split(
+                                "."
+                            );
 
 
                     const symbol =
@@ -3548,6 +3538,7 @@ function createWSConnection(
 
                     }
 
+
                     else if (
                         data.type ===
                         "delta"
@@ -3560,21 +3551,21 @@ function createWSConnection(
 
                     }
 
-                    lastUpdateEl.innerText =
-                        new Date()
-                            .toLocaleTimeString();
+
+                    return;
 
                 }
 
 
                 /*
-                 * PUBLIC TRADES.
+                 * TRADES
                  */
 
-                else if (
-                    data.topic.startsWith(
-                        "publicTrade."
-                    )
+                if (
+                    data.topic
+                        .startsWith(
+                            "publicTrade."
+                        )
                 ) {
 
                     processTrade(
@@ -3585,10 +3576,11 @@ function createWSConnection(
 
             }
 
+
             catch (error) {
 
                 console.error(
-                    `WS ${index + 1} message error:`,
+                    "WS message error:",
                     error
                 );
 
@@ -3597,107 +3589,35 @@ function createWSConnection(
         };
 
 
-    ws.onerror =
+    socket.onerror =
         error => {
 
             console.error(
-                `WS ${index + 1} error:`,
+                "WebSocket error:",
                 error
             );
 
         };
 
 
-    ws.onclose =
+    socket.onclose =
         () => {
 
             /*
-             * Не даём старому сокету
-             * закрыть состояние нового.
+             * Если scanner работает,
+             * переподключаем весь набор.
              */
 
             if (
-                wsConnections[index] !==
-                state
+                running
             ) {
 
-                return;
+                updateWSStatus();
+
+
+                scheduleReconnect();
 
             }
-
-
-            if (
-                pingTimers[index]
-            ) {
-
-                clearInterval(
-                    pingTimers[index]
-                );
-
-                pingTimers[index] =
-                    null;
-
-            }
-
-
-            updateWSStatus();
-
-
-            if (!running)
-                return;
-
-
-            /*
-             * Защита от двойного
-             * reconnect.
-             */
-
-            if (
-                reconnectTimers[index]
-            ) {
-
-                return;
-
-            }
-
-
-            statusEl.innerText =
-                `Переподключение WS ${index + 1}...`;
-
-            statusEl.style.color =
-                "#f7931a";
-
-
-            reconnectTimers[index] =
-                setTimeout(
-                    () => {
-
-                        reconnectTimers[index] =
-                            null;
-
-
-                        if (
-                            !running
-                        )
-                            return;
-
-
-                        if (
-                            version !==
-                            symbolsVersion
-                        )
-                            return;
-
-
-                        createWSConnection(
-                            index,
-                            chunk,
-                            version
-                        );
-
-                    },
-                    RECONNECT_DELAY
-                );
 
         };
 
@@ -3705,55 +3625,21 @@ function createWSConnection(
 
 
 /* =====================================================
-   START ALL WEBSOCKETS
+   CONNECT ALL
 ===================================================== */
 
-function startWebSockets() {
+function connectAllSockets() {
 
-    /*
-     * Сначала закрываем старые
-     * reconnect timers.
-     */
+    if (!running)
+        return;
 
-    for (
-        let i = 0;
 
-        i <
-        reconnectTimers.length;
-
-        i++
-    ) {
-
-        if (
-            reconnectTimers[i]
-        ) {
-
-            clearTimeout(
-                reconnectTimers[i]
-            );
-
-            reconnectTimers[i] =
-                null;
-
-        }
-
-    }
+    closeAllSockets();
 
 
     /*
-     * Создаём новую версию.
-     */
-
-    symbolsVersion++;
-
-
-    const version =
-        symbolsVersion;
-
-
-    /*
-     * Разбиваем TOP-100
-     * на 4 группы.
+     * Делим TOP-100
+     * на два соединения.
      */
 
     const chunks = [];
@@ -3762,82 +3648,51 @@ function startWebSockets() {
     for (
         let i = 0;
 
-        i <
-        WS_CONNECTIONS;
+        i < symbols.length;
 
-        i++
+        i += WS_CHUNK_SIZE
     ) {
-
-        const start =
-            i *
-            SYMBOLS_PER_WS;
-
-
-        const end =
-            Math.min(
-                start +
-                SYMBOLS_PER_WS,
-                symbols.length
-            );
-
 
         chunks.push(
             symbols.slice(
-                start,
-                end
+                i,
+                i +
+                WS_CHUNK_SIZE
             )
         );
 
     }
 
 
-    /*
-     * Создаём 4 WS.
-     */
-
     for (
         let i = 0;
 
-        i <
-        WS_CONNECTIONS;
+        i < chunks.length;
 
         i++
     ) {
 
-        const chunk =
-            chunks[i] || [];
-
-
-        if (
-            chunk.length === 0
-        )
-            continue;
-
-
         /*
          * Небольшая задержка
-         * между созданием соединений.
+         * между подключениями.
          */
 
         setTimeout(
             () => {
 
                 if (
-                    running &&
-                    version ===
-                    symbolsVersion
+                    running
                 ) {
 
-                    createWSConnection(
-                        i,
-                        chunk,
-                        version
+                    connectSocket(
+                        chunks[i],
+                        i
                     );
 
                 }
 
             },
-            i * 250
+            i * 500
         );
 
     }
@@ -3846,114 +3701,215 @@ function startWebSockets() {
 
 
 /* =====================================================
-   STOP ALL WEBSOCKETS
+   WS STATUS
 ===================================================== */
 
-function stopWebSockets() {
+function updateWSStatus() {
 
-    /*
-     * Сначала запрещаем
-     * reconnect.
-     */
+    if (!running) {
 
-    for (
-        let i = 0;
+        wsEl.innerText =
+            "OFF";
 
-        i <
-        reconnectTimers.length;
+        wsEl.className =
+            "stat-value";
 
-        i++
-    ) {
-
-        if (
-            reconnectTimers[i]
-        ) {
-
-            clearTimeout(
-                reconnectTimers[i]
-            );
-
-            reconnectTimers[i] =
-                null;
-
-        }
+        return;
 
     }
 
 
-    /*
-     * Останавливаем ping.
-     */
+    const opened =
+        sockets.filter(
+            socket =>
+                socket &&
+                socket.readyState ===
+                WebSocket.OPEN
+        ).length;
 
-    for (
-        let i = 0;
 
-        i <
-        pingTimers.length;
+    const total =
+        sockets.length;
 
-        i++
+
+    if (
+        opened ===
+        total &&
+        total > 0
     ) {
 
-        if (
-            pingTimers[i]
-        ) {
+        wsEl.innerText =
+            `${opened}/${total}`;
 
-            clearInterval(
-                pingTimers[i]
-            );
+        wsEl.className =
+            "stat-value green";
 
-            pingTimers[i] =
-                null;
 
-        }
+        statusEl.innerText =
+            "Сканирование активно";
+
+        statusEl.style.color =
+            "#27ae60";
 
     }
 
 
-    /*
-     * Закрываем все WS.
-     */
-
-    for (
-        const state
-        of wsConnections
+    else if (
+        opened > 0
     ) {
 
-        if (
-            state &&
-            state.ws
-        ) {
+        wsEl.innerText =
+            `${opened}/${total}`;
 
-            try {
+        wsEl.className =
+            "stat-value orange";
 
-                state.ws.onclose =
-                    null;
 
-                state.ws.onerror =
-                    null;
+        statusEl.innerText =
+            "Частичное подключение";
 
-                state.ws.close();
-
-            }
-
-            catch (e) {}
-
-        }
+        statusEl.style.color =
+            "#f7931a";
 
     }
 
 
-    wsConnections =
-        [];
+    else {
 
-    reconnectTimers =
-        [];
+        wsEl.innerText =
+            "CONNECT";
 
-    pingTimers =
-        [];
+        wsEl.className =
+            "stat-value orange";
+
+    }
+
+}
 
 
-    updateWSStatus();
+/* =====================================================
+   RECONNECT
+===================================================== */
+
+function scheduleReconnect() {
+
+    if (
+        reconnecting ||
+        !running
+    )
+        return;
+
+
+    reconnecting =
+        true;
+
+
+    if (
+        reconnectTimer
+    ) {
+
+        clearTimeout(
+            reconnectTimer
+        );
+
+    }
+
+
+    reconnectTimer =
+        setTimeout(
+            () => {
+
+                reconnecting =
+                    false;
+
+
+                if (
+                    running
+                ) {
+
+                    statusEl.innerText =
+                        "Переподключение...";
+
+                    statusEl.style.color =
+                        "#f7931a";
+
+
+                    connectAllSockets();
+
+                }
+
+            },
+            3000
+        );
+
+}
+
+
+/* =====================================================
+   PING
+===================================================== */
+
+function startPing() {
+
+    if (
+        pingTimer
+    ) {
+
+        clearInterval(
+            pingTimer
+        );
+
+    }
+
+
+    pingTimer =
+        setInterval(
+            () => {
+
+                if (!running)
+                    return;
+
+
+                for (
+                    const socket
+                    of sockets
+                ) {
+
+                    if (
+                        socket &&
+                        socket.readyState ===
+                        WebSocket.OPEN
+                    ) {
+
+                        try {
+
+                            socket.send(
+                                JSON.stringify({
+
+                                    op:
+                                        "ping"
+
+                                })
+                            );
+
+                        }
+
+                        catch (error) {
+
+                            console.error(
+                                "Ping error:",
+                                error
+                            );
+
+                        }
+
+                    }
+
+                }
+
+            },
+            PING_INTERVAL
+        );
 
 }
 
@@ -3979,22 +3935,13 @@ async function loadSymbols() {
                 "https://api.bybit.com/v5/market/tickers?category=linear",
 
                 {
+
                     cache:
                         "no-store"
+
                 }
 
             );
-
-
-        if (
-            !response.ok
-        ) {
-
-            throw new Error(
-                `HTTP ${response.status}`
-            );
-
-        }
 
 
         const json =
@@ -4019,54 +3966,32 @@ async function loadSymbols() {
             json.result.list
 
                 .filter(
-                    item => {
+                    item =>
+                        item.symbol &&
+                        item.symbol
+                            .endsWith(
+                                "USDT"
+                            ) &&
 
-                        return (
-
-                            item.symbol &&
-
-                            item.symbol
-                                .endsWith(
-                                    "USDT"
-                                ) &&
-
-                            parseFloat(
-                                item.turnover24h
-                            ) > 0
-
-                        );
-
-                    }
+                        parseFloat(
+                            item.turnover24h
+                        ) > 0
                 )
 
                 .sort(
                     (a, b) =>
-
                         parseFloat(
                             b.turnover24h
                         ) -
-
                         parseFloat(
                             a.turnover24h
                         )
-
                 )
 
                 .slice(
                     0,
                     MAX_SYMBOLS
                 );
-
-
-        if (
-            list.length === 0
-        ) {
-
-            throw new Error(
-                "TOP-100 is empty"
-            );
-
-        }
 
 
         symbols.length =
@@ -4104,6 +4029,7 @@ async function loadSymbols() {
 
     }
 
+
     catch (error) {
 
         console.error(
@@ -4127,95 +4053,74 @@ async function loadSymbols() {
 
 
 /* =====================================================
-   REFRESH SYMBOLS
+   START
 ===================================================== */
 
-async function refreshSymbols() {
+async function startScanner() {
 
-    if (!running)
+    if (
+        running
+    )
         return;
 
 
-    const oldSymbols =
-        [...symbols];
-
-
-    const success =
-        await loadSymbols();
-
-
-    if (!success)
-        return;
+    running =
+        true;
 
 
     /*
-     * Проверяем, изменился ли
-     * состав TOP.
+     * Очищаем старые таймеры.
      */
 
-    const changed =
-        oldSymbols.length !==
-        symbols.length ||
+    if (
+        reconnectTimer
+    ) {
 
-        oldSymbols.some(
-            (
-                symbol,
-                index
-            ) =>
-                symbol !==
-                symbols[index]
+        clearTimeout(
+            reconnectTimer
         );
 
+        reconnectTimer =
+            null;
 
-    if (!changed) {
+    }
 
-        statusEl.innerText =
-            "Сканирование активно";
 
-        statusEl.style.color =
-            "#27ae60";
+    if (
+        analysisTimer
+    ) {
 
-        return;
+        clearInterval(
+            analysisTimer
+        );
+
+    }
+
+
+    if (
+        uiTimer
+    ) {
+
+        clearInterval(
+            uiTimer
+        );
+
+    }
+
+
+    if (
+        symbolRefreshTimer
+    ) {
+
+        clearInterval(
+            symbolRefreshTimer
+        );
 
     }
 
 
     /*
-     * Если TOP реально изменился,
-     * только тогда пересоздаём WS.
-     */
-
-    books.clear();
-
-    trades.clear();
-
-    wallHistory.clear();
-
-    signals.clear();
-
-
-    stopWebSockets();
-
-    startWebSockets();
-
-}
-
-
-/* =====================================================
-   START SCANNER
-===================================================== */
-
-async function startScanner() {
-
-    if (running)
-        return;
-
-
-    running = true;
-
-
-    /*
-     * Начальная загрузка.
+     * Загружаем TOP.
      */
 
     const success =
@@ -4224,7 +4129,8 @@ async function startScanner() {
 
     if (!success) {
 
-        running = false;
+        running =
+            false;
 
         return;
 
@@ -4232,23 +4138,30 @@ async function startScanner() {
 
 
     /*
-     * Чистое состояние.
+     * Чистим состояние.
      */
 
     books.clear();
 
     trades.clear();
 
-    wallHistory.clear();
-
     signals.clear();
+
+    wallHistory.clear();
 
 
     /*
-     * Запуск WebSocket.
+     * Запускаем heartbeat.
      */
 
-    startWebSockets();
+    startPing();
+
+
+    /*
+     * Подключаем WS.
+     */
+
+    connectAllSockets();
 
 
     /*
@@ -4274,32 +4187,68 @@ async function startScanner() {
 
 
     /*
-     * TOP refresh.
+     * Обновляем TOP
+     * каждые 5 минут.
      */
 
     symbolRefreshTimer =
         setInterval(
-            refreshSymbols,
+            async () => {
+
+                if (!running)
+                    return;
+
+
+                const success =
+                    await loadSymbols();
+
+
+                if (!success)
+                    return;
+
+
+                /*
+                 * Пересобираем
+                 * подписки.
+                 */
+
+                books.clear();
+
+                trades.clear();
+
+                signals.clear();
+
+                wallHistory.clear();
+
+
+                connectAllSockets();
+
+            },
             SYMBOL_REFRESH
         );
 
 
     statusEl.innerText =
-        "Сканирование активно";
+        "Подключение к Bybit...";
 
     statusEl.style.color =
-        "#27ae60";
+        "#f7931a";
 
 }
 
 
 /* =====================================================
-   STOP SCANNER
+   STOP
 ===================================================== */
 
 function stopScanner() {
 
-    running = false;
+    running =
+        false;
+
+
+    reconnecting =
+        false;
 
 
     if (
@@ -4344,16 +4293,28 @@ function stopScanner() {
     }
 
 
-    stopWebSockets();
+    if (
+        reconnectTimer
+    ) {
+
+        clearTimeout(
+            reconnectTimer
+        );
+
+        reconnectTimer =
+            null;
+
+    }
 
 
-    books.clear();
+    closeAllSockets();
 
-    trades.clear();
 
-    wallHistory.clear();
+    wsEl.innerText =
+        "OFF";
 
-    signals.clear();
+    wsEl.className =
+        "stat-value";
 
 
     statusEl.innerText =
@@ -4369,7 +4330,7 @@ function stopScanner() {
 
 
 /* =====================================================
-   CLEAR SIGNALS
+   CLEAR
 ===================================================== */
 
 function clearSignals() {
@@ -4382,14 +4343,53 @@ function clearSignals() {
 
 
 /* =====================================================
+   PAGE VISIBILITY
+===================================================== */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        /*
+         * Если вкладка снова стала
+         * активной и соединение
+         * потерялось — восстанавливаем.
+         */
+
+        if (
+            !document.hidden &&
+            running
+        ) {
+
+            const opened =
+                sockets.filter(
+                    socket =>
+                        socket &&
+                        socket.readyState ===
+                        WebSocket.OPEN
+                ).length;
+
+
+            if (
+                opened === 0
+            ) {
+
+                scheduleReconnect();
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =====================================================
    INITIALIZATION
 ===================================================== */
 
-renderSignals();
-
-
 console.log(
-    "🐋 Bybit Whale Flow Scanner"
+    "🐋 Bybit Whale Flow Scanner loaded"
 );
 
 console.log(
@@ -4398,30 +4398,23 @@ console.log(
 );
 
 console.log(
-    "WebSockets:",
-    WS_CONNECTIONS
-);
-
-console.log(
-    "Symbols per WS:",
-    SYMBOLS_PER_WS
-);
-
-console.log(
-    "OrderBook depth:",
+    "OrderBook:",
     ORDERBOOK_DEPTH
 );
 
 console.log(
-    "Dynamic TOP-20 thresholds: ON"
+    "WS chunk:",
+    WS_CHUNK_SIZE
 );
 
 console.log(
-    "WebSocket reconnect protection: ON"
+    "TP RR:",
+    TAKE_PROFIT_RR
 );
 
 console.log(
-    "Heartbeat: 20 seconds"
+    "Adaptive local liquidity:",
+    GROUP_SETTINGS
 );
 
 </script>
