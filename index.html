@@ -6,9 +6,12 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
 
-<title>Bybit Level & Wall Scanner PRO</title>
+<title>Bybit Whale Flow Scanner PRO</title>
 
 <style>
 
@@ -16,9 +19,10 @@
     box-sizing: border-box;
 }
 
+html,
 body {
     margin: 0;
-    padding: 12px;
+    padding: 0;
     background: #0b0e11;
     color: #eaecef;
     font-family:
@@ -29,32 +33,19 @@ body {
         sans-serif;
 }
 
-.header {
-    background: #1e2329;
-    padding: 14px;
-    border-radius: 12px;
-    margin-bottom: 12px;
-}
-
-h1 {
-    font-size: 19px;
-    margin: 0 0 13px;
-}
-
-.controls {
-    display: flex;
-    gap: 7px;
-    flex-wrap: wrap;
-    margin-bottom: 9px;
+body {
+    padding: 12px;
+    -webkit-overflow-scrolling: touch;
 }
 
 button,
 select {
     border: none;
-    border-radius: 8px;
-    padding: 9px 12px;
-    font-weight: bold;
-    cursor: pointer;
+    border-radius: 9px;
+    padding: 11px 14px;
+    font-weight: 700;
+    font-size: 13px;
+    -webkit-appearance: none;
 }
 
 button {
@@ -68,8 +59,12 @@ button.stop {
 }
 
 button.clear {
-    background: #555;
+    background: #444;
     color: white;
+}
+
+button:active {
+    transform: scale(.97);
 }
 
 select {
@@ -77,9 +72,36 @@ select {
     color: white;
 }
 
-.status {
+.header {
+    background: #1e2329;
+    padding: 14px;
+    border-radius: 13px;
+    margin-bottom: 12px;
+}
+
+h1 {
+    font-size: 19px;
+    margin: 0 0 13px 0;
+}
+
+.controls {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 11px;
     color: #848e9c;
+}
+
+.status {
     font-size: 12px;
+    color: #848e9c;
     margin-top: 7px;
 }
 
@@ -87,34 +109,37 @@ select {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 6px;
-    margin-top: 11px;
+    margin-top: 10px;
 }
 
 .stat {
     background: #161a1e;
     border-radius: 8px;
-    padding: 8px 5px;
+    padding: 8px 4px;
     text-align: center;
     font-size: 10px;
+    color: #848e9c;
 }
 
 .stat-value {
     display: block;
     font-size: 14px;
-    font-weight: bold;
+    font-weight: 800;
     margin-top: 3px;
+    color: #eaecef;
 }
 
 .section-title {
     color: #848e9c;
     font-size: 13px;
-    margin: 12px 0 7px;
+    margin: 13px 0 8px;
 }
 
 .signals {
-    height: 73vh;
-    min-height: 400px;
+    height: 68vh;
+    min-height: 350px;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .signal {
@@ -125,10 +150,6 @@ select {
     border-left: 5px solid #555;
 }
 
-.signal.watch {
-    border-left-color: #f1c40f;
-}
-
 .signal.long {
     border-left-color: #27ae60;
 }
@@ -137,9 +158,8 @@ select {
     border-left-color: #e74c3c;
 }
 
-.signal.cancel {
-    border-left-color: #777;
-    opacity: .75;
+.signal.breakout {
+    border-left-color: #f7931a;
 }
 
 .signal-top {
@@ -150,17 +170,17 @@ select {
 
 .symbol {
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 800;
 }
 
-.state {
+.direction {
     font-size: 12px;
-    font-weight: bold;
+    font-weight: 800;
 }
 
 .score {
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 21px;
+    font-weight: 900;
     margin-top: 4px;
 }
 
@@ -195,34 +215,44 @@ select {
     line-height: 1.5;
 }
 
+.empty {
+    text-align: center;
+    color: #848e9c;
+    padding: 55px 15px;
+}
+
 .green {
-    color: #27ae60;
+    color: #27ae60 !important;
 }
 
 .red {
-    color: #e74c3c;
-}
-
-.yellow {
-    color: #f1c40f;
+    color: #e74c3c !important;
 }
 
 .orange {
-    color: #f7931a;
+    color: #f7931a !important;
 }
 
 .blue {
-    color: #3498db;
+    color: #3498db !important;
 }
 
 .gray {
     color: #848e9c;
 }
 
-.empty {
-    text-align: center;
-    color: #848e9c;
-    padding: 60px 15px;
+.warning {
+    color: #f7931a;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.tp {
+    color: #27ae60 !important;
+}
+
+.sl {
+    color: #e74c3c !important;
 }
 
 @media (max-width: 600px) {
@@ -232,7 +262,7 @@ select {
     }
 
     .signals {
-        height: 68vh;
+        height: 64vh;
     }
 
 }
@@ -241,267 +271,448 @@ select {
 
 </head>
 
+
 <body>
+
 
 <div class="header">
 
-    <h1>
-        🐋 Bybit Level & Wall Scanner PRO
-    </h1>
+<h1>
+🐋 Bybit Whale Flow Scanner PRO
+</h1>
 
-    <div class="controls">
 
-        <button onclick="startScanner()">
-            ▶ Запустить
-        </button>
+<div class="controls">
 
-        <button
-            class="stop"
-            onclick="stopScanner()">
+<button onclick="startScanner()">
+▶ Запустить
+</button>
 
-            ⏹ Стоп
+<button
+    class="stop"
+    onclick="stopScanner()">
 
-        </button>
+⏹ Стоп
 
-        <button
-            class="clear"
-            onclick="clearSignals()">
+</button>
 
-            🗑 Очистить
+<button
+    class="clear"
+    onclick="clearSignals()">
 
-        </button>
+🗑 Очистить
 
-    </div>
-
-    <div class="controls">
-
-        <label>
-            WATCH:
-            <select id="watchDistance">
-
-                <option value="0.001">
-                    0.10%
-                </option>
-
-                <option value="0.0015"
-                        selected>
-                    0.15%
-                </option>
-
-                <option value="0.002">
-                    0.20%
-                </option>
-
-            </select>
-        </label>
-
-        <label>
-            Минимальная ликвидность:
-            <select id="minLiquidity">
-
-                <option value="10000"
-                        selected>
-                    $10k
-                </option>
-
-                <option value="20000">
-                    $20k
-                </option>
-
-                <option value="30000">
-                    $30k
-                </option>
-
-            </select>
-        </label>
-
-        <label>
-            Минимальный Score:
-            <select id="minScore">
-
-                <option value="60">
-                    60
-                </option>
-
-                <option value="65"
-                        selected>
-                    65
-                </option>
-
-                <option value="70">
-                    70
-                </option>
-
-            </select>
-        </label>
-
-    </div>
-
-    <div class="status">
-
-        Статус:
-        <span id="status">
-            Остановлен
-        </span>
-
-    </div>
-
-    <div class="stats">
-
-        <div class="stat">
-            TOP
-            <span
-                id="coinCount"
-                class="stat-value">
-                0
-            </span>
-        </div>
-
-        <div class="stat">
-            WS
-            <span
-                id="wsStatus"
-                class="stat-value">
-                OFF
-            </span>
-        </div>
-
-        <div class="stat">
-            WATCH
-            <span
-                id="candidateCount"
-                class="stat-value">
-                0
-            </span>
-        </div>
-
-        <div class="stat">
-            ENTRY
-            <span
-                id="signalCount"
-                class="stat-value">
-                0
-            </span>
-        </div>
-
-    </div>
+</button>
 
 </div>
+
+
+<div class="controls">
+
+
+<div class="control-group">
+
+<label>
+Возраст стены
+</label>
+
+<select id="wallAge">
+
+<option value="3">
+3 сек
+</option>
+
+<option value="5" selected>
+5 сек
+</option>
+
+<option value="8">
+8 сек
+</option>
+
+<option value="10">
+10 сек
+</option>
+
+</select>
+
+</div>
+
+
+<div class="control-group">
+
+<label>
+Минимальный Score
+</label>
+
+<select id="minScore">
+
+<option value="65">
+65
+</option>
+
+<option value="70" selected>
+70
+</option>
+
+<option value="75">
+75
+</option>
+
+<option value="80">
+80
+</option>
+
+<option value="85">
+85
+</option>
+
+</select>
+
+</div>
+
+
+<div class="control-group">
+
+<label>
+Режим
+</label>
+
+<select id="scanMode">
+
+<option value="balanced" selected>
+Balanced
+</option>
+
+<option value="strict">
+Strict
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<div class="status">
+
+Статус:
+
+<span id="status">
+Остановлен
+</span>
+
+</div>
+
+
+<div
+    id="dataWarning"
+    class="warning">
+</div>
+
+
+<div class="stats">
+
+
+<div class="stat">
+
+МОНЕТ
+
+<span
+    id="coinCount"
+    class="stat-value">
+
+0
+
+</span>
+
+</div>
+
+
+<div class="stat">
+
+WS
+
+<span
+    id="wsStatus"
+    class="stat-value">
+
+OFF
+
+</span>
+
+</div>
+
+
+<div class="stat">
+
+КАНДИДАТЫ
+
+<span
+    id="candidateCount"
+    class="stat-value">
+
+0
+
+</span>
+
+</div>
+
+
+<div class="stat">
+
+СИГНАЛЫ
+
+<span
+    id="signalCount"
+    class="stat-value">
+
+0
+
+</span>
+
+</div>
+
+
+</div>
+
+</div>
+
 
 <div class="section-title">
 
-    🎯 Уровни и торговые ситуации
+🔥 Крупнейшие подтверждённые торговые ситуации
 
 </div>
+
 
 <div
     id="signals"
     class="signals">
 
-    <div
-        id="empty"
-        class="empty">
+<div class="empty">
 
-        Запусти сканер.<br><br>
+Запусти сканер.
 
-        Он будет искать уровни,
-        крупные лимитные стены
-        и подтверждённые отбои.
+<br><br>
 
-    </div>
+Ищем:
+
+<br>
+🟢 LONG
+<br>
+🔴 SHORT
+<br>
+🟠 BREAKOUT
+
+</div>
 
 </div>
 
 
 <script>
 
+
 /* =====================================================
    CONFIG
 ===================================================== */
 
+
+/*
+ * Сканируем TOP 100 по обороту.
+ */
+
 const MAX_SYMBOLS = 100;
-
-const ORDERBOOK_DEPTH = 50;
-
-const ANALYSIS_INTERVAL = 500;
-
-const UI_INTERVAL = 500;
-
-const SYMBOL_REFRESH =
-    5 * 60 * 1000;
 
 
 /*
- * Максимальное расстояние,
- * на котором ищем стены.
+ * Order Book 50.
+ */
+
+const ORDERBOOK_DEPTH = 50;
+
+
+/*
+ * Максимум отображаемых сигналов.
+ */
+
+const MAX_SIGNALS = 15;
+
+
+/*
+ * Частота анализа.
+ */
+
+const ANALYSIS_INTERVAL = 700;
+
+
+/*
+ * Частота UI.
+ */
+
+const UI_INTERVAL = 1000;
+
+
+/*
+ * Обновление TOP.
+ */
+
+const SYMBOL_REFRESH =
+    10 * 60 * 1000;
+
+
+/*
+ * Максимальное расстояние стены
+ * от текущей цены.
  */
 
 const MAX_WALL_DISTANCE = 0.008;
 
 
 /*
- * Локальная ликвидность:
- * ±0.30%
+ * Агрессивный flow.
  */
 
-const LOCAL_LIQUIDITY_DISTANCE = 0.003;
+const TRADE_WINDOW = 10000;
+
+
+/*
+ * Окно изменения цены.
+ */
+
+const PRICE_WINDOW = 60000;
+
+
+/*
+ * История стены.
+ */
+
+const WALL_MEMORY = 30000;
 
 
 /*
  * Минимальный возраст стены.
  */
 
-const MIN_WALL_AGE = 4000;
+const MIN_WALL_AGE = 3000;
 
 
 /*
- * Сколько секунд держим
- * историю сделок.
+ * Максимум уровней книги.
  */
 
-const TRADE_WINDOW = 10000;
-
-const PRICE_WINDOW = 60000;
+const MAX_BOOK_LEVELS = 70;
 
 
 /*
- * Стена должна занимать
- * существенную часть стакана.
+ * Batch subscribe.
  */
 
-const MIN_WALL_SHARE = 0.10;
+const SUBSCRIBE_BATCH_SIZE = 10;
 
 
 /*
- * Минимальная доля стены
- * для сильной ситуации.
+ * Сигнал живёт 8 секунд.
  */
 
-const STRONG_WALL_SHARE = 0.18;
+const SIGNAL_EXPIRY = 8000;
+
+
+/* =====================================================
+   TOP 20
+===================================================== */
 
 
 /*
- * Насколько близко должна быть
- * цена к стене для WATCH.
+ * Для TOP 20 используем
+ * локальную ликвидность.
+ *
+ * Минимальная абсолютная стена
+ * всё равно ограничена снизу.
  */
 
-const DEFAULT_WATCH_DISTANCE = 0.0015;
+const TOP20_MIN_WALL = {
+
+    1: 2500000,
+
+    2: 2000000,
+
+    3: 1500000,
+
+    4: 1200000,
+
+    5: 1000000,
+
+    6: 900000,
+
+    7: 800000,
+
+    8: 750000,
+
+    9: 700000,
+
+    10: 650000,
+
+    11: 600000,
+
+    12: 575000,
+
+    13: 550000,
+
+    14: 525000,
+
+    15: 500000,
+
+    16: 475000,
+
+    17: 450000,
+
+    18: 425000,
+
+    19: 400000,
+
+    20: 375000
+
+};
+
+
+/* =====================================================
+   TOP 21-100
+===================================================== */
 
 
 /*
- * После касания ждём
- * подтверждение отбоя.
+ * Для альтов ниже TOP20
+ * порог постепенно уменьшается.
  */
 
-const REJECTION_WINDOW = 8000;
+function getAltThreshold(rank) {
 
+    if (rank <= 30)
+        return 350000;
 
-/*
- * Максимальный пробой уровня,
- * после которого ситуация отменяется.
- */
+    if (rank <= 40)
+        return 300000;
 
-const LEVEL_BREAK_DISTANCE = 0.001;
+    if (rank <= 50)
+        return 275000;
+
+    if (rank <= 60)
+        return 250000;
+
+    if (rank <= 70)
+        return 225000;
+
+    if (rank <= 80)
+        return 200000;
+
+    if (rank <= 90)
+        return 175000;
+
+    return 150000;
+
+}
 
 
 /* =====================================================
@@ -514,50 +725,63 @@ let running = false;
 
 let reconnectTimer = null;
 
-let symbolRefreshTimer = null;
-
 let analysisTimer = null;
 
 let uiTimer = null;
 
+let symbolRefreshTimer = null;
+
 let pingTimer = null;
+
+let watchdogTimer = null;
 
 
 /*
- * TOP монеты
+ * Symbols.
  */
 
 const symbols = [];
 
 const symbolRanks = new Map();
 
+const symbolTurnovers = new Map();
+
 
 /*
- * Order books
+ * Books.
  */
 
 const books = new Map();
 
 
 /*
- * Trades
+ * Trades.
  */
 
 const trades = new Map();
 
 
 /*
- * История стен
+ * Walls.
  */
 
 const wallHistory = new Map();
 
 
 /*
- * Торговые ситуации
+ * Signals.
  */
 
-const setups = new Map();
+const signals = new Map();
+
+
+/*
+ * Market stats.
+ */
+
+let lastMarketMessage = 0;
+
+let marketMessageCount = 0;
 
 
 /* =====================================================
@@ -565,34 +789,25 @@ const setups = new Map();
 ===================================================== */
 
 const statusEl =
-    document.getElementById(
-        "status"
-    );
+    document.getElementById("status");
 
 const wsEl =
-    document.getElementById(
-        "wsStatus"
-    );
+    document.getElementById("wsStatus");
 
 const coinCountEl =
-    document.getElementById(
-        "coinCount"
-    );
+    document.getElementById("coinCount");
 
 const candidateCountEl =
-    document.getElementById(
-        "candidateCount"
-    );
+    document.getElementById("candidateCount");
 
 const signalCountEl =
-    document.getElementById(
-        "signalCount"
-    );
+    document.getElementById("signalCount");
 
 const signalsEl =
-    document.getElementById(
-        "signals"
-    );
+    document.getElementById("signals");
+
+const dataWarningEl =
+    document.getElementById("dataWarning");
 
 
 /* =====================================================
@@ -621,11 +836,13 @@ function money(value) {
 
 function priceFormat(value) {
 
-    const n =
-        Number(value);
+    const n = Number(value);
 
     if (n >= 1000)
         return n.toFixed(2);
+
+    if (n >= 100)
+        return n.toFixed(3);
 
     if (n >= 1)
         return n.toFixed(4);
@@ -638,87 +855,395 @@ function priceFormat(value) {
 }
 
 
-function pct(value) {
+function percent(value) {
 
     return (
-        value * 100
+        Number(value) * 100
     ).toFixed(2) + "%";
 
 }
 
 
+function clamp(
+    value,
+    min,
+    max
+) {
+
+    return Math.max(
+        min,
+        Math.min(max, value)
+    );
+
+}
+
+
 /* =====================================================
-   DYNAMIC THRESHOLD
+   BASE THRESHOLD
 ===================================================== */
 
-
-/*
- * Порог самой стены.
- *
- * Мы НЕ используем один
- * $250k для всех монет.
- */
-
-function getMinimumWall(
-    symbol,
-    localLiquidity
+function getBaseThreshold(
+    symbol
 ) {
 
     const rank =
-        symbolRanks.get(
-            symbol
-        ) || 100;
+        symbolRanks.get(symbol);
+
+
+    if (!rank)
+        return 150000;
 
 
     /*
-     * Стена должна быть
-     * минимум 10% локальной
-     * ликвидности.
+     * TOP 20.
      */
+
+    if (
+        rank <= 20
+    ) {
+
+        return (
+            TOP20_MIN_WALL[rank] ||
+            375000
+        );
+
+    }
+
+
+    /*
+     * TOP 21-100.
+     */
+
+    return getAltThreshold(
+        rank
+    );
+
+}
+
+
+/* =====================================================
+   LOCAL BOOK STATISTICS
+===================================================== */
+
+function getBookStatistics(
+    symbol
+) {
+
+    const book =
+        books.get(symbol);
+
+
+    if (!book)
+        return null;
+
+
+    let price =
+        book.lastPrice;
+
+
+    if (!price) {
+
+        const bids =
+            [...book.bids.keys()]
+                .sort(
+                    (a, b) =>
+                        b - a
+                );
+
+        const asks =
+            [...book.asks.keys()]
+                .sort(
+                    (a, b) =>
+                        a - b
+                );
+
+
+        if (
+            bids.length &&
+            asks.length
+        ) {
+
+            price =
+                (
+                    bids[0] +
+                    asks[0]
+                ) / 2;
+
+        }
+
+    }
+
+
+    if (!price)
+        return null;
+
+
+    const bidValues = [];
+
+    const askValues = [];
+
+
+    for (
+        const [
+            p,
+            q
+        ]
+        of book.bids
+    ) {
+
+        const distance =
+            Math.abs(
+                p - price
+            ) / price;
+
+
+        if (
+            distance <= 0.003
+        ) {
+
+            bidValues.push(
+                p * q
+            );
+
+        }
+
+    }
+
+
+    for (
+        const [
+            p,
+            q
+        ]
+        of book.asks
+    ) {
+
+        const distance =
+            Math.abs(
+                p - price
+            ) / price;
+
+
+        if (
+            distance <= 0.003
+        ) {
+
+            askValues.push(
+                p * q
+            );
+
+        }
+
+    }
+
+
+    function median(values) {
+
+        if (
+            values.length === 0
+        )
+            return 0;
+
+
+        values.sort(
+            (a, b) =>
+                a - b
+        );
+
+
+        return values[
+            Math.floor(
+                values.length / 2
+            )
+        ];
+
+    }
+
+
+    return {
+
+        price,
+
+        bidMedian:
+            median(
+                bidValues
+            ),
+
+        askMedian:
+            median(
+                askValues
+            ),
+
+        bidTotal:
+            bidValues.reduce(
+                (a, b) =>
+                    a + b,
+                0
+            ),
+
+        askTotal:
+            askValues.reduce(
+                (a, b) =>
+                    a + b,
+                0
+            )
+
+    };
+
+}
+
+
+/* =====================================================
+   DYNAMIC WALL THRESHOLD
+===================================================== */
+
+function getDynamicThreshold(
+    symbol,
+    side
+) {
+
+    const rank =
+        symbolRanks.get(symbol);
+
+
+    const base =
+        getBaseThreshold(
+            symbol
+        );
+
+
+    /*
+     * TOP 20.
+     *
+     * Учитываем локальную ликвидность.
+     */
+
+    if (
+        rank &&
+        rank <= 20
+    ) {
+
+        const stats =
+            getBookStatistics(
+                symbol
+            );
+
+
+        if (!stats)
+            return base;
+
+
+        const local =
+            side === "Buy"
+                ? stats.bidMedian
+                : stats.askMedian;
+
+
+        /*
+         * Стена должна быть
+         * значительно крупнее
+         * обычного уровня.
+         */
+
+        const localThreshold =
+            local > 0
+                ? local * 4.0
+                : 0;
+
+
+        return Math.max(
+            base,
+            localThreshold
+        );
+
+    }
+
+
+    /*
+     * TOP 21-100.
+     *
+     * Здесь сохраняем более
+     * стабильный абсолютный порог.
+     */
+
+    const turnover =
+        symbolTurnovers.get(
+            symbol
+        ) || 0;
+
+
+    /*
+     * Очень ликвидные альты
+     * получают небольшой adaptive boost.
+     */
+
+    const turnoverThreshold =
+        turnover *
+        0.0000125;
+
+
+    return Math.max(
+        base,
+        turnoverThreshold
+    );
+
+}
+
+
+/* =====================================================
+   DYNAMIC FLOW THRESHOLD
+===================================================== */
+
+function getDynamicFlowThreshold(
+    symbol
+) {
+
+    const rank =
+        symbolRanks.get(symbol);
+
+
+    const turnover =
+        symbolTurnovers.get(
+            symbol
+        ) || 0;
+
 
     let threshold =
-        localLiquidity *
-        MIN_WALL_SHARE;
+        turnover *
+        0.0000015;
 
 
     /*
-     * Минимумы в зависимости
-     * от ранга.
+     * Базовые значения.
      */
 
-    let rankMinimum;
+    if (rank <= 5)
+        threshold =
+            Math.max(
+                threshold,
+                150000
+            );
 
+    else if (rank <= 20)
+        threshold =
+            Math.max(
+                threshold,
+                100000
+            );
 
-    if (rank <= 5) {
+    else if (rank <= 50)
+        threshold =
+            Math.max(
+                threshold,
+                50000
+            );
 
-        rankMinimum = 100000;
-
-    }
-
-    else if (rank <= 20) {
-
-        rankMinimum = 50000;
-
-    }
-
-    else if (rank <= 50) {
-
-        rankMinimum = 25000;
-
-    }
-
-    else {
-
-        rankMinimum = 10000;
-
-    }
-
-
-    threshold =
-        Math.max(
-            threshold,
-            rankMinimum
-        );
+    else
+        threshold =
+            Math.max(
+                threshold,
+                30000
+            );
 
 
     return threshold;
@@ -727,17 +1252,20 @@ function getMinimumWall(
 
 
 /* =====================================================
-   BOOK
+   CREATE BOOK
 ===================================================== */
 
-function createBook(symbol) {
+function createBook(
+    symbol
+) {
 
     books.set(
         symbol,
         {
             bids: new Map(),
             asks: new Map(),
-            lastPrice: null
+            lastPrice: null,
+            lastUpdate: 0
         }
     );
 
@@ -759,15 +1287,28 @@ function applySnapshot(
         books.get(symbol);
 
 
-    if (Array.isArray(data.b)) {
+    book.bids.clear();
 
-        for (const row of data.b) {
+    book.asks.clear();
+
+
+    if (
+        Array.isArray(data.b)
+    ) {
+
+        for (
+            const order of data.b
+        ) {
 
             const price =
-                Number(row[0]);
+                Number(
+                    order[0]
+                );
 
             const qty =
-                Number(row[1]);
+                Number(
+                    order[1]
+                );
 
 
             if (
@@ -787,15 +1328,23 @@ function applySnapshot(
     }
 
 
-    if (Array.isArray(data.a)) {
+    if (
+        Array.isArray(data.a)
+    ) {
 
-        for (const row of data.a) {
+        for (
+            const order of data.a
+        ) {
 
             const price =
-                Number(row[0]);
+                Number(
+                    order[0]
+                );
 
             const qty =
-                Number(row[1]);
+                Number(
+                    order[1]
+                );
 
 
             if (
@@ -813,6 +1362,10 @@ function applySnapshot(
         }
 
     }
+
+
+    book.lastUpdate =
+        now();
 
 }
 
@@ -834,18 +1387,28 @@ function applyDelta(
         return;
 
 
-    if (Array.isArray(data.b)) {
+    if (
+        Array.isArray(data.b)
+    ) {
 
-        for (const row of data.b) {
+        for (
+            const order of data.b
+        ) {
 
             const price =
-                Number(row[0]);
+                Number(
+                    order[0]
+                );
 
             const qty =
-                Number(row[1]);
+                Number(
+                    order[1]
+                );
 
 
-            if (qty === 0) {
+            if (
+                qty === 0
+            ) {
 
                 book.bids.delete(
                     price
@@ -865,18 +1428,28 @@ function applyDelta(
     }
 
 
-    if (Array.isArray(data.a)) {
+    if (
+        Array.isArray(data.a)
+    ) {
 
-        for (const row of data.a) {
+        for (
+            const order of data.a
+        ) {
 
             const price =
-                Number(row[0]);
+                Number(
+                    order[0]
+                );
 
             const qty =
-                Number(row[1]);
+                Number(
+                    order[1]
+                );
 
 
-            if (qty === 0) {
+            if (
+                qty === 0
+            ) {
 
                 book.asks.delete(
                     price
@@ -895,6 +1468,77 @@ function applyDelta(
 
     }
 
+
+    if (
+        book.bids.size >
+        MAX_BOOK_LEVELS
+    ) {
+
+        trimBook(
+            book.bids,
+            true
+        );
+
+    }
+
+
+    if (
+        book.asks.size >
+        MAX_BOOK_LEVELS
+    ) {
+
+        trimBook(
+            book.asks,
+            false
+        );
+
+    }
+
+
+    book.lastUpdate =
+        now();
+
+}
+
+
+/* =====================================================
+   TRIM BOOK
+===================================================== */
+
+function trimBook(
+    map,
+    bids
+) {
+
+    const entries =
+        [...map.entries()]
+            .sort(
+                (a, b) =>
+                    bids
+                        ? b[0] - a[0]
+                        : a[0] - b[0]
+            );
+
+
+    map.clear();
+
+
+    entries
+        .slice(
+            0,
+            MAX_BOOK_LEVELS
+        )
+        .forEach(
+            ([price, qty]) => {
+
+                map.set(
+                    price,
+                    qty
+                );
+
+            }
+        );
+
 }
 
 
@@ -902,13 +1546,19 @@ function applyDelta(
    TRADES
 ===================================================== */
 
-function processTrade(data) {
+function processTrade(
+    data
+) {
 
-    if (!Array.isArray(data))
+    if (
+        !Array.isArray(data)
+    )
         return;
 
 
-    for (const trade of data) {
+    for (
+        const trade of data
+    ) {
 
         const symbol =
             trade.s;
@@ -917,13 +1567,19 @@ function processTrade(data) {
             trade.S;
 
         const price =
-            Number(trade.p);
+            Number(
+                trade.p
+            );
 
         const qty =
-            Number(trade.v);
+            Number(
+                trade.v
+            );
 
         const timestamp =
-            Number(trade.T) ||
+            Number(
+                trade.T
+            ) ||
             now();
 
 
@@ -939,7 +1595,9 @@ function processTrade(data) {
             price * qty;
 
 
-        if (!trades.has(symbol)) {
+        if (
+            !trades.has(symbol)
+        ) {
 
             trades.set(
                 symbol,
@@ -955,7 +1613,8 @@ function processTrade(data) {
 
         list.push({
 
-            time: timestamp,
+            time:
+                timestamp,
 
             side,
 
@@ -995,6 +1654,20 @@ function processTrade(data) {
 
         }
 
+
+        if (
+            list.length >
+            500
+        ) {
+
+            list.splice(
+                0,
+                list.length -
+                500
+            );
+
+        }
+
     }
 
 }
@@ -1004,7 +1677,9 @@ function processTrade(data) {
    TRADE FLOW
 ===================================================== */
 
-function getTradeFlow(symbol) {
+function getTradeFlow(
+    symbol
+) {
 
     const list =
         trades.get(symbol) ||
@@ -1020,10 +1695,17 @@ function getTradeFlow(symbol) {
 
     let sell = 0;
 
+    let buyCount = 0;
+
+    let sellCount = 0;
+
 
     for (
-        let i = list.length - 1;
+        let i =
+            list.length - 1;
+
         i >= 0;
+
         i--
     ) {
 
@@ -1039,16 +1721,23 @@ function getTradeFlow(symbol) {
 
 
         if (
-            t.side === "Buy"
+            t.side ===
+            "Buy"
         ) {
 
-            buy += t.value;
+            buy +=
+                t.value;
+
+            buyCount++;
 
         }
 
         else {
 
-            sell += t.value;
+            sell +=
+                t.value;
+
+            sellCount++;
 
         }
 
@@ -1061,16 +1750,26 @@ function getTradeFlow(symbol) {
 
     const imbalance =
         total > 0
-            ? (buy - sell) / total
+            ? (
+                buy -
+                sell
+            ) / total
             : 0;
 
 
     return {
 
         buy,
+
         sell,
+
         total,
-        imbalance
+
+        imbalance,
+
+        buyCount,
+
+        sellCount
 
     };
 
@@ -1081,7 +1780,9 @@ function getTradeFlow(symbol) {
    PRICE CHANGE
 ===================================================== */
 
-function getPriceChange(symbol) {
+function getPriceChange(
+    symbol
+) {
 
     const list =
         trades.get(symbol) ||
@@ -1095,7 +1796,9 @@ function getPriceChange(symbol) {
 
 
     const latest =
-        list[list.length - 1];
+        list[
+            list.length - 1
+        ];
 
 
     const cutoff =
@@ -1108,7 +1811,9 @@ function getPriceChange(symbol) {
 
     for (
         let i = 0;
+
         i < list.length;
+
         i++
     ) {
 
@@ -1137,173 +1842,8 @@ function getPriceChange(symbol) {
     return (
         latest.price -
         old.price
-    ) / old.price;
-
-}
-
-
-/* =====================================================
-   CURRENT PRICE
-===================================================== */
-
-function getCurrentPrice(book) {
-
-    if (
-        book &&
-        book.lastPrice
-    ) {
-
-        return book.lastPrice;
-
-    }
-
-
-    if (
-        !book
-    )
-        return null;
-
-
-    const bids =
-        [...book.bids.keys()]
-            .sort(
-                (a, b) => b - a
-            );
-
-    const asks =
-        [...book.asks.keys()]
-            .sort(
-                (a, b) => a - b
-            );
-
-
-    if (
-        bids.length &&
-        asks.length
-    ) {
-
-        return (
-            bids[0] +
-            asks[0]
-        ) / 2;
-
-    }
-
-
-    return null;
-
-}
-
-
-/* =====================================================
-   LOCAL LIQUIDITY
-===================================================== */
-
-
-/*
- * Суммируем реальную
- * ликвидность вокруг цены.
- *
- * Важно:
- * это НЕ размер одной заявки.
- */
-
-function getLocalLiquidity(
-    book,
-    currentPrice
-) {
-
-    if (
-        !book ||
-        !currentPrice
-    ) {
-
-        return {
-
-            bid: 0,
-
-            ask: 0,
-
-            total: 0
-
-        };
-
-    }
-
-
-    let bid = 0;
-
-    let ask = 0;
-
-
-    for (
-        const [
-            price,
-            qty
-        ]
-        of book.bids
-    ) {
-
-        const distance =
-            Math.abs(
-                price -
-                currentPrice
-            ) /
-            currentPrice;
-
-
-        if (
-            distance <=
-            LOCAL_LIQUIDITY_DISTANCE
-        ) {
-
-            bid +=
-                price * qty;
-
-        }
-
-    }
-
-
-    for (
-        const [
-            price,
-            qty
-        ]
-        of book.asks
-    ) {
-
-        const distance =
-            Math.abs(
-                price -
-                currentPrice
-            ) /
-            currentPrice;
-
-
-        if (
-            distance <=
-            LOCAL_LIQUIDITY_DISTANCE
-        ) {
-
-            ask +=
-                price * qty;
-
-        }
-
-    }
-
-
-    return {
-
-        bid,
-
-        ask,
-
-        total:
-            bid + ask
-
-    };
+    ) /
+    old.price;
 
 }
 
@@ -1312,7 +1852,9 @@ function getLocalLiquidity(
    FIND WALLS
 ===================================================== */
 
-function findWalls(symbol) {
+function findWalls(
+    symbol
+) {
 
     const book =
         books.get(symbol);
@@ -1322,62 +1864,52 @@ function findWalls(symbol) {
         return [];
 
 
-    const currentPrice =
-        getCurrentPrice(book);
+    let currentPrice =
+        book.lastPrice;
+
+
+    if (!currentPrice) {
+
+        const bids =
+            [...book.bids.keys()]
+                .sort(
+                    (a, b) =>
+                        b - a
+                );
+
+        const asks =
+            [...book.asks.keys()]
+                .sort(
+                    (a, b) =>
+                        a - b
+                );
+
+
+        if (
+            bids.length &&
+            asks.length
+        ) {
+
+            currentPrice =
+                (
+                    bids[0] +
+                    asks[0]
+                ) / 2;
+
+        }
+
+    }
 
 
     if (!currentPrice)
         return [];
 
 
-    const liquidity =
-        getLocalLiquidity(
-            book,
-            currentPrice
-        );
-
-
-    /*
-     * Жёсткий фильтр:
-     *
-     * если вся локальная
-     * ликвидность < $10k
-     *
-     * монета не интересует.
-     */
-
-    const minimumLiquidity =
-        Number(
-            document
-                .getElementById(
-                    "minLiquidity"
-                )
-                .value
-        );
-
-
-    if (
-        liquidity.total <
-        minimumLiquidity
-    ) {
-
-        return [];
-
-    }
-
-
     const result = [];
 
 
-    const threshold =
-        getMinimumWall(
-            symbol,
-            liquidity.total
-        );
-
-
     /*
-     * BUY WALL
+     * BUY WALLS
      */
 
     for (
@@ -1408,47 +1940,45 @@ function findWalls(symbol) {
             price * qty;
 
 
-        const share =
-            liquidity.total > 0
-                ? value /
-                  liquidity.total
-                : 0;
+        const threshold =
+            getDynamicThreshold(
+                symbol,
+                "Buy"
+            );
 
 
         if (
-            value >= threshold &&
-            share >= MIN_WALL_SHARE
-        ) {
+            value <
+            threshold
+        )
+            continue;
 
-            result.push({
 
-                symbol,
+        result.push({
 
-                side: "Buy",
+            symbol,
 
-                price,
+            side: "Buy",
 
-                qty,
+            price,
 
-                value,
+            qty,
 
-                distance,
+            value,
 
-                share,
+            distance,
 
-                currentPrice,
+            currentPrice,
 
-                liquidity
+            threshold
 
-            });
-
-        }
+        });
 
     }
 
 
     /*
-     * SELL WALL
+     * SELL WALLS
      */
 
     for (
@@ -1479,63 +2009,97 @@ function findWalls(symbol) {
             price * qty;
 
 
-        const share =
-            liquidity.total > 0
-                ? value /
-                  liquidity.total
-                : 0;
+        const threshold =
+            getDynamicThreshold(
+                symbol,
+                "Sell"
+            );
 
 
         if (
-            value >= threshold &&
-            share >= MIN_WALL_SHARE
-        ) {
+            value <
+            threshold
+        )
+            continue;
 
-            result.push({
 
-                symbol,
+        result.push({
 
-                side: "Sell",
+            symbol,
 
-                price,
+            side: "Sell",
 
-                qty,
+            price,
 
-                value,
+            qty,
 
-                distance,
+            value,
 
-                share,
+            distance,
 
-                currentPrice,
+            currentPrice,
 
-                liquidity
+            threshold
 
-            });
-
-        }
+        });
 
     }
 
 
+    /*
+     * Считаем локальный ratio.
+     */
+
+    const stats =
+        getBookStatistics(
+            symbol
+        );
+
+
+    for (
+        const wall of result
+    ) {
+
+        const local =
+            wall.side === "Buy"
+                ? stats?.bidMedian || 1
+                : stats?.askMedian || 1;
+
+
+        wall.ratio =
+            wall.value /
+            Math.max(
+                local,
+                1
+            );
+
+    }
+
+
+    /*
+     * Сортировка.
+     */
+
     result.sort(
         (a, b) => {
 
-            /*
-             * Сначала учитываем
-             * относительную силу стены.
-             */
+            const scoreA =
+                a.value *
+                Math.min(
+                    a.ratio,
+                    10
+                );
 
-            const sa =
-                a.share * 100 +
-                a.value / 1000000;
+            const scoreB =
+                b.value *
+                Math.min(
+                    b.ratio,
+                    10
+                );
 
-            const sb =
-                b.share * 100 +
-                b.value / 1000000;
 
-
-            return sb - sa;
+            return scoreB -
+                   scoreA;
 
         }
     );
@@ -1550,20 +2114,78 @@ function findWalls(symbol) {
 
 
 /* =====================================================
-   WALL HISTORY
+   WALL KEY
 ===================================================== */
 
-function updateWallHistory(wall) {
+function getWallKey(
+    wall
+) {
 
     /*
-     * Цена уровня округляется
-     * чтобы небольшое изменение
-     * количества не создавало
-     * новый уровень.
+     * Более точная нормализация
+     * цены для альтов.
      */
 
+    let precision = 6;
+
+
+    if (
+        wall.price >= 1000
+    )
+        precision = 1;
+
+    else if (
+        wall.price >= 100
+    )
+        precision = 2;
+
+    else if (
+        wall.price >= 1
+    )
+        precision = 4;
+
+    else if (
+        wall.price >= 0.01
+    )
+        precision = 6;
+
+    else
+        precision = 8;
+
+
+    const normalized =
+        Number(
+            wall.price.toFixed(
+                precision
+            )
+        );
+
+
+    return (
+        wall.symbol +
+        "_" +
+        wall.side +
+        "_" +
+        normalized
+    );
+
+}
+
+
+/* =====================================================
+   UPDATE WALL HISTORY
+===================================================== */
+
+function updateWallHistory(
+    wall
+) {
+
     const key =
-        `${wall.symbol}_${wall.side}_${wall.price}`;
+        getWallKey(wall);
+
+
+    const timestamp =
+        now();
 
 
     if (
@@ -1574,9 +2196,22 @@ function updateWallHistory(wall) {
             key,
             {
 
-                firstSeen: now(),
+                key,
 
-                lastSeen: now(),
+                symbol:
+                    wall.symbol,
+
+                side:
+                    wall.side,
+
+                price:
+                    wall.price,
+
+                firstSeen:
+                    timestamp,
+
+                lastSeen:
+                    timestamp,
 
                 lastValue:
                     wall.value,
@@ -1584,122 +2219,353 @@ function updateWallHistory(wall) {
                 maxValue:
                     wall.value,
 
-                touches: 0,
+                samples: 1,
 
-                lastPrice:
-                    wall.currentPrice,
-
-                minPrice:
-                    wall.currentPrice,
-
-                maxPrice:
-                    wall.currentPrice
+                disappeared: false
 
             }
         );
 
     }
 
+    else {
 
-    const history =
-        wallHistory.get(key);
-
-
-    history.lastSeen =
-        now();
+        const item =
+            wallHistory.get(key);
 
 
-    history.lastValue =
-        wall.value;
+        item.lastSeen =
+            timestamp;
 
 
-    history.maxValue =
-        Math.max(
-            history.maxValue,
-            wall.value
-        );
+        item.lastValue =
+            wall.value;
 
 
-    history.lastPrice =
-        wall.currentPrice;
+        item.maxValue =
+            Math.max(
+                item.maxValue,
+                wall.value
+            );
 
 
-    history.minPrice =
-        Math.min(
-            history.minPrice,
-            wall.currentPrice
-        );
+        item.samples++;
 
 
-    history.maxPrice =
-        Math.max(
-            history.maxPrice,
-            wall.currentPrice
-        );
+        item.disappeared =
+            false;
+
+    }
 
 
-    return history;
+    return wallHistory.get(key);
 
 }
 
 
 /* =====================================================
-   WALL EXISTS
+   WALL STABILITY
 ===================================================== */
 
-function wallStillExists(
-    setup
+function getWallStability(
+    history,
+    currentValue
 ) {
 
-    const book =
-        books.get(
-            setup.symbol
-        );
+    if (!history)
+        return 0;
 
 
-    if (!book)
-        return false;
-
-
-    const source =
-        setup.side === "Buy"
-            ? book.bids
-            : book.asks;
-
-
-    const qty =
-        source.get(
-            setup.wallPrice
-        );
-
-
-    if (!qty)
-        return false;
-
-
-    const value =
-        setup.wallPrice *
-        qty;
+    const age =
+        now() -
+        history.firstSeen;
 
 
     /*
-     * Если стена уменьшилась
-     * более чем на 65%,
-     * считаем её исчезнувшей.
+     * Возраст.
      */
 
+    const ageFactor =
+        clamp(
+            age / 15000,
+            0,
+            1
+        );
+
+
+    /*
+     * Стабильность размера.
+     */
+
+    const maxValue =
+        Math.max(
+            history.maxValue,
+            1
+        );
+
+
+    const valueRatio =
+        currentValue /
+        maxValue;
+
+
+    const valueFactor =
+        clamp(
+            valueRatio,
+            0,
+            1
+        );
+
+
+    /*
+     * Количество наблюдений.
+     */
+
+    const sampleFactor =
+        clamp(
+            history.samples / 15,
+            0,
+            1
+        );
+
+
+    return (
+        ageFactor * 0.45 +
+        valueFactor * 0.30 +
+        sampleFactor * 0.25
+    );
+
+}
+
+
+/* =====================================================
+   WALL ATTACK
+===================================================== */
+
+function getWallAttack(
+    wall,
+    flow
+) {
+
     if (
-        value <
-        setup.initialWallValue *
-        0.35
+        wall.side === "Buy"
     ) {
 
-        return false;
+        /*
+         * Продавцы атакуют BUY wall.
+         */
+
+        if (
+            flow.sell >
+            flow.buy * 1.35
+        ) {
+
+            return true;
+
+        }
 
     }
 
 
-    return true;
+    if (
+        wall.side === "Sell"
+    ) {
+
+        /*
+         * Покупатели атакуют SELL wall.
+         */
+
+        if (
+            flow.buy >
+            flow.sell * 1.35
+        ) {
+
+            return true;
+
+        }
+
+    }
+
+
+    return false;
+
+}
+
+
+/* =====================================================
+   ABSORPTION
+===================================================== */
+
+function isAbsorption(
+    wall,
+    flow,
+    priceChange
+) {
+
+    if (
+        wall.side === "Buy"
+    ) {
+
+        return (
+            flow.sell >
+            flow.buy * 1.15 &&
+            priceChange >
+            -0.0012
+        );
+
+    }
+
+
+    if (
+        wall.side === "Sell"
+    ) {
+
+        return (
+            flow.buy >
+            flow.sell * 1.15 &&
+            priceChange <
+            0.0012
+        );
+
+    }
+
+
+    return false;
+
+}
+
+
+/* =====================================================
+   SETUP
+===================================================== */
+
+function determineSetup(
+    wall,
+    flow,
+    priceChange,
+    stability
+) {
+
+    const flowThreshold =
+        getDynamicFlowThreshold(
+            wall.symbol
+        );
+
+
+    if (
+        flow.total <
+        flowThreshold
+    )
+        return null;
+
+
+    /*
+     * =========================================
+     * BUY WALL
+     * =========================================
+     */
+
+    if (
+        wall.side === "Buy"
+    ) {
+
+        /*
+         * LONG:
+         *
+         * Стена стоит,
+         * продажи атакуют её,
+         * цена не падает.
+         *
+         * Это absorption.
+         */
+
+        if (
+            isAbsorption(
+                wall,
+                flow,
+                priceChange
+            ) &&
+            stability >= 0.30
+        ) {
+
+            return "LONG";
+
+        }
+
+
+        /*
+         * BREAKDOWN:
+         *
+         * BUY wall атакован
+         * продавцами и цена
+         * действительно идёт вниз.
+         */
+
+        if (
+            flow.sell >
+            flow.buy * 1.50 &&
+            priceChange <
+            -0.0006
+        ) {
+
+            return "BREAKOUT";
+
+        }
+
+    }
+
+
+    /*
+     * =========================================
+     * SELL WALL
+     * =========================================
+     */
+
+    if (
+        wall.side === "Sell"
+    ) {
+
+        /*
+         * SHORT:
+         *
+         * Покупатели атакуют
+         * SELL wall, но цена
+         * не проходит выше.
+         */
+
+        if (
+            isAbsorption(
+                wall,
+                flow,
+                priceChange
+            ) &&
+            stability >= 0.30
+        ) {
+
+            return "SHORT";
+
+        }
+
+
+        /*
+         * BREAKOUT UP.
+         */
+
+        if (
+            flow.buy >
+            flow.sell * 1.50 &&
+            priceChange >
+            0.0006
+        ) {
+
+            return "BREAKOUT";
+
+        }
+
+    }
+
+
+    return null;
 
 }
 
@@ -1711,480 +2577,353 @@ function wallStillExists(
 function calculateScore(
     wall,
     flow,
-    rejection
+    priceChange,
+    history
 ) {
 
     let score = 0;
 
 
     /*
-     * Размер.
+     * 1.
+     * Размер стены.
+     *
+     * 20 points.
      */
 
-    const size =
-        Math.min(
-            25,
-            Math.log10(
-                Math.max(
-                    wall.value,
-                    1
-                ) /
-                10000
-            ) * 12
-        );
+    const threshold =
+        wall.threshold;
 
 
-    score +=
+    const sizeRatio =
+        wall.value /
         Math.max(
-            0,
-            size
+            threshold,
+            1
         );
 
-
-    /*
-     * Доля локальной
-     * ликвидности.
-     */
-
-    const shareScore =
-        Math.min(
-            25,
-            wall.share * 100
-        );
-
-
-    score +=
-        shareScore;
-
-
-    /*
-     * Возраст.
-     */
-
-    const age =
-        wall.age / 1000;
-
-
-    score +=
-        Math.min(
-            15,
-            age
-        );
-
-
-    /*
-     * Поглощение.
-     */
 
     score +=
         Math.min(
             20,
-            Math.abs(
-                flow.imbalance
-            ) * 40
+            Math.log10(
+                Math.max(
+                    sizeRatio,
+                    1
+                )
+            ) * 16
         );
 
 
     /*
-     * Реакция цены.
+     * 2.
+     * Wall ratio.
+     *
+     * 20 points.
      */
 
-    score +=
-        Math.min(
-            15,
-            rejection * 10000
+    const ratioScore =
+        clamp(
+            (
+                wall.ratio -
+                2
+            ) * 4,
+            0,
+            20
         );
 
 
-    return Math.min(
-        100,
-        Math.round(score)
-    );
-
-}
+    score +=
+        ratioScore;
 
 
-/* =====================================================
-   CREATE / UPDATE SETUP
-===================================================== */
-
-function getSetupKey(wall) {
-
-    return (
-        wall.symbol +
-        "_" +
-        wall.side +
-        "_" +
-        wall.price
-    );
-
-}
-
-
-/* =====================================================
-   ANALYZE WALL
-===================================================== */
-
-function analyzeWall(wall) {
-
-    const key =
-        getSetupKey(wall);
-
-
-    const history =
-        updateWallHistory(wall);
-
+    /*
+     * 3.
+     * Возраст.
+     *
+     * 15 points.
+     */
 
     const age =
         now() -
         history.firstSeen;
 
 
-    wall.age =
-        age;
-
-
-    /*
-     * Слишком свежая стена.
-     */
-
-    if (
-        age <
-        MIN_WALL_AGE
-    ) {
-
-        return;
-
-    }
-
-
-    /*
-     * Если уже есть сетап,
-     * обновляем его.
-     */
-
-    let setup =
-        setups.get(key);
-
-
-    if (!setup) {
-
-        setup = {
-
-            key,
-
-            symbol:
-                wall.symbol,
-
-            side:
-                wall.side,
-
-            wallPrice:
-                wall.price,
-
-            initialWallValue:
-                wall.value,
-
-            state:
-                "WATCH",
-
-            created:
-                now(),
-
-            touched:
-                false,
-
-            rejection:
-                0,
-
-            score:
-                0,
-
-            lastUpdate:
-                now(),
-
-            wall,
-
-            flow:
-                null,
-
-            liquidity:
-                wall.liquidity
-
-        };
-
-
-        setups.set(
-            key,
-            setup
-        );
-
-    }
-
-
-    setup.wall =
-        wall;
-
-    setup.lastUpdate =
-        now();
-
-
-    const flow =
-        getTradeFlow(
-            wall.symbol
-        );
-
-
-    setup.flow =
-        flow;
-
-
-    const currentPrice =
-        wall.currentPrice;
-
-
-    const distance =
-        wall.distance;
-
-
-    /*
-     * WATCH distance.
-     */
-
-    const watchDistance =
-        Number(
-            document
-                .getElementById(
-                    "watchDistance"
-                )
-                .value
+    score +=
+        Math.min(
+            15,
+            age / 1000
         );
 
 
     /*
-     * Цена рядом со стеной.
-     */
-
-    if (
-        distance <=
-        watchDistance
-    ) {
-
-        setup.touched =
-            true;
-
-    }
-
-
-    /*
-     * BUY WALL
+     * 4.
+     * Flow.
      *
-     * Для LONG нам нужны:
-     *
-     * 1. цена рядом с BUY wall
-     * 2. агрессивные продажи
-     * 3. цена не пробивает стену
-     * 4. затем появляется рост
+     * 25 points.
      */
 
-    if (
+    const alignedFlow =
         wall.side === "Buy"
-    ) {
-
-        const levelBreak =
-            (
-                wall.price -
-                currentPrice
-            ) /
-            wall.price;
-
-
-        /*
-         * Цена ниже стены.
-         */
-
-        if (
-            levelBreak >
-            LEVEL_BREAK_DISTANCE
-        ) {
-
-            setup.state =
-                "CANCELLED";
-
-            setup.cancelReason =
-                "BUY wall пробита";
-
-
-            return;
-
-        }
-
-
-        /*
-         * Продавцы атакуют стену.
-         */
-
-        const sellingPressure =
-            flow.imbalance <
-            -0.12;
-
-
-        /*
-         * Появляется восстановление.
-         */
-
-        const recovery =
-            flow.imbalance >
-            -0.05;
-
-
-        /*
-         * Цена начинает расти.
-         */
-
-        const priceChange =
-            getPriceChange(
-                wall.symbol
+            ? Math.max(
+                0,
+                flow.imbalance
+            )
+            : Math.max(
+                0,
+                -flow.imbalance
             );
 
 
-        const priceRecovery =
-            priceChange >
-            0.00015;
+    const attackFlow =
+        wall.side === "Buy"
+            ? Math.max(
+                0,
+                -flow.imbalance
+            )
+            : Math.max(
+                0,
+                flow.imbalance
+            );
 
 
-        /*
-         * Сначала должно быть
-         * давление продавцов.
-         */
+    /*
+     * Для absorption
+     * полезен противоположный flow,
+     * поэтому учитываем его отдельно.
+     */
 
-        if (
-            setup.touched &&
-            sellingPressure
-        ) {
-
-            setup.state =
-                "ABSORBING";
-
-        }
+    const flowQuality =
+        Math.max(
+            alignedFlow,
+            attackFlow
+        );
 
 
-        /*
-         * После давления —
-         * восстановление.
-         */
+    score +=
+        Math.min(
+            25,
+            flowQuality * 35
+        );
 
-        if (
-            setup.touched &&
-            setup.state ===
-            "ABSORBING" &&
-            recovery &&
-            priceRecovery
-        ) {
 
-            setup.state =
-                "ENTRY";
+    /*
+     * 5.
+     * Price reaction.
+     *
+     * 10 points.
+     */
 
-            setup.direction =
-                "LONG";
+    const priceQuality =
+        Math.min(
+            1,
+            Math.abs(
+                priceChange
+            ) * 1200
+        );
 
-            setup.rejection =
-                priceChange;
 
-        }
+    score +=
+        priceQuality * 10;
+
+
+    /*
+     * 6.
+     * Stability.
+     *
+     * 10 points.
+     */
+
+    const stability =
+        getWallStability(
+            history,
+            wall.value
+        );
+
+
+    score +=
+        stability * 10;
+
+
+    return clamp(
+        Math.round(score),
+        0,
+        100
+    );
+
+}
+
+
+/* =====================================================
+   TARGETS
+===================================================== */
+
+function calculateTargets(
+    wall,
+    setup,
+    price
+) {
+
+    let tp = 0;
+
+    let sl = 0;
+
+
+    /*
+     * Расстояние зависит
+     * от типа актива.
+     */
+
+    const rank =
+        symbolRanks.get(
+            wall.symbol
+        ) || 100;
+
+
+    let tpPercent;
+
+    let slPercent;
+
+
+    if (
+        rank <= 10
+    ) {
+
+        tpPercent =
+            0.0035;
+
+        slPercent =
+            0.0020;
+
+    }
+
+    else if (
+        rank <= 20
+    ) {
+
+        tpPercent =
+            0.0045;
+
+        slPercent =
+            0.0025;
+
+    }
+
+    else if (
+        rank <= 50
+    ) {
+
+        tpPercent =
+            0.0060;
+
+        slPercent =
+            0.0035;
+
+    }
+
+    else {
+
+        tpPercent =
+            0.0080;
+
+        slPercent =
+            0.0045;
 
     }
 
 
     /*
-     * SELL WALL
-     *
-     * Для SHORT:
-     *
-     * агрессивные покупки
-     * бьют в стену,
-     * цена не проходит,
-     * появляется снижение.
+     * LONG.
      */
 
     if (
-        wall.side === "Sell"
+        setup === "LONG"
     ) {
 
-        const levelBreak =
+        tp =
+            price *
             (
-                currentPrice -
-                wall.price
-            ) /
-            wall.price;
-
-
-        if (
-            levelBreak >
-            LEVEL_BREAK_DISTANCE
-        ) {
-
-            setup.state =
-                "CANCELLED";
-
-            setup.cancelReason =
-                "SELL wall пробита";
-
-
-            return;
-
-        }
-
-
-        const buyingPressure =
-            flow.imbalance >
-            0.12;
-
-
-        const rejection =
-            flow.imbalance <
-            0.05;
-
-
-        const priceChange =
-            getPriceChange(
-                wall.symbol
+                1 +
+                tpPercent
             );
 
+        sl =
+            price *
+            (
+                1 -
+                slPercent
+            );
 
-        const priceDrop =
-            priceChange <
-            -0.00015;
+    }
 
+
+    /*
+     * SHORT.
+     */
+
+    else if (
+        setup === "SHORT"
+    ) {
+
+        tp =
+            price *
+            (
+                1 -
+                tpPercent
+            );
+
+        sl =
+            price *
+            (
+                1 +
+                slPercent
+            );
+
+    }
+
+
+    /*
+     * BREAKOUT.
+     */
+
+    else {
 
         if (
-            setup.touched &&
-            buyingPressure
+            wall.side === "Sell"
         ) {
 
-            setup.state =
-                "ABSORBING";
+            tp =
+                price *
+                (
+                    1 +
+                    tpPercent *
+                    1.35
+                );
+
+            sl =
+                price *
+                (
+                    1 -
+                    slPercent
+                );
 
         }
 
+        else {
 
-        if (
-            setup.touched &&
-            setup.state ===
-            "ABSORBING" &&
-            rejection &&
-            priceDrop
-        ) {
+            tp =
+                price *
+                (
+                    1 -
+                    tpPercent *
+                    1.35
+                );
 
-            setup.state =
-                "ENTRY";
-
-            setup.direction =
-                "SHORT";
-
-            setup.rejection =
-                Math.abs(
-                    priceChange
+            sl =
+                price *
+                (
+                    1 +
+                    slPercent
                 );
 
         }
@@ -2192,72 +2931,276 @@ function analyzeWall(wall) {
     }
 
 
+    return {
+
+        tp,
+
+        sl,
+
+        tpPercent,
+
+        slPercent
+
+    };
+
+}
+
+
+/* =====================================================
+   ANALYZE SYMBOL
+===================================================== */
+
+function analyzeSymbol(
+    symbol
+) {
+
+    const book =
+        books.get(symbol);
+
+
+    if (!book)
+        return;
+
+
     /*
-     * ENTRY не должен жить вечно.
+     * Старую книгу не анализируем.
      */
 
     if (
-        setup.state ===
-        "ENTRY"
+        now() -
+        book.lastUpdate >
+        10000
     ) {
 
-        if (
-            now() -
-            setup.created >
-            REJECTION_WINDOW
-        ) {
-
-            /*
-             * После подтверждённого
-             * входа оставляем ACTIVE.
-             */
-
-            setup.state =
-                "ACTIVE";
-
-        }
+        return;
 
     }
 
 
-    /*
-     * Score.
-     */
-
-    setup.score =
-        calculateScore(
-            wall,
-            flow,
-            setup.rejection || 0
-        );
-
-
-    /*
-     * Если score слишком маленький,
-     * ENTRY не показываем.
-     */
-
-    const minScore =
-        Number(
-            document
-                .getElementById(
-                    "minScore"
-                )
-                .value
+    const walls =
+        findWalls(
+            symbol
         );
 
 
     if (
-        (
-            setup.state ===
-            "ENTRY"
-        ) &&
-        setup.score <
-        minScore
+        walls.length === 0
+    )
+        return;
+
+
+    const flow =
+        getTradeFlow(
+            symbol
+        );
+
+
+    const priceChange =
+        getPriceChange(
+            symbol
+        );
+
+
+    const requiredAge =
+        Math.max(
+            MIN_WALL_AGE,
+            Number(
+                document
+                    .getElementById(
+                        "wallAge"
+                    )
+                    .value
+            ) * 1000
+        );
+
+
+    const strict =
+        document
+            .getElementById(
+                "scanMode"
+            )
+            .value ===
+        "strict";
+
+
+    for (
+        const wall of walls
     ) {
 
-        setup.state =
-            "ABSORBING";
+        const history =
+            updateWallHistory(
+                wall
+            );
+
+
+        const age =
+            now() -
+            history.firstSeen;
+
+
+        /*
+         * Стена должна существовать
+         * минимум заданное время.
+         */
+
+        if (
+            age <
+            requiredAge
+        )
+            continue;
+
+
+        const stability =
+            getWallStability(
+                history,
+                wall.value
+            );
+
+
+        /*
+         * В strict требуем
+         * более устойчивую стену.
+         */
+
+        if (
+            strict &&
+            stability <
+            0.45
+        )
+            continue;
+
+
+        /*
+         * Flow.
+         */
+
+        const flowThreshold =
+            getDynamicFlowThreshold(
+                symbol
+            );
+
+
+        const finalFlowThreshold =
+            strict
+                ? flowThreshold * 1.5
+                : flowThreshold;
+
+
+        if (
+            flow.total <
+            finalFlowThreshold
+        )
+            continue;
+
+
+        /*
+         * Определяем setup.
+         */
+
+        const setup =
+            determineSetup(
+                wall,
+                flow,
+                priceChange,
+                stability
+            );
+
+
+        if (!setup)
+            continue;
+
+
+        /*
+         * Score.
+         */
+
+        const score =
+            calculateScore(
+                wall,
+                flow,
+                priceChange,
+                history
+            );
+
+
+        const minScore =
+            Number(
+                document
+                    .getElementById(
+                        "minScore"
+                    )
+                    .value
+            );
+
+
+        if (
+            score <
+            minScore
+        )
+            continue;
+
+
+        /*
+         * TP / SL.
+         */
+
+        const targets =
+            calculateTargets(
+                wall,
+                setup,
+                wall.currentPrice
+            );
+
+
+        const key =
+            [
+                wall.symbol,
+                wall.side,
+                getWallKey(wall)
+            ].join("_");
+
+
+        signals.set(
+            key,
+            {
+
+                key,
+
+                symbol,
+
+                rank:
+                    symbolRanks.get(
+                        symbol
+                    ),
+
+                setup,
+
+                score,
+
+                wall,
+
+                flow,
+
+                priceChange,
+
+                age,
+
+                stability,
+
+                threshold:
+                    wall.threshold,
+
+                tp:
+                    targets.tp,
+
+                sl:
+                    targets.sl,
+
+                updated:
+                    now()
+
+            }
+        );
 
     }
 
@@ -2274,27 +3217,41 @@ function analyzeAll() {
         return;
 
 
-    /*
-     * Сначала находим
-     * актуальные стены.
-     */
-
     for (
-        const symbol
-        of symbols
+        const symbol of symbols
     ) {
 
-        const walls =
-            findWalls(symbol);
+        analyzeSymbol(
+            symbol
+        );
+
+    }
 
 
-        for (
-            const wall
-            of walls
+    /*
+     * Удаляем старые сигналы.
+     */
+
+    const expiry =
+        now() -
+        SIGNAL_EXPIRY;
+
+
+    for (
+        const [
+            key,
+            signal
+        ]
+        of signals
+    ) {
+
+        if (
+            signal.updated <
+            expiry
         ) {
 
-            analyzeWall(
-                wall
+            signals.delete(
+                key
             );
 
         }
@@ -2303,64 +3260,28 @@ function analyzeAll() {
 
 
     /*
-     * Проверяем старые ситуации.
+     * Чистим историю стен.
      */
+
+    const historyExpiry =
+        now() -
+        WALL_MEMORY;
+
 
     for (
         const [
             key,
-            setup
+            item
         ]
-        of setups
+        of wallHistory
     ) {
 
         if (
-            setup.state ===
-            "CANCELLED"
-        )
-            continue;
-
-
-        /*
-         * Стена исчезла.
-         */
-
-        if (
-            !wallStillExists(
-                setup
-            )
+            item.lastSeen <
+            historyExpiry
         ) {
 
-            setup.state =
-                "CANCELLED";
-
-            setup.cancelReason =
-                "Стена исчезла";
-
-
-            continue;
-
-        }
-
-
-        /*
-         * WATCH/ABSORBING
-         * не держим бесконечно.
-         */
-
-        if (
-            now() -
-            setup.created >
-            30000 &&
-            (
-                setup.state ===
-                "WATCH" ||
-                setup.state ===
-                "ABSORBING"
-            )
-        ) {
-
-            setups.delete(
+            wallHistory.delete(
                 key
             );
 
@@ -2372,187 +3293,61 @@ function analyzeAll() {
 
 
 /* =====================================================
-   STATE TEXT
-===================================================== */
-
-function getStateText(
-    setup
-) {
-
-    if (
-        setup.state ===
-        "WATCH"
-    ) {
-
-        return "🟡 WATCH";
-
-    }
-
-
-    if (
-        setup.state ===
-        "ABSORBING"
-    ) {
-
-        return "🟠 ПОГЛОЩЕНИЕ";
-
-    }
-
-
-    if (
-        setup.state ===
-        "ENTRY"
-    ) {
-
-        return setup.direction ===
-            "LONG"
-                ? "🟢 LONG ENTRY"
-                : "🔴 SHORT ENTRY";
-
-    }
-
-
-    if (
-        setup.state ===
-        "ACTIVE"
-    ) {
-
-        return setup.direction ===
-            "LONG"
-                ? "🟢 LONG ACTIVE"
-                : "🔴 SHORT ACTIVE";
-
-    }
-
-
-    if (
-        setup.state ===
-        "CANCELLED"
-    ) {
-
-        return "⚪ CANCELLED";
-
-    }
-
-
-    return setup.state;
-
-}
-
-
-/* =====================================================
    RENDER
 ===================================================== */
 
 function renderSignals() {
 
-    const list =
-        [...setups.values()]
-            .filter(
-                s =>
-                    s.state !==
-                    "CANCELLED"
-            )
+    const sorted =
+        [...signals.values()]
             .sort(
-                (a, b) => {
-
-                    const priority = {
-
-                        ENTRY: 5,
-
-                        ACTIVE: 4,
-
-                        ABSORBING: 3,
-
-                        WATCH: 2
-
-                    };
-
-
-                    const pa =
-                        priority[
-                            a.state
-                        ] || 0;
-
-                    const pb =
-                        priority[
-                            b.state
-                        ] || 0;
-
-
-                    if (
-                        pa !== pb
-                    )
-                        return pb - pa;
-
-
-                    return (
-                        b.score -
-                        a.score
-                    );
-
-                }
+                (a, b) =>
+                    b.score -
+                    a.score
             )
             .slice(
                 0,
-                15
+                MAX_SIGNALS
             );
 
 
     candidateCountEl.innerText =
-        list.filter(
-            s =>
-                s.state ===
-                "WATCH" ||
-                s.state ===
-                "ABSORBING"
-        ).length;
+        signals.size;
 
 
     signalCountEl.innerText =
-        list.filter(
-            s =>
-                s.state ===
-                "ENTRY" ||
-                s.state ===
-                "ACTIVE"
-        ).length;
+        sorted.length;
 
 
     if (
-        list.length === 0
+        sorted.length === 0
     ) {
 
         signalsEl.innerHTML = `
 
             <div class="empty">
 
-                🔎 Ищем уровни...
+                🔎 Ищем ситуацию...
 
                 <br><br>
 
-                Нужна локальная ликвидность
-                минимум $10 000.
+                Сейчас нет подтверждённой
+                whale-ситуации.
 
                 <br><br>
 
-                Затем ждём:
+                Сканируем TOP
+                ${symbols.length || 100}
 
                 <br>
 
-                крупную стену →
+                TOP 20:
+                адаптивная ликвидность
 
                 <br>
 
-                касание →
-
-                <br>
-
-                поглощение →
-
-                <br>
-
-                отбой.
+                TOP 21-100:
+                adaptive alt threshold
 
             </div>
 
@@ -2567,364 +3362,401 @@ function renderSignals() {
 
 
     for (
-        const s
-        of list
+        const s of sorted
     ) {
 
-        const wall =
-            s.wall;
+        let directionIcon =
+            "🟢";
 
-
-        const flow =
-            s.flow ||
-            {
-                buy: 0,
-                sell: 0,
-                imbalance: 0
-            };
-
-
-        const direction =
-            s.direction ||
-            (
-                wall.side ===
-                "Buy"
-                    ? "ПОДДЕРЖКА"
-                    : "СОПРОТИВЛЕНИЕ"
-            );
-
-
-        const distance =
-            wall.distance;
-
-
-        const wallShare =
-            wall.share;
-
-
-        const sideText =
-            wall.side ===
-            "Buy"
-                ? "BUY WALL / SUPPORT"
-                : "SELL WALL / RESISTANCE";
-
-
-        let className =
-            "watch";
+        let directionClass =
+            "long";
 
 
         if (
-            s.state ===
-            "ENTRY" ||
-            s.state ===
-            "ACTIVE"
+            s.setup ===
+            "SHORT"
         ) {
 
-            className =
-                s.direction ===
-                "LONG"
-                    ? "long"
-                    : "short";
+            directionIcon =
+                "🔴";
+
+            directionClass =
+                "short";
 
         }
+
+
+        if (
+            s.setup ===
+            "BREAKOUT"
+        ) {
+
+            directionIcon =
+                "🟠";
+
+            directionClass =
+                "breakout";
+
+        }
+
+
+        const wallSide =
+            s.wall.side ===
+            "Buy"
+
+                ? "BUY WALL"
+
+                : "SELL WALL";
+
+
+        const alignedFlow =
+            s.wall.side ===
+            "Buy"
+
+                ? s.flow.buy
+
+                : s.flow.sell;
+
+
+        const oppositeFlow =
+            s.wall.side ===
+            "Buy"
+
+                ? s.flow.sell
+
+                : s.flow.buy;
 
 
         let reason = "";
 
 
         if (
-            s.state ===
-            "WATCH"
+            s.setup ===
+            "LONG"
         ) {
 
             reason =
-                wall.side ===
-                "Buy"
-
-                    ? "Сильная BUY wall. Ждём касание и продажи в стену."
-
-                    : "Сильная SELL wall. Ждём касание и покупки в стену.";
+                "BUY wall + absorption aggressive SELL";
 
         }
 
 
-        if (
-            s.state ===
-            "ABSORBING"
+        else if (
+            s.setup ===
+            "SHORT"
         ) {
 
             reason =
-                wall.side ===
-                "Buy"
-
-                    ? "Продавцы атакуют BUY wall. Цена пока держится — наблюдаем возможный отбой."
-
-                    : "Покупатели атакуют SELL wall. Цена пока не проходит — наблюдаем возможный отбой.";
+                "SELL wall + absorption aggressive BUY";
 
         }
 
 
-        if (
-            s.state ===
-            "ENTRY"
-        ) {
+        else {
 
             reason =
-                s.direction ===
-                "LONG"
+                s.wall.side ===
+                "Sell"
 
-                    ? "Продавцы поглощены BUY wall, цена начала восстанавливаться. Возможен вход LONG."
+                    ? "SELL wall атакован aggressive BUY — breakout вверх"
 
-                    : "Покупатели поглощены SELL wall, цена начала снижаться. Возможен вход SHORT.";
-
-        }
-
-
-        if (
-            s.state ===
-            "ACTIVE"
-        ) {
-
-            reason =
-                "Сетап подтверждён. Следим за уровнем и сохранением стены.";
+                    : "BUY wall атакован aggressive SELL — breakdown вниз";
 
         }
 
 
         html += `
 
-            <div
-                class="signal ${className}">
+        <div
+            class="signal ${directionClass}">
 
-                <div
-                    class="signal-top">
 
-                    <div class="symbol">
+            <div class="signal-top">
 
-                        ${s.symbol}
+                <div class="symbol">
 
-                        <span class="gray">
+                    ${directionIcon}
 
-                            #${symbolRanks.get(
-                                s.symbol
-                            ) || "?"}
+                    ${s.symbol}
 
-                        </span>
+                    <span class="gray">
 
-                    </div>
+                        #${s.rank}
 
-                    <div class="state">
-
-                        ${getStateText(
-                            s
-                        )}
-
-                    </div>
+                    </span>
 
                 </div>
 
 
-                <div class="score">
+                <div class="direction">
 
-                    Score:
-                    ${s.score}/100
-
-                </div>
-
-
-                <div class="data-grid">
-
-
-                    <div class="data-box">
-
-                        Уровень
-
-                        <strong>
-
-                            ${priceFormat(
-                                wall.price
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="data-box">
-
-                        До уровня
-
-                        <strong>
-
-                            ${pct(
-                                distance
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="data-box">
-
-                        Лимитная заявка
-
-                        <strong>
-
-                            ${sideText}
-
-                            $${money(
-                                wall.value
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="data-box">
-
-                        Доля локальной
-                        ликвидности
-
-                        <strong>
-
-                            ${pct(
-                                wallShare
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="data-box">
-
-                        Локальная ликвидность
-
-                        <strong>
-
-                            $${money(
-                                wall.liquidity.total
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="data-box">
-
-                        Стена живёт
-
-                        <strong>
-
-                            ${(wall.age / 1000)
-                                .toFixed(1)}
-                            сек
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="data-box">
-
-                        Aggressive BUY
-
-                        <strong
-                            class="green">
-
-                            $${money(
-                                flow.buy
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="data-box">
-
-                        Aggressive SELL
-
-                        <strong
-                            class="red">
-
-                            $${money(
-                                flow.sell
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="data-box">
-
-                        Flow imbalance
-
-                        <strong>
-
-                            ${pct(
-                                flow.imbalance
-                            )}
-
-                        </strong>
-
-                    </div>
-
-
-                    <div class="data-box">
-
-                        Ситуация
-
-                        <strong>
-
-                            ${direction}
-
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="reason">
-
-                    💡 ${reason}
-
-                    <br><br>
-
-                    📍 Уровень:
-
-                    ${priceFormat(
-                        wall.price
-                    )}
-
-                    <br>
-
-                    🧱 Стена:
-
-                    $${money(
-                        wall.value
-                    )}
-
-                    (${pct(
-                        wallShare
-                    )} локальной ликвидности)
-
-                    <br>
-
-                    💧 Стакан:
-
-                    $${money(
-                        wall.liquidity.total
-                    )}
+                    ${s.setup}
 
                 </div>
 
             </div>
+
+
+            <div class="score">
+
+                Score:
+                ${s.score}/100
+
+            </div>
+
+
+            <div class="data-grid">
+
+
+                <div class="data-box">
+
+                    Whale Wall
+
+                    <strong>
+
+                        ${wallSide}
+
+                        $${money(
+                            s.wall.value
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Минимум
+
+                    <strong>
+
+                        $${money(
+                            s.threshold
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Цена стены
+
+                    <strong>
+
+                        ${priceFormat(
+                            s.wall.price
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Wall Ratio
+
+                    <strong>
+
+                        ${s.wall.ratio.toFixed(
+                            1
+                        )}x
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Возраст стены
+
+                    <strong>
+
+                        ${(s.age / 1000)
+                            .toFixed(1)}
+                        сек
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    До стены
+
+                    <strong>
+
+                        ${percent(
+                            s.wall.distance
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Aggressive BUY
+
+                    <strong
+                        class="green">
+
+                        $${money(
+                            s.flow.buy
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Aggressive SELL
+
+                    <strong
+                        class="red">
+
+                        $${money(
+                            s.flow.sell
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Imbalance
+
+                    <strong>
+
+                        ${percent(
+                            s.flow.imbalance
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    Цена / 1 мин
+
+                    <strong>
+
+                        ${percent(
+                            s.priceChange
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    TAKE PROFIT
+
+                    <strong
+                        class="tp">
+
+                        ${priceFormat(
+                            s.tp
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="data-box">
+
+                    STOP LOSS
+
+                    <strong
+                        class="sl">
+
+                        ${priceFormat(
+                            s.sl
+                        )}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="reason">
+
+                💡 ${reason}
+
+                <br>
+
+                ⚡ Aligned flow:
+
+                $${money(
+                    alignedFlow
+                )}
+
+                vs
+
+                $${money(
+                    oppositeFlow
+                )}
+
+                <br>
+
+                💰 Wall:
+
+                $${money(
+                    s.wall.value
+                )}
+
+                |
+
+                минимум:
+
+                $${money(
+                    s.threshold
+                )}
+
+                <br>
+
+                🛡 Stability:
+
+                ${(s.stability * 100)
+                    .toFixed(0)}%
+
+                <br>
+
+                🎯 TP:
+
+                ${priceFormat(
+                    s.tp
+                )}
+
+                |
+
+                🛑 SL:
+
+                ${priceFormat(
+                    s.sl
+                )}
+
+            </div>
+
+
+        </div>
 
         `;
 
@@ -2933,6 +3765,99 @@ function renderSignals() {
 
     signalsEl.innerHTML =
         html;
+
+}
+
+
+/* =====================================================
+   SUBSCRIBE
+===================================================== */
+
+function subscribeInBatches() {
+
+    if (
+        !ws ||
+        ws.readyState !==
+        WebSocket.OPEN
+    )
+        return;
+
+
+    const args = [];
+
+
+    for (
+        const symbol of symbols
+    ) {
+
+        args.push(
+            `orderbook.${ORDERBOOK_DEPTH}.${symbol}`
+        );
+
+        args.push(
+            `publicTrade.${symbol}`
+        );
+
+    }
+
+
+    for (
+        let i = 0;
+
+        i < args.length;
+
+        i += SUBSCRIBE_BATCH_SIZE
+    ) {
+
+        const batch =
+            args.slice(
+                i,
+                i +
+                SUBSCRIBE_BATCH_SIZE
+            );
+
+
+        setTimeout(
+            () => {
+
+                if (
+                    ws &&
+                    ws.readyState ===
+                    WebSocket.OPEN
+                ) {
+
+                    try {
+
+                        ws.send(
+                            JSON.stringify({
+
+                                op:
+                                    "subscribe",
+
+                                args:
+                                    batch
+
+                            })
+                        );
+
+                    }
+
+                    catch (error) {
+
+                        console.error(
+                            "Subscribe error:",
+                            error
+                        );
+
+                    }
+
+                }
+
+            },
+            i * 35
+        );
+
+    }
 
 }
 
@@ -2951,9 +3876,18 @@ function connectWebSocket() {
 
         try {
             ws.close();
-        } catch (e) {}
+        }
+
+        catch (e) {}
 
     }
+
+
+    statusEl.innerText =
+        "Подключение WebSocket...";
+
+    statusEl.style.color =
+        "#f7931a";
 
 
     ws =
@@ -2972,49 +3906,25 @@ function connectWebSocket() {
 
 
         statusEl.innerText =
-            "Сканирование активно";
+            `WS подключён — TOP ${symbols.length}`;
 
         statusEl.style.color =
             "#27ae60";
 
 
-        const args = [];
+        lastMarketMessage =
+            now();
+
+        marketMessageCount = 0;
 
 
-        for (
-            const symbol
-            of symbols
-        ) {
-
-            args.push(
-                `orderbook.${ORDERBOOK_DEPTH}.${symbol}`
-            );
-
-            args.push(
-                `publicTrade.${symbol}`
-            );
-
-        }
-
-
-        /*
-         * Отправляем подписку.
-         */
-
-        ws.send(
-            JSON.stringify({
-
-                op: "subscribe",
-
-                args
-
-            })
-        );
+        subscribeInBatches();
 
     };
 
 
-    ws.onmessage = event => {
+    ws.onmessage =
+        event => {
 
         try {
 
@@ -3024,17 +3934,56 @@ function connectWebSocket() {
                 );
 
 
+            /*
+             * Subscribe response.
+             */
+
+            if (
+                data.op ===
+                "subscribe"
+            ) {
+
+                if (
+                    data.success ===
+                    false
+                ) {
+
+                    console.error(
+                        "Subscribe error:",
+                        data
+                    );
+
+                }
+
+                return;
+
+            }
+
+
+            /*
+             * Pong.
+             */
+
             if (
                 data.op ===
                 "pong"
-            )
+            ) {
+
                 return;
+
+            }
 
 
             if (
                 !data.topic
             )
                 return;
+
+
+            lastMarketMessage =
+                now();
+
+            marketMessageCount++;
 
 
             /*
@@ -3069,6 +4018,7 @@ function connectWebSocket() {
 
                 }
 
+
                 else if (
                     data.type ===
                     "delta"
@@ -3085,7 +4035,7 @@ function connectWebSocket() {
 
 
             /*
-             * TRADES
+             * PUBLIC TRADE
              */
 
             else if (
@@ -3106,7 +4056,7 @@ function connectWebSocket() {
         catch (error) {
 
             console.error(
-                "WS error:",
+                "WS parse error:",
                 error
             );
 
@@ -3115,7 +4065,8 @@ function connectWebSocket() {
     };
 
 
-    ws.onerror = error => {
+    ws.onerror =
+        error => {
 
         console.error(
             "WebSocket error:",
@@ -3132,7 +4083,8 @@ function connectWebSocket() {
     };
 
 
-    ws.onclose = () => {
+    ws.onclose =
+        () => {
 
         wsEl.innerText =
             "OFF";
@@ -3141,24 +4093,57 @@ function connectWebSocket() {
             "stat-value red";
 
 
-        if (running) {
+        if (
+            running
+        ) {
 
             statusEl.innerText =
-                "Переподключение...";
+                "WS разорван — переподключение";
 
             statusEl.style.color =
                 "#f7931a";
 
 
-            reconnectTimer =
-                setTimeout(
-                    connectWebSocket,
-                    3000
-                );
+            scheduleReconnect();
 
         }
 
     };
+
+}
+
+
+/* =====================================================
+   RECONNECT
+===================================================== */
+
+function scheduleReconnect() {
+
+    if (
+        reconnectTimer
+    )
+        return;
+
+
+    reconnectTimer =
+        setTimeout(
+            () => {
+
+                reconnectTimer =
+                    null;
+
+
+                if (
+                    running
+                ) {
+
+                    connectWebSocket();
+
+                }
+
+            },
+            3000
+        );
 
 }
 
@@ -3169,8 +4154,15 @@ function connectWebSocket() {
 
 function startPing() {
 
-    if (pingTimer)
-        return;
+    if (
+        pingTimer
+    ) {
+
+        clearInterval(
+            pingTimer
+        );
+
+    }
 
 
     pingTimer =
@@ -3183,11 +4175,20 @@ function startPing() {
                     WebSocket.OPEN
                 ) {
 
-                    ws.send(
-                        JSON.stringify({
-                            op: "ping"
-                        })
-                    );
+                    try {
+
+                        ws.send(
+                            JSON.stringify({
+
+                                op:
+                                    "ping"
+
+                            })
+                        );
+
+                    }
+
+                    catch (e) {}
 
                 }
 
@@ -3199,7 +4200,72 @@ function startPing() {
 
 
 /* =====================================================
-   LOAD TOP 100
+   WATCHDOG
+===================================================== */
+
+function startWatchdog() {
+
+    if (
+        watchdogTimer
+    ) {
+
+        clearInterval(
+            watchdogTimer
+        );
+
+    }
+
+
+    watchdogTimer =
+        setInterval(
+            () => {
+
+                if (!running)
+                    return;
+
+
+                const silence =
+                    now() -
+                    lastMarketMessage;
+
+
+                if (
+                    silence >
+                    12000
+                ) {
+
+                    dataWarningEl.innerText =
+                        "⚠️ Нет market data > 12 сек. Переподключение...";
+
+
+                    if (ws) {
+
+                        try {
+                            ws.close();
+                        }
+
+                        catch (e) {}
+
+                    }
+
+                }
+
+                else {
+
+                    dataWarningEl.innerText =
+                        "";
+
+                }
+
+            },
+            5000
+        );
+
+}
+
+
+/* =====================================================
+   LOAD SYMBOLS
 ===================================================== */
 
 async function loadSymbols() {
@@ -3207,7 +4273,7 @@ async function loadSymbols() {
     try {
 
         statusEl.innerText =
-            "Загрузка TOP-100...";
+            "Загрузка TOP 100...";
 
         statusEl.style.color =
             "#f7931a";
@@ -3215,10 +4281,24 @@ async function loadSymbols() {
 
         const response =
             await fetch(
-
-                "https://api.bybit.com/v5/market/tickers?category=linear"
-
+                "https://api.bybit.com/v5/market/tickers?category=linear",
+                {
+                    cache:
+                        "no-store"
+                }
             );
+
+
+        if (
+            !response.ok
+        ) {
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+
+        }
 
 
         const json =
@@ -3246,36 +4326,27 @@ async function loadSymbols() {
                     item => {
 
                         return (
-
                             item.symbol &&
-
                             item.symbol
                                 .endsWith(
                                     "USDT"
                                 ) &&
-
                             Number(
                                 item.turnover24h
                             ) > 0
-
                         );
 
                     }
                 )
 
                 .sort(
-                    (a, b) => {
-
-                        return (
-                            Number(
-                                b.turnover24h
-                            ) -
-                            Number(
-                                a.turnover24h
-                            )
-                        );
-
-                    }
+                    (a, b) =>
+                        Number(
+                            b.turnover24h
+                        ) -
+                        Number(
+                            a.turnover24h
+                        )
                 )
 
                 .slice(
@@ -3284,9 +4355,13 @@ async function loadSymbols() {
                 );
 
 
-        symbols.length = 0;
+        symbols.length =
+            0;
+
 
         symbolRanks.clear();
+
+        symbolTurnovers.clear();
 
 
         list.forEach(
@@ -3302,12 +4377,27 @@ async function loadSymbols() {
                     index + 1
                 );
 
+
+                symbolTurnovers.set(
+                    item.symbol,
+                    Number(
+                        item.turnover24h
+                    )
+                );
+
             }
         );
 
 
         coinCountEl.innerText =
             symbols.length;
+
+
+        statusEl.innerText =
+            `TOP ${symbols.length} загружен`;
+
+        statusEl.style.color =
+            "#27ae60";
 
 
         return true;
@@ -3337,30 +4427,10 @@ async function loadSymbols() {
 
 
 /* =====================================================
-   START
+   RESET
 ===================================================== */
 
-async function startScanner() {
-
-    if (running)
-        return;
-
-
-    running = true;
-
-
-    const success =
-        await loadSymbols();
-
-
-    if (!success) {
-
-        running = false;
-
-        return;
-
-    }
-
+function resetMarketState() {
 
     books.clear();
 
@@ -3368,12 +4438,50 @@ async function startScanner() {
 
     wallHistory.clear();
 
-    setups.clear();
+    signals.clear();
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+async function startScanner() {
+
+    if (
+        running
+    )
+        return;
+
+
+    running = true;
+
+
+    resetMarketState();
+
+
+    const success =
+        await loadSymbols();
+
+
+    if (
+        !success
+    ) {
+
+        running =
+            false;
+
+        return;
+
+    }
 
 
     connectWebSocket();
 
     startPing();
+
+    startWatchdog();
 
 
     analysisTimer =
@@ -3394,16 +4502,18 @@ async function startScanner() {
         setInterval(
             async () => {
 
+                if (!running)
+                    return;
+
+
+                statusEl.innerText =
+                    "Обновление TOP...";
+
+
                 await loadSymbols();
 
 
-                books.clear();
-
-                trades.clear();
-
-                wallHistory.clear();
-
-                setups.clear();
+                resetMarketState();
 
 
                 connectWebSocket();
@@ -3411,6 +4521,9 @@ async function startScanner() {
             },
             SYMBOL_REFRESH
         );
+
+
+    renderSignals();
 
 }
 
@@ -3424,46 +4537,86 @@ function stopScanner() {
     running = false;
 
 
-    if (analysisTimer) {
+    if (
+        analysisTimer
+    ) {
 
         clearInterval(
             analysisTimer
         );
 
-        analysisTimer = null;
+        analysisTimer =
+            null;
 
     }
 
 
-    if (uiTimer) {
+    if (
+        uiTimer
+    ) {
 
         clearInterval(
             uiTimer
         );
 
-        uiTimer = null;
+        uiTimer =
+            null;
 
     }
 
 
-    if (symbolRefreshTimer) {
+    if (
+        symbolRefreshTimer
+    ) {
 
         clearInterval(
             symbolRefreshTimer
         );
 
-        symbolRefreshTimer = null;
+        symbolRefreshTimer =
+            null;
 
     }
 
 
-    if (reconnectTimer) {
+    if (
+        reconnectTimer
+    ) {
 
         clearTimeout(
             reconnectTimer
         );
 
-        reconnectTimer = null;
+        reconnectTimer =
+            null;
+
+    }
+
+
+    if (
+        pingTimer
+    ) {
+
+        clearInterval(
+            pingTimer
+        );
+
+        pingTimer =
+            null;
+
+    }
+
+
+    if (
+        watchdogTimer
+    ) {
+
+        clearInterval(
+            watchdogTimer
+        );
+
+        watchdogTimer =
+            null;
 
     }
 
@@ -3473,6 +4626,7 @@ function stopScanner() {
         try {
             ws.close();
         }
+
         catch (e) {}
 
         ws = null;
@@ -3493,6 +4647,10 @@ function stopScanner() {
     statusEl.style.color =
         "#848e9c";
 
+
+    dataWarningEl.innerText =
+        "";
+
 }
 
 
@@ -3502,9 +4660,7 @@ function stopScanner() {
 
 function clearSignals() {
 
-    setups.clear();
-
-    wallHistory.clear();
+    signals.clear();
 
     renderSignals();
 
@@ -3512,11 +4668,54 @@ function clearSignals() {
 
 
 /* =====================================================
+   VISIBILITY
+===================================================== */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if (
+            document.visibilityState ===
+            "visible"
+        ) {
+
+            if (
+                running
+            ) {
+
+                const silence =
+                    now() -
+                    lastMarketMessage;
+
+
+                if (
+                    silence >
+                    10000
+                ) {
+
+                    statusEl.innerText =
+                        "Восстановление WebSocket...";
+
+
+                    connectWebSocket();
+
+                }
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =====================================================
    INIT
 ===================================================== */
 
 console.log(
-    "🐋 Bybit Level & Wall Scanner PRO"
+    "🐋 Bybit Whale Flow Scanner PRO"
 );
 
 console.log(
@@ -3525,16 +4724,24 @@ console.log(
 );
 
 console.log(
-    "OrderBook:",
+    "ORDERBOOK:",
     ORDERBOOK_DEPTH
 );
 
 console.log(
-    "Minimum local liquidity: $10,000"
+    "TOP20: dynamic local liquidity"
 );
 
 console.log(
-    "Architecture: LEVEL → WATCH → ABSORBING → ENTRY"
+    "TOP21-100: adaptive alt thresholds"
+);
+
+console.log(
+    "Dynamic flow enabled"
+);
+
+console.log(
+    "TP / SL enabled"
 );
 
 </script>
