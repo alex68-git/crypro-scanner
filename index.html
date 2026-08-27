@@ -4,12 +4,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bybit Whale Flow Scanner</title>
+<title>Bybit Whale Levels Scanner (Swing Edition)</title>
 
 <style>
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
@@ -19,9 +17,6 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* =========================
-   HEADER & CONTROLS
-========================= */
 .header {
     background: #1e2329;
     padding: 15px;
@@ -29,16 +24,14 @@ body {
     margin-bottom: 15px;
 }
 
-h1 {
-    font-size: 20px;
-    margin: 0 0 15px 0;
-}
+h1 { font-size: 20px; margin: 0 0 15px 0; }
 
 .controls {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
     margin-bottom: 12px;
+    align-items: center;
 }
 
 button, select {
@@ -49,35 +42,17 @@ button, select {
     cursor: pointer;
 }
 
-button {
-    background: #f7931a;
-    color: #1e2329;
-}
+button { background: #f7931a; color: #1e2329; }
+button.stop { background: #e74c3c; color: white; }
+button.clear { background: #555; color: white; }
+button.pause { background: #3498db; color: white; }
+button.pause.active { background: #e67e22; }
 
-button.stop {
-    background: #e74c3c;
-    color: white;
-}
+select { background: #2b3139; color: white; }
+label { font-size: 13px; color: #848e9c; }
 
-button.clear {
-    background: #555;
-    color: white;
-}
+.status { color: #848e9c; font-size: 13px; margin-top: 8px; }
 
-select {
-    background: #2b3139;
-    color: white;
-}
-
-.status {
-    color: #848e9c;
-    font-size: 13px;
-    margin-top: 8px;
-}
-
-/* =========================
-   STATS & CARDS
-========================= */
 .stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -104,13 +79,11 @@ select {
     color: #848e9c;
     font-size: 14px;
     margin: 15px 0 8px;
+    display: flex;
+    justify-content: space-between;
 }
 
-.signals {
-    height: 70vh;
-    min-height: 400px;
-    overflow-y: auto;
-}
+.signals { height: 68vh; min-height: 400px; overflow-y: auto; }
 
 .signal {
     background: #1e2329;
@@ -118,21 +91,19 @@ select {
     padding: 13px;
     margin-bottom: 9px;
     border-left: 5px solid #555;
+    position: relative;
 }
 
 .signal.long { border-left-color: #27ae60; }
 .signal.short { border-left-color: #e74c3c; }
-.signal.breakout { border-left-color: #f7931a; }
 
-.signal-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
+.signal-top { display: flex; justify-content: space-between; align-items: center; }
 .symbol { font-size: 17px; font-weight: bold; }
-.direction { font-weight: bold; font-size: 13px; }
-.score { font-size: 21px; font-weight: bold; margin-top: 5px; }
+.direction { font-weight: bold; font-size: 14px; padding: 4px 8px; border-radius: 4px; }
+.direction.long { background: rgba(39, 174, 96, 0.2); color: #27ae60; }
+.direction.short { background: rgba(231, 76, 60, 0.2); color: #e74c3c; }
+
+.score { font-size: 20px; font-weight: bold; margin-top: 5px; }
 
 .data-grid {
     display: grid;
@@ -165,21 +136,14 @@ select {
     line-height: 1.5;
 }
 
-.empty {
-    text-align: center;
-    color: #848e9c;
-    padding: 60px 15px;
-}
-
+.empty { text-align: center; color: #848e9c; padding: 60px 15px; }
 .green { color: #27ae60; }
 .red { color: #e74c3c; }
-.orange { color: #f7931a; }
-.blue { color: #3498db; }
 .gray { color: #848e9c; }
 
 @media (max-width: 600px) {
     .stats { grid-template-columns: repeat(2, 1fr); }
-    .signals { height: 65vh; }
+    .signals { height: 60vh; }
 }
 </style>
 </head>
@@ -187,31 +151,45 @@ select {
 <body>
 
 <div class="header">
-    <h1>🐋 Bybit Whale Flow Scanner</h1>
+    <h1>🐋 Bybit Whale Levels Scanner (Swing Edition)</h1>
 
     <div class="controls">
         <button onclick="startScanner()">▶ Запустить</button>
         <button class="stop" onclick="stopScanner()">⏹ Стоп</button>
+        <button id="pauseBtn" class="pause" onclick="togglePause()">⏸ Пауза UI</button>
         <button class="clear" onclick="clearSignals()">🗑 Очистить</button>
     </div>
 
     <div class="controls">
         <label>
-            Подтверждение стены:
+            Выдержка стены:
             <select id="wallAge">
-                <option value="3">3 сек</option>
-                <option value="5" selected>5 сек</option>
-                <option value="10">10 сек</option>
+                <option value="30">30 сек (быстрый)</option>
+                <option value="60" selected>1 минута</option>
+                <option value="120">2 минуты</option>
             </select>
         </label>
 
         <label>
-            Минимальный Score:
+            Чувствительность к объёму 24h:
+            <select id="volSens">
+                <option value="0.0003">0.03% (Меньше стен)</option>
+                <option value="0.0005" selected>0.05% (Базовый)</option>
+                <option value="0.001">0.10% (Только гиганты)</option>
+            </select>
+        </label>
+
+        <label>
+            Мин. Score:
             <select id="minScore">
                 <option value="60">60</option>
                 <option value="70" selected>70</option>
                 <option value="80">80</option>
             </select>
+        </label>
+        
+        <label>
+            <input type="checkbox" id="soundToggle" checked> 🔔 Звук
         </label>
     </div>
 
@@ -227,15 +205,15 @@ select {
     </div>
 </div>
 
-<div class="section-title">🔥 Лучшие текущие торговые ситуации</div>
+<div class="section-title">
+    <span>📌 Подтвержденные крупные уровни</span>
+    <span id="pauseStatus" style="color: #f7931a; display: none;">[ОБНОВЛЕНИЕ UI НА ПАУЗЕ]</span>
+</div>
 
 <div id="signals" class="signals">
     <div id="empty" class="empty">
-        Запусти сканер.<br><br>
-        Он будет искать:<br>
-        🟢 LONG<br>
-        🔴 SHORT<br>
-        🟠 BREAKOUT
+        Запустите сканер.<br><br>
+        Ищем плиты с выдержкой 1-2 минуты, подходящие для входа от уровня.
     </div>
 </div>
 
@@ -245,25 +223,20 @@ select {
 ===================================================== */
 const MAX_SYMBOLS = 100;
 const ORDERBOOK_DEPTH = 50;
-const MAX_SIGNALS = 10;
-const ANALYSIS_INTERVAL = 500;
-const UI_INTERVAL = 1000;
+const MAX_SIGNALS = 15;
+const ANALYSIS_INTERVAL = 1000;
+const UI_INTERVAL = 1500;
 const SYMBOL_REFRESH = 5 * 60 * 1000;
 const MIN_WALL_RATIO = 3;
 
-const BASE_THRESHOLDS = {
-    top5: 500000,
-    top20: 300000,
-    top50: 150000,
-    top100: 50000
-};
-
-const MAX_WALL_DISTANCE = 0.008;
-const TRADE_WINDOW = 10000;
-const PRICE_WINDOW = 60000;
+const MAX_WALL_DISTANCE = 0.012; // 1.2% до стены для уровня
+const TRADE_WINDOW = 30000;      // 30 сек окно потока
+const PRICE_WINDOW = 120000;     // 2 мин окно цены
 
 let ws = null;
 let running = false;
+let uiPaused = false;
+
 let reconnectTimer = null;
 let symbolRefreshTimer = null;
 let analysisTimer = null;
@@ -271,13 +244,14 @@ let uiTimer = null;
 
 const symbols = [];
 const symbolRanks = new Map();
+const symbolTurnovers = new Map(); // Суточный объем
 const books = new Map();
 const trades = new Map();
 const wallHistory = new Map();
 const signals = new Map();
 
 /* =====================================================
-   DOM ELEMENTS
+   DOM & AUDIO
 ===================================================== */
 const statusEl = document.getElementById("status");
 const wsEl = document.getElementById("wsStatus");
@@ -286,8 +260,23 @@ const candidateCountEl = document.getElementById("candidateCount");
 const signalCountEl = document.getElementById("signalCount");
 const signalsEl = document.getElementById("signals");
 
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playBeep() {
+    if (!document.getElementById("soundToggle").checked) return;
+    try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = 880;
+        gain.gain.value = 0.1;
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.15);
+    } catch(e){}
+}
+
 /* =====================================================
-   HELPERS
+   HELPERS & DYNAMIC THRESHOLD
 ===================================================== */
 function now() { return Date.now(); }
 
@@ -302,21 +291,34 @@ function priceFormat(value) {
     return n.toFixed(8);
 }
 
-function percent(value) {
-    return (value * 100).toFixed(2) + "%";
+function percent(value) { return (value * 100).toFixed(2) + "%"; }
+
+// Расчет динамического порога стены от 24h объема
+function getDynamicThreshold(symbol) {
+    const turnover = symbolTurnovers.get(symbol) || 10000000;
+    const sens = parseFloat(document.getElementById("volSens").value);
+    
+    // Минимальный порог не менее $30,000 в любом случае
+    return Math.max(30000, turnover * sens);
 }
 
-function getBaseThreshold(symbol) {
-    const rank = symbolRanks.get(symbol);
-    if (!rank) return 50000;
-    if (rank <= 5) return BASE_THRESHOLDS.top5;
-    if (rank <= 20) return BASE_THRESHOLDS.top20;
-    if (rank <= 50) return BASE_THRESHOLDS.top50;
-    return BASE_THRESHOLDS.top100;
+function togglePause() {
+    uiPaused = !uiPaused;
+    const btn = document.getElementById("pauseBtn");
+    const status = document.getElementById("pauseStatus");
+    if (uiPaused) {
+        btn.classList.add("active");
+        btn.innerText = "▶ Возобновить UI";
+        status.style.display = "inline";
+    } else {
+        btn.classList.remove("active");
+        btn.innerText = "⏸ Пауза UI";
+        status.style.display = "none";
+    }
 }
 
 /* =====================================================
-   ORDERBOOK & TRADE PROCESSING
+   DATA PROCESSING
 ===================================================== */
 function createBook(symbol) {
     books.set(symbol, { bids: new Map(), asks: new Map(), lastPrice: null });
@@ -381,17 +383,17 @@ function processTrade(data) {
 function getTradeFlow(symbol) {
     const list = trades.get(symbol) || [];
     const cutoff = now() - TRADE_WINDOW;
-    let buy = 0, sell = 0, buyCount = 0, sellCount = 0;
+    let buy = 0, sell = 0;
 
     for (let i = list.length - 1; i >= 0; i--) {
         const t = list[i];
         if (t.time < cutoff) break;
-        if (t.side === "Buy") { buy += t.value; buyCount++; }
-        else { sell += t.value; sellCount++; }
+        if (t.side === "Buy") buy += t.value;
+        else sell += t.value;
     }
     const total = buy + sell;
     const imbalance = total > 0 ? (buy - sell) / total : 0;
-    return { buy, sell, total, imbalance, buyCount, sellCount };
+    return { buy, sell, total, imbalance };
 }
 
 function getPriceChange(symbol) {
@@ -414,7 +416,7 @@ function getLocalLiquidity(book, side, currentPrice) {
     const values = [];
 
     for (const [price, qty] of source) {
-        if (Math.abs(price - currentPrice) / currentPrice <= 0.003) {
+        if (Math.abs(price - currentPrice) / currentPrice <= 0.004) {
             const val = price * qty;
             if (val > 0) values.push(val);
         }
@@ -440,7 +442,7 @@ function findWalls(symbol) {
     if (!currentPrice) return [];
 
     const result = [];
-    const threshold = getBaseThreshold(symbol);
+    const threshold = getDynamicThreshold(symbol);
 
     // BUY WALLS
     for (const [price, qty] of book.bids) {
@@ -451,7 +453,7 @@ function findWalls(symbol) {
         const ratio = value / Math.max(local, 1);
 
         if (value >= threshold && ratio >= MIN_WALL_RATIO) {
-            result.push({ symbol, side: "Buy", price, qty, value, distance, ratio, currentPrice });
+            result.push({ symbol, side: "Buy", price, qty, value, distance, ratio, currentPrice, threshold });
         }
     }
 
@@ -464,12 +466,12 @@ function findWalls(symbol) {
         const ratio = value / Math.max(local, 1);
 
         if (value >= threshold && ratio >= MIN_WALL_RATIO) {
-            result.push({ symbol, side: "Sell", price, qty, value, distance, ratio, currentPrice });
+            result.push({ symbol, side: "Sell", price, qty, value, distance, ratio, currentPrice, threshold });
         }
     }
 
     result.sort((a, b) => b.value - a.value);
-    return result.slice(0, 6);
+    return result.slice(0, 4);
 }
 
 function updateWallHistory(wall) {
@@ -484,42 +486,30 @@ function updateWallHistory(wall) {
     return wallHistory.get(key);
 }
 
-function calculateScore(wall, flow, priceChange, age) {
+function calculateScore(wall, flow, priceChange, ageSec) {
     let score = 0;
-    const threshold = getBaseThreshold(wall.symbol);
 
-    // 1. Размер стены (Корректная проверка без отрицательного логарифма)
-    const sizeRatio = wall.value / Math.max(threshold, 1);
-    const sizeScore = Math.min(20, Math.log10(Math.max(sizeRatio, 1)) * 10);
-    score += Math.max(0, sizeScore);
+    // 1. Отношение размера к динамическому порогу (До 25 б.)
+    const thresholdRatio = wall.value / wall.threshold;
+    score += Math.min(25, thresholdRatio * 10);
 
-    // 2. Relative wall ratio
-    score += Math.min(20, wall.ratio * 5);
+    // 2. Отношение к стакану (До 20 б.)
+    score += Math.min(20, wall.ratio * 4);
 
-    // 3. Возраст стены
-    score += Math.min(15, age / 1000);
+    // 3. Выдержка стены (До 25 б.) — чем дольше стоит, тем надежнее уровень
+    score += Math.min(25, (ageSec / 60) * 12.5);
 
-    // 4. Агрессивный поток
-    const alignedFlow = wall.side === "Buy" ? Math.max(0, flow.imbalance) : Math.max(0, -flow.imbalance);
-    score += alignedFlow * 25;
-
-    // 5. Изменение цены
-    const alignedPrice = wall.side === "Buy" ? Math.max(0, priceChange) : Math.max(0, -priceChange);
-    score += Math.min(20, alignedPrice * 1000);
+    // 4. Поток и защита уровня (До 30 б.)
+    // Если цена близко к BUY плите и идет отскок — это идеальный LONG
+    if (wall.side === "Buy") {
+        if (priceChange >= 0) score += 15; // Отскакиваем вверх
+        if (flow.imbalance > -0.1) score += 15; // Нет тотального давления продавцов
+    } else {
+        if (priceChange <= 0) score += 15; // Отскакиваем вниз
+        if (flow.imbalance < 0.1) score += 15;
+    }
 
     return Math.min(100, Math.round(score));
-}
-
-function determineSetup(wall, flow, priceChange) {
-    if (wall.side === "Buy") {
-        if (flow.imbalance > 0.15 && priceChange > 0) return "LONG";
-        if (flow.imbalance < -0.20 && priceChange < 0) return "SHORT";
-    }
-    if (wall.side === "Sell") {
-        if (flow.imbalance < -0.15 && priceChange < 0) return "SHORT";
-        if (flow.imbalance > 0.20 && priceChange > 0) return "LONG";
-    }
-    return null;
 }
 
 function analyzeSymbol(symbol) {
@@ -532,21 +522,27 @@ function analyzeSymbol(symbol) {
 
     for (const wall of wallsFound) {
         const history = updateWallHistory(wall);
-        const age = now() - history.firstSeen;
-        const requiredAge = parseInt(document.getElementById("wallAge").value) * 1000;
+        const ageSec = (now() - history.firstSeen) / 1000;
+        const requiredAgeSec = parseInt(document.getElementById("wallAge").value);
 
-        if (age < requiredAge) continue;
-        const setup = determineSetup(wall, flow, priceChange);
-        if (!setup) continue;
+        // Фильтр строгого времени стояния стены (1 или 2 минуты)
+        if (ageSec < requiredAgeSec) continue;
 
-        const score = calculateScore(wall, flow, priceChange, age);
+        // Сетапы для среднесрока: Либо удержание уровня, либо отскок
+        let setup = wall.side === "Buy" ? "LONG LEVEL" : "SHORT LEVEL";
+
+        const score = calculateScore(wall, flow, priceChange, ageSec);
         const minScore = parseInt(document.getElementById("minScore").value);
         if (score < minScore) continue;
 
         const key = `${symbol}_${wall.side}_${wall.price}`;
+        const isNew = !signals.has(key);
+
         signals.set(key, {
-            key, symbol, rank: symbolRanks.get(symbol), setup, score, wall, flow, priceChange, age, updated: now()
+            key, symbol, rank: symbolRanks.get(symbol), setup, score, wall, flow, priceChange, ageSec, updated: now()
         });
+
+        if (isNew && score >= 75) playBeep();
     }
 }
 
@@ -554,7 +550,8 @@ function analyzeAll() {
     if (!running) return;
     for (const symbol of symbols) analyzeSymbol(symbol);
 
-    const expiry = now() - 5000;
+    // Сигнал висит на экране долго (пока стену не уберут на 15+ секунд)
+    const expiry = now() - 15000;
     for (const [key, signal] of signals) {
         if (signal.updated < expiry) signals.delete(key);
     }
@@ -564,53 +561,53 @@ function analyzeAll() {
    RENDER
 ===================================================== */
 function renderSignals() {
-    const sorted = [...signals.values()].sort((a, b) => b.score - a.score).slice(0, MAX_SIGNALS);
     candidateCountEl.innerText = signals.size;
+
+    if (uiPaused) return; // Если нажата пауза, не перерисовываем экран
+
+    const sorted = [...signals.values()].sort((a, b) => b.score - a.score).slice(0, MAX_SIGNALS);
     signalCountEl.innerText = sorted.length;
 
     if (sorted.length === 0) {
         signalsEl.innerHTML = `
             <div class="empty">
-                🔎 Ищем ситуацию...<br><br>
-                Пока нет подтверждённого LONG / SHORT сетапа.
+                🔎 Поиск подтвержденных уровней...<br><br>
+                Ждем плиты, которые выстоят выбранное время (1-2 мин).
             </div>`;
         return;
     }
 
     let html = "";
     for (const s of sorted) {
-        let directionIcon = "🟢", directionClass = "long";
-        if (s.setup === "SHORT") { directionIcon = "🔴"; directionClass = "short"; }
-        if (s.setup === "BREAKOUT") { directionIcon = "🟠"; directionClass = "breakout"; }
-
-        const wallSide = s.wall.side === "Buy" ? "BUY WALL" : "SELL WALL";
-        const alignedFlow = s.wall.side === "Buy" ? s.flow.buy : s.flow.sell;
-        const oppositeFlow = s.wall.side === "Buy" ? s.flow.sell : s.flow.buy;
-        const reason = s.wall.side === "Buy"
-            ? (s.flow.imbalance > 0 ? "BUY wall + агрессивные покупки" : "BUY wall + давление продавцов")
-            : (s.flow.imbalance < 0 ? "SELL wall + агрессивные продажи" : "SELL wall + агрессивные покупки");
+        const isLong = s.wall.side === "Buy";
+        const directionClass = isLong ? "long" : "short";
+        const wallSideText = isLong ? "🛡 BUY LEVEL (Плита)" : "🛑 SELL LEVEL (Плита)";
 
         html += `
             <div class="signal ${directionClass}">
                 <div class="signal-top">
-                    <div class="symbol">${directionIcon} ${s.symbol} <span class="gray">#${s.rank}</span></div>
-                    <div class="direction">${s.setup}</div>
+                    <div class="symbol">
+                        ${s.symbol} <span class="gray">#${s.rank}</span>
+                    </div>
+                    <div class="direction ${directionClass}">${s.setup}</div>
                 </div>
+                
                 <div class="score">Score: ${s.score}/100</div>
+                
                 <div class="data-grid">
-                    <div class="data-box">Лимитная ликвидность<strong>${wallSide} $${money(s.wall.value)}</strong></div>
-                    <div class="data-box">Цена стены<strong>${priceFormat(s.wall.price)}</strong></div>
-                    <div class="data-box">Относительный размер<strong>${s.wall.ratio.toFixed(1)}x</strong></div>
-                    <div class="data-box">Стена живёт<strong>${(s.age / 1000).toFixed(1)} сек</strong></div>
-                    <div class="data-box">Aggressive BUY<strong class="green">$${money(s.flow.buy)}</strong></div>
-                    <div class="data-box">Aggressive SELL<strong class="red">$${money(s.flow.sell)}</strong></div>
-                    <div class="data-box">BUY/SELL imbalance<strong>${percent(s.flow.imbalance)}</strong></div>
-                    <div class="data-box">Цена / 1 мин<strong>${percent(s.priceChange)}</strong></div>
+                    <div class="data-box">Тип уровня<strong>${wallSideText}</strong></div>
+                    <div class="data-box">Цена стены (Уровень)<strong>${priceFormat(s.wall.price)}</strong></div>
+                    <div class="data-box">Объём плиты<strong>$${money(s.wall.value)}</strong></div>
+                    <div class="data-box">Порог монеты (24h)<strong>$${money(s.wall.threshold)}</strong></div>
+                    <div class="data-box">Время жизни плиты<strong>${(s.ageSec / 60).toFixed(1)} мин (${Math.round(s.ageSec)} сек)</strong></div>
+                    <div class="data-box">До стены<strong>${percent(s.wall.distance)}</strong></div>
+                    <div class="data-box">Плотность к стакану<strong>${s.wall.ratio.toFixed(1)}x</strong></div>
+                    <div class="data-box">Реакция цены (2 мин)<strong>${percent(s.priceChange)}</strong></div>
                 </div>
+
                 <div class="reason">
-                    💡 ${reason}<br>
-                    📍 До стены: ${percent(s.wall.distance)}<br>
-                    ⚡ Aggressive flow: $${money(alignedFlow)} vs $${money(oppositeFlow)}
+                    💡 <b>Анализ уровня:</b> Плита стоит уже <b>${(s.ageSec / 60).toFixed(1)} мин</b>. 
+                    Размер превышает порог суточной ликвидности монеты в <b>${(s.wall.value / s.wall.threshold).toFixed(1)} раз</b>.
                 </div>
             </div>`;
     }
@@ -618,7 +615,7 @@ function renderSignals() {
 }
 
 /* =====================================================
-   WEBSOCKET (FIXED FOR BYBIT LIMITS)
+   WEBSOCKET (PACKET SUBSCRIPTION)
 ===================================================== */
 function connectWebSocket() {
     if (!running) return;
@@ -641,7 +638,6 @@ function connectWebSocket() {
             args.push(`publicTrade.${symbol}`);
         }
 
-        // ИСПРАВЛЕНИЕ: Отправка подписок пакетами по 10 штук с паузой
         const chunkSize = 10;
         for (let i = 0; i < args.length; i += chunkSize) {
             if (!running || ws.readyState !== WebSocket.OPEN) break;
@@ -664,13 +660,10 @@ function connectWebSocket() {
             } else if (data.topic.startsWith("publicTrade.")) {
                 processTrade(data.data);
             }
-        } catch (error) {
-            console.error("WS message error:", error);
-        }
+        } catch (error) {}
     };
 
-    ws.onerror = error => {
-        console.error("WebSocket error:", error);
+    ws.onerror = () => {
         wsEl.innerText = "ERROR";
         wsEl.className = "stat-value red";
     };
@@ -695,7 +688,7 @@ function startPing() {
 }
 
 /* =====================================================
-   DATA LOADING & CONTROL
+   LOAD SYMBOLS & CONTROL
 ===================================================== */
 async function loadSymbols() {
     try {
@@ -705,9 +698,7 @@ async function loadSymbols() {
         const response = await fetch("https://api.bybit.com/v5/market/tickers?category=linear");
         const json = await response.json();
 
-        if (!json.result || !Array.isArray(json.result.list)) {
-            throw new Error("Invalid Bybit response");
-        }
+        if (!json.result || !Array.isArray(json.result.list)) throw new Error("Invalid response");
 
         const list = json.result.list
             .filter(item => item.symbol && item.symbol.endsWith("USDT") && parseFloat(item.turnover24h) > 0)
@@ -716,16 +707,17 @@ async function loadSymbols() {
 
         symbols.length = 0;
         symbolRanks.clear();
+        symbolTurnovers.clear();
 
         list.forEach((item, index) => {
             symbols.push(item.symbol);
             symbolRanks.set(item.symbol, index + 1);
+            symbolTurnovers.set(item.symbol, parseFloat(item.turnover24h));
         });
 
         coinCountEl.innerText = symbols.length;
         return true;
     } catch (error) {
-        console.error("TOP loading error:", error);
         statusEl.innerText = "Ошибка загрузки TOP";
         statusEl.style.color = "#e74c3c";
         return false;
@@ -751,20 +743,16 @@ async function startScanner() {
 
     symbolRefreshTimer = setInterval(async () => {
         await loadSymbols();
-        books.clear();
-        trades.clear();
-        wallHistory.clear();
-        signals.clear();
         connectWebSocket();
     }, SYMBOL_REFRESH);
 }
 
 function stopScanner() {
     running = false;
-    if (analysisTimer) { clearInterval(analysisTimer); analysisTimer = null; }
-    if (uiTimer) { clearInterval(uiTimer); uiTimer = null; }
-    if (symbolRefreshTimer) { clearInterval(symbolRefreshTimer); symbolRefreshTimer = null; }
-    if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+    if (analysisTimer) clearInterval(analysisTimer);
+    if (uiTimer) clearInterval(uiTimer);
+    if (symbolRefreshTimer) clearInterval(symbolRefreshTimer);
+    if (reconnectTimer) clearTimeout(reconnectTimer);
 
     if (ws) {
         try { ws.onclose = null; ws.close(); } catch (e) {}
@@ -783,8 +771,6 @@ function clearSignals() {
 }
 
 startPing();
-console.log("🐋 Bybit Whale Flow Scanner loaded");
 </script>
-
 </body>
 </html>
