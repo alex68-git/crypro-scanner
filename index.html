@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bybit Swing Levels Scanner (15m-4h)</title>
+<title>Bybit Swing Levels Scanner PRO (15m–4h)</title>
 
 <style>
 * { box-sizing: border-box; }
@@ -153,7 +153,7 @@ label { font-size: 13px; color: #848e9c; }
 <body>
 
 <div class="header">
-    <h1>📈 Bybit Swing Levels Scanner (15m–4h)</h1>
+    <h1>📈 Bybit Swing Levels Scanner PRO (15m–4h)</h1>
 
     <div class="controls">
         <button onclick="startScanner()">▶ Запустить</button>
@@ -185,9 +185,9 @@ label { font-size: 13px; color: #848e9c; }
         <label>
             Дистанция до стены:
             <select id="maxDist">
+                <option value="0.003" selected>менее 0.3% (Готовый вход)</option>
                 <option value="0.01">до 1.0%</option>
-                <option value="0.02" selected>до 2.0% (Успеть на TF)</option>
-                <option value="0.03">до 3.0%</option>
+                <option value="0.02">до 2.0% (Подход)</option>
             </select>
         </label>
 
@@ -216,7 +216,7 @@ label { font-size: 13px; color: #848e9c; }
 <div id="signals" class="signals">
     <div id="empty" class="empty">
         Запустите сканер.<br><br>
-        Ищем крупные плиты с выдержкой от 5 до 30 минут для торговли на 15m–4h.
+        Ищем крупные плиты с выдержкой от 5 до 30 минут и дистанцией менее 0.3%.
     </div>
 </div>
 
@@ -436,11 +436,13 @@ function calculateSwingScore(wall, ageSec) {
     const ratioToThreshold = wall.value / wall.threshold;
     score += Math.min(35, ratioToThreshold * 15);
 
-    // 3. Дистанция — комфортное время для среднесрочного входа (До 25 баллов)
-    if (wall.distance >= 0.004 && wall.distance <= 0.018) {
-        score += 25; 
-    } else if (wall.distance < 0.004) {
-        score += 10; // Уже слишком близко
+    // 3. Дистанция до стены (До 25 баллов) — максимальный балл при входе в упор (<0.3%)
+    if (wall.distance <= 0.003) {
+        score += 25;
+    } else if (wall.distance <= 0.01) {
+        score += 15;
+    } else {
+        score += 5;
     }
 
     return Math.min(100, Math.round(score));
@@ -495,7 +497,7 @@ function renderSignals() {
         signalsEl.innerHTML = `
             <div class="empty">
                 🔎 Поиск подтвержденных уровней для 15m-4h...<br><br>
-                Ожидаем плиты, выстоявшие выбранный таймфрейм.
+                Ожидаем плиты с дистанцией менее 0.3% и выбранной выдержкой.
             </div>`;
         return;
     }
@@ -505,7 +507,6 @@ function renderSignals() {
         const isLong = s.wall.side === "Buy";
         const directionClass = isLong ? "long" : "short";
         
-        // Расчет StopLoss и TakeProfit под swing
         const stopLoss = isLong ? s.wall.price * 0.996 : s.wall.price * 1.004;
         const takeProfit = isLong ? s.wall.price * 1.012 : s.wall.price * 0.988;
 
@@ -530,7 +531,7 @@ function renderSignals() {
                 </div>
 
                 <div class="level-setup">
-                    <div class="level-setup-title">🎯 Ориентиры для TradingView / Ордеров:</div>
+                    <div class="level-setup-title">🎯 Ориентиры для TradingView / BingX:</div>
                     Вход у стены: <b>${priceFormat(s.wall.price)}</b> | 
                     Stop-Loss: <b class="red">${priceFormat(stopLoss)}</b> | 
                     Take-Profit (1:3): <b class="green">${priceFormat(takeProfit)}</b>
