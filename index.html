@@ -166,7 +166,7 @@ label { font-size: 13px; color: #848e9c; }
         <label>
             Выдержка уровня (TF):
             <select id="wallAge">
-                <option value="120">2 минуты (Тест)</option>
+                <option value="120">2 минуты (Быстрый тест)</option>
                 <option value="300" selected>5 минут (15m TF)</option>
                 <option value="900">15 минут (1h-4h TF)</option>
                 <option value="1800">30 минут (Major Level)</option>
@@ -176,8 +176,8 @@ label { font-size: 13px; color: #848e9c; }
         <label>
             Минимальный объём стены:
             <select id="volSens">
-                <option value="0.0008">0.08% (Средние стены)</option>
-                <option value="0.0015" selected>0.15% (Крупный уровень)</option>
+                <option value="0.0008" selected>0.08% (Средние стены)</option>
+                <option value="0.0015">0.15% (Крупный уровень)</option>
                 <option value="0.0030">0.30% (Монументальный)</option>
             </select>
         </label>
@@ -185,8 +185,8 @@ label { font-size: 13px; color: #848e9c; }
         <label>
             Дистанция до стены:
             <select id="maxDist">
-                <option value="0.003" selected>менее 0.3% (Готовый вход)</option>
-                <option value="0.01">до 1.0%</option>
+                <option value="0.003">менее 0.3% (Готовый вход)</option>
+                <option value="0.01" selected>до 1.0% (Оптимально)</option>
                 <option value="0.02">до 2.0% (Подход)</option>
             </select>
         </label>
@@ -216,18 +216,17 @@ label { font-size: 13px; color: #848e9c; }
 <div id="signals" class="signals">
     <div id="empty" class="empty">
         Запустите сканер.<br><br>
-        Ищем крупные плиты с выдержкой от 5 до 30 минут и дистанцией менее 0.3%.
+        Ищем крупные плиты с выдержкой от 5 минут на глубине стакана 200 уровней.
     </div>
 </div>
 
 <script>
 const MAX_SYMBOLS = 100;
-const ORDERBOOK_DEPTH = 50;
+const ORDERBOOK_DEPTH = 200; // Увеличено до 200 для дальности обзора
 const MAX_SIGNALS = 15;
 const ANALYSIS_INTERVAL = 1000;
 const UI_INTERVAL = 1500;
 const SYMBOL_REFRESH = 5 * 60 * 1000;
-const MIN_WALL_RATIO = 4;
 
 let ws = null;
 let running = false;
@@ -286,7 +285,7 @@ function percent(value) { return (value * 100).toFixed(2) + "%"; }
 function getDynamicThreshold(symbol) {
     const turnover = symbolTurnovers.get(symbol) || 10000000;
     const sens = parseFloat(document.getElementById("volSens").value);
-    return Math.max(50000, turnover * sens);
+    return Math.max(30000, turnover * sens);
 }
 
 function togglePause() {
@@ -356,22 +355,6 @@ function processTrade(data) {
     }
 }
 
-function getLocalLiquidity(book, side, currentPrice) {
-    if (!book || !currentPrice) return 1;
-    const source = side === "Buy" ? book.bids : book.asks;
-    const values = [];
-
-    for (const [price, qty] of source) {
-        if (Math.abs(price - currentPrice) / currentPrice <= 0.008) {
-            const val = price * qty;
-            if (val > 0) values.push(val);
-        }
-    }
-    if (values.length === 0) return 1;
-    values.sort((a, b) => a - b);
-    return values[Math.floor(values.length / 2)];
-}
-
 function findWalls(symbol) {
     const book = books.get(symbol);
     if (!book) return [];
@@ -383,29 +366,25 @@ function findWalls(symbol) {
     const threshold = getDynamicThreshold(symbol);
     const maxDist = parseFloat(document.getElementById("maxDist").value);
 
-    // BUY WALLS (Поддержка)
+    // BUY WALLS
     for (const [price, qty] of book.bids) {
         const distance = (currentPrice - price) / currentPrice;
         if (distance < 0 || distance > maxDist) continue;
         const value = price * qty;
-        const local = getLocalLiquidity(book, "Buy", currentPrice);
-        const ratio = value / Math.max(local, 1);
 
-        if (value >= threshold && ratio >= MIN_WALL_RATIO) {
-            result.push({ symbol, side: "Buy", price, qty, value, distance, ratio, currentPrice, threshold });
+        if (value >= threshold) {
+            result.push({ symbol, side: "Buy", price, qty, value, distance, currentPrice, threshold });
         }
     }
 
-    // SELL WALLS (Сопротивление)
+    // SELL WALLS
     for (const [price, qty] of book.asks) {
         const distance = (price - currentPrice) / currentPrice;
         if (distance < 0 || distance > maxDist) continue;
         const value = price * qty;
-        const local = getLocalLiquidity(book, "Sell", currentPrice);
-        const ratio = value / Math.max(local, 1);
 
-        if (value >= threshold && ratio >= MIN_WALL_RATIO) {
-            result.push({ symbol, side: "Sell", price, qty, value, distance, ratio, currentPrice, threshold });
+        if (value >= threshold) {
+            result.push({ symbol, side: "Sell", price, qty, value, distance, currentPrice, threshold });
         }
     }
 
@@ -428,21 +407,21 @@ function updateWallHistory(wall) {
 function calculateSwingScore(wall, ageSec) {
     let score = 0;
 
-    // 1. Время выдержки стены (До 40 баллов)
+    // Время выдержки
     const ageMinutes = ageSec / 60;
-    score += Math.min(40, (ageMinutes / 15) * 40);
+    score += Math.min(40, (ageMinutes / 10) * 40);
 
-    // 2. Объём от порога суточной ликвидности (До 35 баллов)
+    // Отношение объема к порогу
     const ratioToThreshold = wall.value / wall.threshold;
     score += Math.min(35, ratioToThreshold * 15);
 
-    // 3. Дистанция до стены (До 25 баллов) — максимальный балл при входе в упор (<0.3%)
+    // Дистанция
     if (wall.distance <= 0.003) {
         score += 25;
     } else if (wall.distance <= 0.01) {
-        score += 15;
+        score += 18;
     } else {
-        score += 5;
+        score += 10;
     }
 
     return Math.min(100, Math.round(score));
@@ -462,7 +441,7 @@ function analyzeSymbol(symbol) {
         if (ageSec < requiredAgeSec) continue;
 
         const score = calculateSwingScore(wall, ageSec);
-        if (score < 50) continue;
+        if (score < 35) continue; // Порог вхождения снижен для повышения чувствительности
 
         const setup = wall.side === "Buy" ? "LONG (Опоры Уровня)" : "SHORT (Сопротивление)";
         const key = `${symbol}_${wall.side}_${wall.price}`;
@@ -496,8 +475,8 @@ function renderSignals() {
     if (sorted.length === 0) {
         signalsEl.innerHTML = `
             <div class="empty">
-                🔎 Поиск подтвержденных уровней для 15m-4h...<br><br>
-                Ожидаем плиты с дистанцией менее 0.3% и выбранной выдержкой.
+                🔎 Поиск подтвержденных уровней на глубине 200...<br><br>
+                Ожидаем появление плит с выбранной выдержкой.
             </div>`;
         return;
     }
@@ -553,7 +532,7 @@ function connectWebSocket() {
     ws.onopen = async () => {
         wsEl.innerText = "ON";
         wsEl.className = "stat-value green";
-        statusEl.innerText = "Сканирование среднесрочных уровней активно";
+        statusEl.innerText = "Сканирование среднесрочных уровней (Depth 200) активно";
         statusEl.style.color = "#27ae60";
 
         const args = [];
